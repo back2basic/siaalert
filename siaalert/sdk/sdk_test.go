@@ -1,21 +1,52 @@
 package sdk_test
 
 import (
+	"flag"
+	"fmt"
+	"log"
+	"os"
 	"testing"
 
+	"github.com/back2basic/siadata/siaalert/config"
 	"github.com/back2basic/siadata/siaalert/explored"
 	"github.com/back2basic/siadata/siaalert/sdk"
 	"github.com/stretchr/testify/assert"
 )
 
+func TestPrepareAppwrite(t *testing.T) {
+	// Setup a mock environment for configuration and database service
+	cfg := config.LoadConfig("../config.yaml")
+
+	// Startup
+	log.SetFlags(0)
+	log.SetOutput(os.Stdout)
+	flag.Parse()
+
+	fmt.Println("Init Appwrite:")
+	dbSvc := sdk.PrepareAppwrite(cfg)	
+	assert.NotNil(t, dbSvc)	
+}	
+
 func TestGetHostByPublicKey(t *testing.T) {
 	// Setup a mock database service and the necessary environment
+	cfg := config.LoadConfig("../config.yaml")
 
-	databaseID := "testDatabaseID"
-	collectionID := "testCollectionID"
-	publicKey := "testPublicKey"
+	// Startup
+	log.SetFlags(0)
+	log.SetOutput(os.Stdout)
+	flag.Parse()
+
+	fmt.Println("Init Appwrite:")
+	dbSvc := sdk.PrepareAppwrite(cfg)
+	sdk.GetAppwriteDatabaseService().Client = dbSvc.(*sdk.AppwriteDatabaseService).Client
+
+
+	databaseID := "67bf83fe0014e0b1b4ef"
+	collectionID := "67bf8471002b2ae85dbd"
+	publicKey := "1"
 
 	host, err := sdk.GetHostByPublicKey(databaseID, collectionID, publicKey)
+	fmt.Println(host.Documents[0])
 	assert.NoError(t, err)
 	assert.NotNil(t, host)
 }
@@ -24,8 +55,8 @@ func TestCheckHost(t *testing.T) {
 	// Setup a mock environment for configuration and database service
 
 	host := explored.Host{
-		PublicKey:  "testPublicKey",
-		NetAddress: "testNetAddress",
+		PublicKey:  "1",
+		NetAddress: "[::1]:9982",
 		// Other fields...
 	}
 
