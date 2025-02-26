@@ -85,7 +85,7 @@ func main() {
 	sdk.GetAppwriteDatabaseService().Client = dbSvc.(*sdk.AppwriteDatabaseService).Client
 
 	cfg.Appwrite.Database = sdk.PrepareDatabase(cfg, sdk.GetAppwriteDatabaseService())
-	cfg.Appwrite.ColHosts, cfg.Appwrite.ColStatus, cfg.Appwrite.ColAlert, cfg.Appwrite.ColCheck = sdk.PrepareCollection(sdk.GetAppwriteDatabaseService(), cfg.Appwrite.Database.Id)
+	cfg.Appwrite.ColHosts, cfg.Appwrite.ColStatus, cfg.Appwrite.ColAlert, cfg.Appwrite.ColCheck, cfg.Appwrite.ColRhp2 = sdk.PrepareCollection(sdk.GetAppwriteDatabaseService(), cfg.Appwrite.Database.Id)
 
 	cron.StartCron()
 
@@ -100,7 +100,7 @@ func main() {
 			return
 		}
 		fmt.Println("New Hosts available:", len(hosts)-len(sdk.HostCache))
-		cron.CheckNewExporedHosts( hosts)
+		cron.CheckNewExporedHosts(hosts)
 	}
 	fmt.Println("Startup Complete")
 

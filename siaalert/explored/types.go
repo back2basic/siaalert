@@ -33,11 +33,16 @@ type Host struct {
 	SuccessfulInteractions uint64    `json:"successfulInteractions"`
 	FailedInteractions     uint64    `json:"failedInteractions"`
 
-	Settings   rhpv2.HostSettings   `json:"settings"`
-	PriceTable rhpv3.HostPriceTable `json:"priceTable"`
-
-	RHPV4Settings rhpv4.HostSettings `json:"rhpV4Settings"`
+	Settings   Settings      `json:"settings"`
+	PriceTable PriceTable    `json:"priceTable"`
+	RHPV4Settings RHPV4Settings `json:"rhpV4Settings"`
 }
+
+type (
+	Settings      rhpv2.HostSettings
+	PriceTable    rhpv3.HostPriceTable
+	RHPV4Settings rhpv4.HostSettings
+)
 
 type NetAddress struct {
 	Protocol string `json:"protocol"`

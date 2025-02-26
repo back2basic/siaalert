@@ -17,40 +17,6 @@ func CheckNewExporedHosts(hosts []explored.Host) {
 		checked, exists := sdk.HostCache[hosts[i-1].PublicKey]
 		sdk.Mutex.Unlock()
 
-		// udpate release
-		// if exists {
-		// 	found, err := sdk.GetCheck(checked.Id)
-		// 	if err != nil {
-		// 		fmt.Println("error updating release", err, checked.NetAddress)
-		// 		continue
-		// 	}
-		// 	var checkDoc sdk.CheckDocument
-		// 	found.Decode(&checkDoc)
-		// 	params := sdk.Check{
-		// 		HostId:             checkDoc.HostId,
-		// 		V4Addr:             checkDoc.V4Addr,
-		// 		V6Addr:             checkDoc.V6Addr,
-		// 		Rhp2Port:           checkDoc.Rhp2Port,
-		// 		Rhp2V4Delay:        checkDoc.Rhp2V4Delay,
-		// 		Rhp2V6Delay:        checkDoc.Rhp2V6Delay,
-		// 		Rhp2V4:             checkDoc.Rhp2V4,
-		// 		Rhp2V6:             checkDoc.Rhp2V6,
-		// 		Rhp3Port:           checkDoc.Rhp3Port,
-		// 		Rhp3V4:             checkDoc.Rhp3V4,
-		// 		Rhp3V6:             checkDoc.Rhp3V6,
-		// 		Rhp3V4Delay:        checkDoc.Rhp3V4Delay,
-		// 		Rhp3V6Delay:        checkDoc.Rhp3V6Delay,
-		// 		Rhp4Port:           checkDoc.Rhp4Port,
-		// 		Rhp4V4:             checkDoc.Rhp4V4,
-		// 		Rhp4V6:             checkDoc.Rhp4V6,
-		// 		Rhp4V4Delay:        checkDoc.Rhp4V4Delay,
-		// 		Rhp4V6Delay:        checkDoc.Rhp4V6Delay,
-		// 		AcceptingContracts: checkDoc.AcceptingContracts,
-		// 		Release:            hosts[i-1].Settings.Release,
-		// 	}
-		// 	sdk.UpdateRelease(checkDoc.Id, params)
-		// }
-
 		// Check host if not already cached
 		if !exists {
 			var err error
@@ -166,60 +132,10 @@ func RunBench(hosts []explored.Host, checker scan.Checker) {
 
 }
 
-// func runPortScan(hostId string, scanned bench.Scan) {
-// 	checker := scan.Checker{}
-// 	netAddress, rhp2, err := checker.SplitAddressPort(scanned.Settings.Netaddress)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return
-// 	}
-
-// 	rhp3 := scanned.Settings.Siamuxport
-// 	rhp4 := "9984"
-
-// 	// clasify netaddress
-// 	var v4, v6 []net.IP = nil, nil
-// 	params := sdk.CheckParams{}
-// 	params.HostId = hostId
-// 	classify := checker.ClassifyNetAddress(netAddress)
-// 	switch classify {
-// 	case "Hostname":
-// 		params.HasARecord, params.HasAAAARecord, v4, v6 = checker.CheckDNSRecords(netAddress)
-// 		if params.HasARecord {
-// 			params.Rhp2v4, params.Rhp2v4Delay = checker.CheckPortOpen(v4[0].String(), rhp2)
-// 			params.Rhp3v4, params.Rhp3v4Delay = checker.CheckPortOpen(v4[0].String(), rhp3)
-// 			params.Rhp4v4, params.Rhp4v4Delay = checker.CheckPortOpen(v4[0].String(), rhp4)
-// 		}
-// 		if params.HasAAAARecord {
-// 			params.Rhp2v6, params.Rhp2v6Delay = checker.CheckPortOpen(v6[0].String(), rhp2)
-// 			params.Rhp3v6, params.Rhp3v6Delay = checker.CheckPortOpen(v6[0].String(), rhp3)
-// 			params.Rhp4v6, params.Rhp4v6Delay = checker.CheckPortOpen(v6[0].String(), rhp4)
-// 		}
-
-// 		if len(params.V4) > 0 {
-// 			params.V4 = v4[0].String()
-// 		}
-// 		if len(params.V6) > 0 {
-// 			params.V4 = v6[0].String()
-// 		}
-// 		sdk.UpdateCheck(params)
-// 		break
-
-// 	case "IPv4":
-// 		params.Rhp2v4, params.Rhp2v4Delay = checker.CheckPortOpen(netAddress, rhp2)
-// 		params.Rhp3v4, params.Rhp3v4Delay = checker.CheckPortOpen(netAddress, rhp3)
-// 		params.Rhp4v4, params.Rhp4v4Delay = checker.CheckPortOpen(netAddress, rhp4)
-// 		sdk.UpdateCheck(params)
-// 		break
-
-// 	case "IPv6":
-// 		params.Rhp2v6, params.Rhp2v6Delay = checker.CheckPortOpen(netAddress, rhp2)
-// 		params.Rhp3v6, params.Rhp3v6Delay = checker.CheckPortOpen(netAddress, rhp3)
-// 		params.Rhp4v6, params.Rhp4v6Delay = checker.CheckPortOpen(netAddress, rhp4)
-// 		sdk.UpdateCheck(params)
-// 		break
-// 	}
-// 	// fmt.Println(netAddress)
-// 	// fmt.Printf("RHP2v4: %v, RHP2v6: %v, RHP3v4: %v, RHP3v6: %v, RHP4v4: %v, RHP4v6: %v\n", rhp2v4, rhp2v6, rhp3v4, rhp3v6, rhp4v4, rhp4v6)
-// 	// fmt.Printf("RHP2v4Delay: %v, RHP2v6Delay: %v, RHP3v4Delay: %v, RHP3v6Delay: %v, RHP4v4Delay: %v, RHP4v6Delay: %v\n", rhp2v4Delay, rhp2v6Delay, rhp3v4Delay, rhp3v6Delay, rhp4v4Delay, rhp4v6Delay)
-// }
+func RunRhp(hosts []explored.Host) {
+	for _, host := range hosts {
+		if time.Since(host.LastAnnouncement).Hours() > 24*365*2 {
+			sdk.UpdateRhp(host)
+		}
+	}
+}
