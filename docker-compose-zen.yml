@@ -1,0 +1,57 @@
+# compose for benchmarking
+services:
+  bench:
+    build:
+      dockerfile: ./docker/Dockerfile.testnet
+      context: ./host-bench
+    environment:
+      - BENCHY_SEED=
+    volumes:
+      - host-bench-data:/data
+    ports:
+      - 8484
+    restart: unless-stopped
+    networks:
+      - sia
+      
+  # explored change network in main.go
+  explored:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./explored
+    ports:
+      - 9980
+    volumes:
+      - explored-data:/data
+    restart: unless-stopped
+    networks:
+      - sia
+
+  siadata:
+    build:
+      dockerfile: ./docker/Dockerfile
+      context: ./siaalert
+    volumes:
+      - ./cache:/app/cache
+    depends_on:
+      - explored
+      - bench
+    networks:
+      - sia
+
+# /etc/docker/daemon.json
+# {
+#   "ipv6": true,
+#   "fixed-cidr-v6": "fd12:3456:789c:1::/64",
+#   "experimental": true,
+#   "ip6tables": true
+# }
+networks:
+  sia:
+    name: sia
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: fd12:3456:789c:2::/64 # IPv6 subnet to use
