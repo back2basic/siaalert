@@ -30,6 +30,8 @@ type AppwriteConfig struct {
 	ColAlert  *models.Collection
 	ColCheck  *models.Collection
 	ColRhp2   *models.Collection
+	ColRhp3   *models.Collection
+	ColRhp4   *models.Collection
 }
 
 // ServerConfig holds the server-related configuration
