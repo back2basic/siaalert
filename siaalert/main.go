@@ -11,7 +11,6 @@ import (
 
 	"github.com/back2basic/siadata/siaalert/config"
 	"github.com/back2basic/siadata/siaalert/cron"
-	"github.com/back2basic/siadata/siaalert/explored"
 	"github.com/back2basic/siadata/siaalert/sdk"
 )
 
@@ -73,7 +72,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	cfg := config.LoadConfig("config.yaml")
+	cfg := config.LoadConfig("./data/config.yaml")
 
 	// Startup
 	log.SetFlags(0)
@@ -85,23 +84,10 @@ func main() {
 	sdk.GetAppwriteDatabaseService().Client = dbSvc.(*sdk.AppwriteDatabaseService).Client
 
 	cfg.Appwrite.Database = sdk.PrepareDatabase(cfg, sdk.GetAppwriteDatabaseService())
-	cfg.Appwrite.ColHosts, cfg.Appwrite.ColStatus, cfg.Appwrite.ColAlert, cfg.Appwrite.ColCheck = sdk.PrepareCollection(sdk.GetAppwriteDatabaseService(), cfg.Appwrite.Database.Id)
+	cfg.Appwrite.ColHosts, cfg.Appwrite.ColStatus, cfg.Appwrite.ColAlert, cfg.Appwrite.ColCheck, cfg.Appwrite.ColRhp2, cfg.Appwrite.ColRhp3 = sdk.PrepareCollection(sdk.GetAppwriteDatabaseService(), cfg.Appwrite.Database.Id)
 
 	cron.StartCron()
 
-	if len(sdk.HostCache) == 0 {
-		hosts, err := explored.GetAllHosts()
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		if len(hosts) == 0 {
-			fmt.Println("No hosts found")
-			return
-		}
-		fmt.Println("New Hosts available:", len(hosts)-len(sdk.HostCache))
-		cron.CheckNewExporedHosts( hosts)
-	}
 	fmt.Println("Startup Complete")
 
 	defer func() {

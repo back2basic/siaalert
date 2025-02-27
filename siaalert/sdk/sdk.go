@@ -38,12 +38,16 @@ type DatabaseService interface {
 	ListCollections(databaseID string) (*models.CollectionList, error)
 	ListDocuments(databaseID, collectionID string, queries []string) (*models.DocumentList, error)
 	GetDocument(databaseID, collectionID, documentID string) (*models.Document, error)
-	CreateHostDocument(databaseID, collectionID, documentID string, data Host) (*models.Document, error)
-	UpdateHostDocument(databaseID, collectionID, documentID string, data Host) (*models.Document, error)
-	CreateCheckDocument(databaseID, collectionID, documentID string, data Check) (*models.Document, error)
-	UpdateCheckDocument(databaseID, collectionID, documentID string, data Check) (*models.Document, error)
-	CreateStatusDocument(databaseID, collectionID, documentID string, data Status) (*models.Document, error)
-	UpdateStatusDocument(databaseID, collectionID, documentID string, data Status) (*models.Document, error)
+	CreateHostDocument(documentID string, data Host) (*models.Document, error)
+	UpdateHostDocument(documentID string, data Host) (*models.Document, error)
+	CreateCheckDocument(documentID string, data Check) (*models.Document, error)
+	UpdateCheckDocument(documentID string, data Check) (*models.Document, error)
+	CreateStatusDocument(documentID string, data Status) (*models.Document, error)
+	UpdateStatusDocument(documentID string, data Status) (*models.Document, error)
+	CreateRhp2Document(documentID string, data Rhp2) (*models.Document, error)
+	UpdateRhp2Document(documentID string, data Rhp2) (*models.Document, error)
+	CreateRhp3Document(documentID string, data Rhp3) (*models.Document, error)
+	UpdateRhp3Document(documentID string, data Rhp3) (*models.Document, error)
 }
 
 // ListDatabases calls the Appwrite SDK's List method.
@@ -67,33 +71,59 @@ func (ads *AppwriteDatabaseService) GetDocument(databaseID, collectionID, docume
 }
 
 // CreateDocument wraps the Appwrite create document call.
-func (ads *AppwriteDatabaseService) CreateHostDocument(databaseID, collectionID, documentID string, data Host) (*models.Document, error) {
-	return ads.Client.CreateDocument(databaseID, collectionID, documentID, data)
+func (ads *AppwriteDatabaseService) CreateHostDocument(documentID string, data Host) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColHosts.Id, documentID, data)
 }
 
 // UpdateDocument wraps the Appwrite update document call.
-func (ads *AppwriteDatabaseService) UpdateHostDocument(databaseID, collectionID, documentID string, data Host) (*models.Document, error) {
-	return ads.Client.UpdateDocument(databaseID, collectionID, documentID, ads.Client.WithUpdateDocumentData(data))
+func (ads *AppwriteDatabaseService) UpdateHostDocument(documentID string, data Host) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColHosts.Id, documentID, ads.Client.WithUpdateDocumentData(data))
 }
 
 // CreateDocument wraps the Appwrite create document call.
-func (ads *AppwriteDatabaseService) CreateStatusDocument(databaseID, collectionID, documentID string, data Status) (*models.Document, error) {
-	return ads.Client.CreateDocument(databaseID, collectionID, documentID, data)
+func (ads *AppwriteDatabaseService) CreateStatusDocument(documentID string, data Status) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColStatus.Id, documentID, data)
 }
 
 // UpdateDocument wraps the Appwrite update document call.
-func (ads *AppwriteDatabaseService) UpdateStatusDocument(databaseID, collectionID, documentID string, data Status) (*models.Document, error) {
-	return ads.Client.UpdateDocument(databaseID, collectionID, documentID, ads.Client.WithUpdateDocumentData(data))
+func (ads *AppwriteDatabaseService) UpdateStatusDocument(documentID string, data Status) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColStatus.Id, documentID, ads.Client.WithUpdateDocumentData(data))
 }
 
 // CreateDocument wraps the Appwrite create document call.
-func (ads *AppwriteDatabaseService) CreateCheckDocument(databaseID, collectionID, documentID string, data Check) (*models.Document, error) {
-	return ads.Client.CreateDocument(databaseID, collectionID, documentID, data)
+func (ads *AppwriteDatabaseService) CreateCheckDocument(documentID string, data Check) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColCheck.Id, documentID, data)
 }
 
 // UpdateDocument wraps the Appwrite update document call.
-func (ads *AppwriteDatabaseService) UpdateCheckDocument(databaseID, collectionID, documentID string, data Check) (*models.Document, error) {
-	return ads.Client.UpdateDocument(databaseID, collectionID, documentID, ads.Client.WithUpdateDocumentData(data))
+func (ads *AppwriteDatabaseService) UpdateCheckDocument(documentID string, data Check) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColCheck.Id, documentID, ads.Client.WithUpdateDocumentData(data))
+}
+
+func (ads *AppwriteDatabaseService) CreateRhp2Document(documentID string, data Rhp2) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, data)
+}
+
+func (ads *AppwriteDatabaseService) UpdateRhp2Document(documentID string, data Rhp2) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, ads.Client.WithUpdateDocumentData(data))
+}
+
+func (ads *AppwriteDatabaseService) CreateRhp3Document(documentID string, data Rhp3) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, data)
+}
+
+func (ads *AppwriteDatabaseService) UpdateRhp3Document(documentID string, data Rhp3) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, ads.Client.WithUpdateDocumentData(data))
 }
 
 func GetAppwriteDatabaseService() *AppwriteDatabaseService {
@@ -146,7 +176,7 @@ func PrepareDatabase(cfg *config.Config, dbSvc DatabaseService) *models.Database
 	return foundDB
 }
 
-func PrepareCollection(dbSvc DatabaseService, databaseID string) (hosts, status, alert, check *models.Collection) {
+func PrepareCollection(dbSvc DatabaseService, databaseID string) (hosts, status, alert, check, rhp2, rhp3 *models.Collection) {
 	allCollections, err := dbSvc.ListCollections(databaseID)
 	if err != nil {
 		panic(err)
@@ -166,6 +196,12 @@ func PrepareCollection(dbSvc DatabaseService, databaseID string) (hosts, status,
 		case "check":
 			check = &c
 			fmt.Println("Collection loaded:", check.Name, check.Id)
+		case "rhp2":
+			rhp2 = &c
+			fmt.Println("Collection loaded:", rhp2.Name, rhp2.Id)
+		case "rhp3":
+			rhp3 = &c
+			fmt.Println("Collection loaded:", rhp3.Name, rhp3.Id)
 		}
 	}
 	return
@@ -213,7 +249,6 @@ func CheckHost(host explored.Host) (HostDocument, error) {
 
 func CreateHost(host explored.Host) (HostDocument, error) {
 	db := GetAppwriteDatabaseService()
-	cfg := config.GetConfig()
 	// fmt.Println("Creating host", host)
 	sdkHost := Host{
 		PublicKey:              host.PublicKey,
@@ -235,7 +270,7 @@ func CreateHost(host explored.Host) (HostDocument, error) {
 		Error:                  "",
 	}
 
-	doc, err := db.CreateHostDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColHosts.Id, id.Unique(), sdkHost)
+	doc, err := db.CreateHostDocument(id.Unique(), sdkHost)
 	var resp HostDocument
 	doc.Decode(&resp)
 	if err != nil {
@@ -248,7 +283,6 @@ func CreateHost(host explored.Host) (HostDocument, error) {
 
 func UpdateHost(host explored.Host, hostId string, foundHost HostDocument) {
 	db := GetAppwriteDatabaseService()
-	cfg := config.GetConfig()
 	// fmt.Println("Updating host")
 	sdkHost := Host{
 		PublicKey:              host.PublicKey,
@@ -270,7 +304,7 @@ func UpdateHost(host explored.Host, hostId string, foundHost HostDocument) {
 		Error:                  foundHost.Error,
 	}
 
-	_, err := db.UpdateHostDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColHosts.Id, hostId, sdkHost)
+	_, err := db.UpdateHostDocument(hostId, sdkHost)
 
 	if err != nil {
 		fmt.Println(host.PublicKey)
@@ -281,7 +315,6 @@ func UpdateHost(host explored.Host, hostId string, foundHost HostDocument) {
 
 func UpdateNetAddress(host HostDocument) {
 	db := GetAppwriteDatabaseService()
-	cfg := config.GetConfig()
 
 	docData := Host{
 		PublicKey:              host.PublicKey,
@@ -303,7 +336,7 @@ func UpdateNetAddress(host HostDocument) {
 		OfflineSince:           host.OfflineSince,
 	}
 
-	_, err := db.UpdateHostDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColHosts.Id, host.Id, docData)
+	_, err := db.UpdateHostDocument(host.Id, docData)
 	if err != nil {
 		fmt.Println("UpdateNetAddress:", err)
 	}
@@ -353,7 +386,6 @@ func CheckUpdateStatus(hostId, netAddress, error string, online bool) {
 
 func UpdateHostStatus(error, onlineSince, offlineSince string, online bool, host HostDocument) {
 	db := GetAppwriteDatabaseService()
-	cfg := config.GetConfig()
 
 	docData := Host{
 		PublicKey:              host.PublicKey,
@@ -376,8 +408,6 @@ func UpdateHostStatus(error, onlineSince, offlineSince string, online bool, host
 	}
 
 	doc, err := db.UpdateHostDocument(
-		cfg.Appwrite.Database.Id,
-		cfg.Appwrite.ColHosts.Id,
 		host.Id,
 		docData,
 	)
@@ -450,12 +480,12 @@ func UpdateStatus(state explored.Consensus) {
 		Height: state.Index.Height,
 	}
 	if statusList.Total == 0 {
-		_, err := db.CreateStatusDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColStatus.Id, id.Unique(), status)
+		_, err := db.CreateStatusDocument(id.Unique(), status)
 		if err != nil {
 			fmt.Println(err)
 		}
 	} else {
-		_, err := db.UpdateStatusDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColStatus.Id, statusList.Documents[0].Id, status)
+		_, err := db.UpdateStatusDocument(statusList.Documents[0].Id, status)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -531,14 +561,14 @@ func UpdateCheck(params CheckParams) {
 	}
 
 	if checkList.Total == 0 {
-		_, err := db.CreateCheckDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColCheck.Id, id.Unique(), check)
+		_, err := db.CreateCheckDocument(id.Unique(), check)
 		if err != nil {
 			fmt.Println(err)
 		}
 	} else {
 		// TODO: check if value have changed and send mail with array that have changed
 
-		_, err := db.UpdateCheckDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColCheck.Id, checkList.Documents[0].Id, check)
+		_, err := db.UpdateCheckDocument(checkList.Documents[0].Id, check)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -547,9 +577,85 @@ func UpdateCheck(params CheckParams) {
 
 func UpdateRelease(id string, check Check) {
 	db := GetAppwriteDatabaseService()
-	cfg := config.GetConfig()
-	_, err := db.UpdateCheckDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColCheck.Id, id, check)
+	_, err := db.UpdateCheckDocument(id, check)
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func UpdateRhp(host explored.Host) {
+	db := GetAppwriteDatabaseService()
+	cfg := config.GetConfig()
+	found, err := GetHostByPublicKey(cfg.Appwrite.Database.Id, cfg.Appwrite.ColHosts.Id, host.PublicKey)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	var hostList HostList
+	found.Decode(&hostList)
+
+	foundRhp2, err := db.ListDocuments(
+		cfg.Appwrite.Database.Id,
+		cfg.Appwrite.ColRhp2.Id,
+		[]string{
+			query.Equal("hostId", hostList.Documents[0].Id),
+		},
+	)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	foundRhp3, err := db.ListDocuments(
+		cfg.Appwrite.Database.Id,
+		cfg.Appwrite.ColRhp3.Id,
+		[]string{
+			query.Equal("hostId", hostList.Documents[0].Id),
+		},
+	)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	params2 := Rhp2{
+		AcceptingContracts:   host.Settings.AcceptingContracts,
+		MaxDownloadBatchSize: host.Settings.MaxDownloadBatchSize,
+		MaxDuration:          host.Settings.MaxDuration,
+		MaxReviseBatchSize:   host.Settings.MaxReviseBatchSize,
+		RemainingStorage:     host.Settings.RemainingStorage,
+		TotalStorage:         host.Settings.TotalStorage,
+		RevisionNumber:       host.Settings.RevisionNumber,
+		Version:              host.Settings.Version,
+		Release:              host.Settings.Release,
+		SiaMuxPort:           host.Settings.SiaMuxPort,
+		HostId:               hostList.Documents[0].Id,
+	}
+	if foundRhp2.Total == 0 {
+		_, err = db.CreateRhp2Document(id.Unique(), params2)
+		if err != nil {
+			fmt.Println(err)
+		}
+	} else {
+		_, err = db.UpdateRhp2Document(foundRhp2.Documents[0].Id, params2)
+	}
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	params3 := Rhp3{
+		HostBlockHeight: host.PriceTable.HostBlockHeight,
+		HostId:               hostList.Documents[0].Id,
+	}
+	if foundRhp3.Total == 0 {
+		_, err = db.CreateRhp3Document(id.Unique(), params3)
+		if err != nil {
+			fmt.Println(err)
+		}
+	} else {
+		_, err = db.UpdateRhp3Document(foundRhp3.Documents[0].Id, params3)
+	}
+	if err != nil {
+		fmt.Println(err)
+	}
+
 }

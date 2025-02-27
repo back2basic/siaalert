@@ -107,3 +107,26 @@ type CheckParams struct {
 	Rhp4v4Delay, Rhp4v6Delay                              time.Duration
 	V4, V6, HostId, Rhp2Port, Rhp3Port, Rhp4Port, Release string
 }
+
+type Rhp2 struct {
+	AcceptingContracts   bool   `json:"acceptingcontracts"`
+	MaxDownloadBatchSize uint64 `json:"maxdownloadbatchsize"`
+	MaxDuration          uint64 `json:"maxduration"`
+	MaxReviseBatchSize   uint64 `json:"maxrevisebatchsize"`
+	RemainingStorage     uint64 `json:"remainingstorage"`
+	TotalStorage         uint64 `json:"totalstorage"`
+	RevisionNumber       uint64 `json:"revisionnumber"`
+	Version              string `json:"version"`
+	Release              string `json:"release"`
+	SiaMuxPort           string `json:"siamuxport"`
+	HostId               string `json:"hostId"`
+}
+
+type Rhp3 struct {
+	HostBlockHeight uint64 `json:"hostBlockHeight"`
+	HostId          string `json:"hostId"`
+}
+
+type Rhp4 struct {
+	HostId string `json:"hostId"`
+}
