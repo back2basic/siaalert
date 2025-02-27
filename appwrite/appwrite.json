@@ -47,6 +47,11 @@
             "$id": "67b10489002ca682bdc8",
             "name": "main",
             "enabled": true
+        },
+        {
+            "$id": "67bf83fe0014e0b1b4ef",
+            "name": "test",
+            "enabled": true
         }
     ],
     "collections": [
@@ -683,24 +688,6 @@
                     "default": null
                 },
                 {
-                    "key": "rhp2V4Delay",
-                    "type": "double",
-                    "required": false,
-                    "array": false,
-                    "min": -1.7976931348623157e+308,
-                    "max": 1.7976931348623157e+308,
-                    "default": null
-                },
-                {
-                    "key": "rhp2V6Delay",
-                    "type": "double",
-                    "required": false,
-                    "array": false,
-                    "min": -1.7976931348623157e+308,
-                    "max": 1.7976931348623157e+308,
-                    "default": null
-                },
-                {
                     "key": "rhp2V4",
                     "type": "boolean",
                     "required": false,
@@ -737,24 +724,6 @@
                     "default": null
                 },
                 {
-                    "key": "rhp3V4Delay",
-                    "type": "double",
-                    "required": false,
-                    "array": false,
-                    "min": -1.7976931348623157e+308,
-                    "max": 1.7976931348623157e+308,
-                    "default": null
-                },
-                {
-                    "key": "rhp3V6Delay",
-                    "type": "double",
-                    "required": false,
-                    "array": false,
-                    "min": -1.7976931348623157e+308,
-                    "max": 1.7976931348623157e+308,
-                    "default": null
-                },
-                {
                     "key": "rhp4Port",
                     "type": "string",
                     "required": false,
@@ -777,6 +746,49 @@
                     "default": null
                 },
                 {
+                    "key": "acceptingContracts",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "rhp2V4Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "rhp2V6Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "rhp3V4Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "rhp3V6Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
                     "key": "rhp4V4Delay",
                     "type": "double",
                     "required": false,
@@ -792,13 +804,6 @@
                     "array": false,
                     "min": -1.7976931348623157e+308,
                     "max": 1.7976931348623157e+308,
-                    "default": null
-                },
-                {
-                    "key": "acceptingContracts",
-                    "type": "boolean",
-                    "required": false,
-                    "array": false,
                     "default": null
                 },
                 {
@@ -867,6 +872,71 @@
                     "default": null
                 },
                 {
+                    "key": "rhp2V4",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "rhp2V6",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "rhp3Port",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": null
+                },
+                {
+                    "key": "rhp3V4",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "rhp3V6",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "rhp4Port",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": null
+                },
+                {
+                    "key": "rhp4V4",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "rhp4V6",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "acceptingContracts",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
                     "key": "rhp2V4Delay",
                     "type": "double",
                     "required": false,
@@ -882,6 +952,384 @@
                     "array": false,
                     "min": -1.7976931348623157e+308,
                     "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "rhp3V4Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "rhp3V6Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "rhp4V4Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "rhp4V6Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "release",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 25,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "hostId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "67bf755d00014804abc0",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "675cdd70003a75d6cc0f",
+            "name": "rhp2",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "acceptingcontracts",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "maxdownloadbatchsize",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "maxduration",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "maxrevisebatchsize",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "remainingstorage",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "totalstorage",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "revisionnumber",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "version",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 25,
+                    "default": null
+                },
+                {
+                    "key": "release",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 25,
+                    "default": null
+                },
+                {
+                    "key": "siamuxport",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 25,
+                    "default": null
+                },
+                {
+                    "key": "hostId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 55,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "hostId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "67bf8471002b2ae85dbd",
+            "$permissions": [],
+            "databaseId": "67bf83fe0014e0b1b4ef",
+            "name": "hosts",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "publicKey",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "v2",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "netAddress",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "v2NetAddresses",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "v2NetAddressesProto",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "countryCode",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 25,
+                    "default": null
+                },
+                {
+                    "key": "knownSince",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "lastScan",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "lastScanSuccessful",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "lastAnnouncement",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "totalScans",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": 0,
+                    "max": 9223372036854776,
+                    "default": 0
+                },
+                {
+                    "key": "successfulInteractions",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": 0,
+                    "max": 9223372036854776,
+                    "default": 0
+                },
+                {
+                    "key": "failedInteractions",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": 0,
+                    "max": 9223372036854776,
+                    "default": 0
+                },
+                {
+                    "key": "error",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "online",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "onlineSince",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 25,
+                    "default": null
+                },
+                {
+                    "key": "offlineSince",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 25,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "publicKey"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "67c049e1001f276f18d9",
+            "$permissions": [
+                "read(\"any\")"
+            ],
+            "databaseId": "67bf83fe0014e0b1b4ef",
+            "name": "check",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "hostId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "v4Addr",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 55,
+                    "default": null
+                },
+                {
+                    "key": "v6Addr",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 55,
+                    "default": null
+                },
+                {
+                    "key": "rhp2Port",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
                     "default": null
                 },
                 {
@@ -921,24 +1369,6 @@
                     "default": null
                 },
                 {
-                    "key": "rhp3V4Delay",
-                    "type": "double",
-                    "required": false,
-                    "array": false,
-                    "min": -1.7976931348623157e+308,
-                    "max": 1.7976931348623157e+308,
-                    "default": null
-                },
-                {
-                    "key": "rhp3V6Delay",
-                    "type": "double",
-                    "required": false,
-                    "array": false,
-                    "min": -1.7976931348623157e+308,
-                    "max": 1.7976931348623157e+308,
-                    "default": null
-                },
-                {
                     "key": "rhp4Port",
                     "type": "string",
                     "required": false,
@@ -961,6 +1391,49 @@
                     "default": null
                 },
                 {
+                    "key": "acceptingContracts",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "rhp2V4Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "rhp2V6Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "rhp3V4Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
+                    "key": "rhp3V6Delay",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "min": -1.7976931348623157e+308,
+                    "max": 1.7976931348623157e+308,
+                    "default": null
+                },
+                {
                     "key": "rhp4V4Delay",
                     "type": "double",
                     "required": false,
@@ -976,13 +1449,6 @@
                     "array": false,
                     "min": -1.7976931348623157e+308,
                     "max": 1.7976931348623157e+308,
-                    "default": null
-                },
-                {
-                    "key": "acceptingContracts",
-                    "type": "boolean",
-                    "required": false,
-                    "array": false,
                     "default": null
                 },
                 {
