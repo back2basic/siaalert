@@ -45,6 +45,9 @@ type DatabaseService interface {
 	CreateStatusDocument(documentID string, data Status) (*models.Document, error)
 	UpdateStatusDocument(documentID string, data Status) (*models.Document, error)
 	CreateRhp2Document(documentID string, data Rhp2) (*models.Document, error)
+	UpdateRhp2Document(documentID string, data Rhp2) (*models.Document, error)
+	CreateRhp3Document(documentID string, data Rhp3) (*models.Document, error)
+	UpdateRhp3Document(documentID string, data Rhp3) (*models.Document, error)
 }
 
 // ListDatabases calls the Appwrite SDK's List method.
@@ -108,6 +111,21 @@ func (ads *AppwriteDatabaseService) CreateRhp2Document(documentID string, data R
 	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, data)
 }
 
+func (ads *AppwriteDatabaseService) UpdateRhp2Document(documentID string, data Rhp2) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, ads.Client.WithUpdateDocumentData(data))
+}
+
+func (ads *AppwriteDatabaseService) CreateRhp3Document(documentID string, data Rhp3) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, data)
+}
+
+func (ads *AppwriteDatabaseService) UpdateRhp3Document(documentID string, data Rhp3) (*models.Document, error) {
+	cfg := config.GetConfig()
+	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, ads.Client.WithUpdateDocumentData(data))
+}
+
 func GetAppwriteDatabaseService() *AppwriteDatabaseService {
 	once.Do(func() {
 		instance = &AppwriteDatabaseService{}
@@ -158,7 +176,7 @@ func PrepareDatabase(cfg *config.Config, dbSvc DatabaseService) *models.Database
 	return foundDB
 }
 
-func PrepareCollection(dbSvc DatabaseService, databaseID string) (hosts, status, alert, check, rhp2 *models.Collection) {
+func PrepareCollection(dbSvc DatabaseService, databaseID string) (hosts, status, alert, check, rhp2, rhp3 *models.Collection) {
 	allCollections, err := dbSvc.ListCollections(databaseID)
 	if err != nil {
 		panic(err)
@@ -181,6 +199,9 @@ func PrepareCollection(dbSvc DatabaseService, databaseID string) (hosts, status,
 		case "rhp2":
 			rhp2 = &c
 			fmt.Println("Collection loaded:", rhp2.Name, rhp2.Id)
+		case "rhp3":
+			rhp3 = &c
+			fmt.Println("Collection loaded:", rhp3.Name, rhp3.Id)
 		}
 	}
 	return
@@ -573,7 +594,30 @@ func UpdateRhp(host explored.Host) {
 	var hostList HostList
 	found.Decode(&hostList)
 
-	params := Rhp2{
+	foundRhp2, err := db.ListDocuments(
+		cfg.Appwrite.Database.Id,
+		cfg.Appwrite.ColRhp2.Id,
+		[]string{
+			query.Equal("hostId", hostList.Documents[0].Id),
+		},
+	)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	foundRhp3, err := db.ListDocuments(
+		cfg.Appwrite.Database.Id,
+		cfg.Appwrite.ColRhp3.Id,
+		[]string{
+			query.Equal("hostId", hostList.Documents[0].Id),
+		},
+	)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	params2 := Rhp2{
 		AcceptingContracts:   host.Settings.AcceptingContracts,
 		MaxDownloadBatchSize: host.Settings.MaxDownloadBatchSize,
 		MaxDuration:          host.Settings.MaxDuration,
@@ -586,8 +630,30 @@ func UpdateRhp(host explored.Host) {
 		SiaMuxPort:           host.Settings.SiaMuxPort,
 		HostId:               hostList.Documents[0].Id,
 	}
+	if foundRhp2.Total == 0 {
+		_, err = db.CreateRhp2Document(id.Unique(), params2)
+		if err != nil {
+			fmt.Println(err)
+		}
+	} else {
+		_, err = db.UpdateRhp2Document(foundRhp2.Documents[0].Id, params2)
+	}
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	_, err = db.CreateRhp2Document(id.Unique(), params)
+	params3 := Rhp3{
+		HostBlockHeight: host.PriceTable.HostBlockHeight,
+		HostId:               hostList.Documents[0].Id,
+	}
+	if foundRhp3.Total == 0 {
+		_, err = db.CreateRhp3Document(id.Unique(), params3)
+		if err != nil {
+			fmt.Println(err)
+		}
+	} else {
+		_, err = db.UpdateRhp3Document(foundRhp3.Documents[0].Id, params3)
+	}
 	if err != nil {
 		fmt.Println(err)
 	}
