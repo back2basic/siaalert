@@ -72,7 +72,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	cfg := config.LoadConfig("config.yaml")
+	cfg := config.LoadConfig("./data/config.yaml")
 
 	// Startup
 	log.SetFlags(0)
@@ -88,19 +88,6 @@ func main() {
 
 	cron.StartCron()
 
-	// if len(sdk.HostCache) == 0 {
-	// 	hosts, err := explored.GetAllHosts()
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 		return
-	// 	}
-	// 	if len(hosts) == 0 {
-	// 		fmt.Println("No hosts found")
-	// 		return
-	// 	}
-	// 	fmt.Println("New Hosts available:", len(hosts)-len(sdk.HostCache))
-	// 	cron.CheckNewExporedHosts(hosts)
-	// }
 	fmt.Println("Startup Complete")
 
 	defer func() {
