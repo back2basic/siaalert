@@ -43,8 +43,8 @@ func cronEvery15Minutes(c *cron.Cron) {
 	})
 }
 
-func cronEvery8Hour(c *cron.Cron) {
-	c.AddFunc("0 0 */8 * * *", func() {
+func cronEvery2Hour(c *cron.Cron) {
+	c.AddFunc("0 0 */2 * * *", func() {
 		hosts, err := explored.GetAllHosts()
 		if err != nil {
 			fmt.Println(err)
@@ -63,7 +63,7 @@ func StartCron() {
 	// Every hour
 	cronEvery15Minutes(c)
 	// Every 8 hours
-	cronEvery8Hour(c)
+	cronEvery2Hour(c)
 	// Start cron
 	c.Start()
 }
