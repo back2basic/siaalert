@@ -165,7 +165,7 @@ export const Scan = ({
               <div>{data.data?.documents[0]?.rhp2Port}</div>
               {data.data?.documents[0]?.rhp2V4Delay !== 0 &&
                 (data.data?.documents[0]?.rhp2V4Delay ?? 0) < 3000 && (
-                  <div>{data.data?.documents[0]?.rhp2V4Delay}ms</div>
+                  <div className={!data.data?.documents[0]?.rhp2V4 ? "hidden" : "flex"}>{data.data?.documents[0]?.rhp2V4Delay}ms</div>
                 )}
             </div>
           </div>
@@ -179,7 +179,7 @@ export const Scan = ({
               <div>{data.data?.documents[0]?.rhp2Port}</div>
               {data.data?.documents[0]?.rhp2V6Delay !== 0 &&
                 (data.data?.documents[0]?.rhp2V6Delay ?? 0) < 3000 && (
-                  <div>{data.data?.documents[0]?.rhp2V6Delay}ms</div>
+                  <div className={!data.data?.documents[0]?.rhp2V6 ? "hidden" : "flex"}>{data.data?.documents[0]?.rhp2V6Delay}ms</div>
                 )}
             </div>
           </div>
@@ -196,7 +196,7 @@ export const Scan = ({
               <div>{data.data?.documents[0]?.rhp3Port}</div>
               {data.data?.documents[0]?.rhp3V4Delay !== 0 &&
                 (data.data?.documents[0]?.rhp3V4Delay ?? 0) < 3000 && (
-                  <div>{data.data?.documents[0]?.rhp3V4Delay}ms</div>
+                  <div className={!data.data?.documents[0]?.rhp3V4 ? "hidden" : "flex"}>{data.data?.documents[0]?.rhp3V4Delay}ms</div>
                 )}
             </div>
           </div>
@@ -210,7 +210,7 @@ export const Scan = ({
               <div>{data.data?.documents[0]?.rhp3Port}</div>
               {data.data?.documents[0]?.rhp3V6Delay !== 0 &&
                 (data.data?.documents[0]?.rhp3V6Delay ?? 0) < 3000 && (
-                  <div>{data.data?.documents[0]?.rhp3V6Delay}ms</div>
+                  <div  className={!data.data?.documents[0]?.rhp2V6 ? "hidden" : "flex"}>{data.data?.documents[0]?.rhp3V6Delay}ms</div>
                 )}
             </div>
           </div>
