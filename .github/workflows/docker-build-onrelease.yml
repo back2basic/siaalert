@@ -27,12 +27,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Change to siaalert directory
-        run: cd siaalert
-
       - name: Run go mod tidy
-        run: go mod tidy
+        run: |
+          cd siaalert
+          go mod tidy
 
       - name: Build and push Docker image with release tag and latest tag
         run: |
+          cd siaalert
           docker buildx build --platform linux/amd64,linux/arm64 --tag ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }} --tag ghcr.io/${{ github.repository }}:latest -f ./docker/Dockerfile --push .
