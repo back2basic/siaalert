@@ -123,8 +123,10 @@ type Rhp2 struct {
 }
 
 type Rhp3 struct {
-	HostBlockHeight uint64 `json:"hostblockheight"`
+	HostBlockHeight uint64 `json:"hostBlockHeight"`
+	HostId          string `json:"hostId"`
 }
 
 type Rhp4 struct {
+	HostId string `json:"hostId"`
 }
