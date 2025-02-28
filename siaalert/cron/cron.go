@@ -27,8 +27,16 @@ func cronEvery5Minutes(c *cron.Cron) {
 	})
 }
 
+var running15Minutes bool
 func cronEvery15Minutes(c *cron.Cron) {
 	c.AddFunc("0 */15 * * * *", func() {
+		if running15Minutes {
+			return
+		}
+		running15Minutes = true
+		defer func() {
+			running15Minutes = false
+		}()
 		hosts, err := explored.GetAllHosts()
 		if err != nil {
 			fmt.Println(err)
@@ -43,8 +51,16 @@ func cronEvery15Minutes(c *cron.Cron) {
 	})
 }
 
+var running2Hour bool
 func cronEvery2Hour(c *cron.Cron) {
 	c.AddFunc("0 0 */2 * * *", func() {
+		if running2Hour {
+			return
+		}
+		running2Hour = true
+		defer func() {
+			running2Hour = false
+		}()
 		hosts, err := explored.GetAllHosts()
 		if err != nil {
 			fmt.Println(err)

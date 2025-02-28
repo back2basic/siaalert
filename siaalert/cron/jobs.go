@@ -34,7 +34,7 @@ func CheckNewExporedHosts(hosts []explored.Host) {
 				sdk.Mutex.Lock()
 				sdk.HostCache[hosts[i-1].PublicKey] = checked
 				sdk.Mutex.Unlock()
-				go sdk.UpdateNetAddress(checked)
+				sdk.UpdateNetAddress(checked)
 			}
 		}
 	}
