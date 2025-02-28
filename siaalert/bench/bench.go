@@ -167,3 +167,38 @@ func LoadBenchConsensus() (Consensus, error) {
 	}
 	return response, nil
 }
+
+// BENCH
+
+// func CallScanHosts(address, hostkey string) {
+// 	// Replace with your host's IP and port
+// 	host := "host_ip:host_port"
+
+// 	// Establish connection
+// 	conn, err := net.DialTimeout("tcp", host, 10*time.Second)
+// 	if err != nil {
+// 		log.Fatalf("Failed to connect to host: %v", err)
+// 	}
+// 	defer conn.Close()
+
+// 	ctx := context.Background()
+
+// 	// Example: Perform RHP2 handshake
+// 	if err := performRHP2Scan(ctx, conn); err != nil {
+// 		log.Printf("RHP2 Scan Error: %v", err)
+// 	}
+
+// 	// Add RHP3/RHP4 scan logic here
+// }
+
+// func performRHP2Scan(ctx context.Context, conn net.Conn, puib types.PublicKey) error {
+// 	client,err := rhp2.NewRenterTransport(conn, pub)
+// 	// Example: Perform handshake and retrieve info
+// 	_, err = client.Handshake(ctx)
+// 	if err != nil {
+// 		return fmt.Errorf("Handshake failed: %w", err)
+// 	}
+
+// 	// Additional RHP2 requests...
+// 	return nil
+// }
