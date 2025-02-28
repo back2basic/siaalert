@@ -10,6 +10,7 @@ type Job struct {
 	Type    string
 	Address string
 	HostKey string
+	V2      bool
 }
 
 type Worker struct {
