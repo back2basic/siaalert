@@ -62,18 +62,19 @@ func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
 	if len(needScanning) == 0 {
 		return
 	}
+	// Workers
+	numWorkers := 20
+	if os.Getenv("NETWORK") == "main" {
+		numWorkers = min(len(needScanning)/5, 50)
+		if numWorkers < 5 {
+			numWorkers = 2
+		}
+	}
+	fmt.Println("Starting", numWorkers, "workers for scanning", len(needScanning), "hosts")
 	// Queue
 	jobQueue := make(chan Job, len(needScanning))
 	var wg sync.WaitGroup
 
-	// Workers
-	numWorkers := 20
-	if os.Getenv("NETWORK") == "main" {
-		numWorkers = min(len(needScanning) / 5, 50)
-		if numWorkers == 0 {
-			numWorkers = 1
-		}
-	}
 	for i := 1; i <= numWorkers; i++ {
 		worker := NewWorker(i, jobQueue, &wg)
 		worker.Start(checker)
