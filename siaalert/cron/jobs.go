@@ -62,7 +62,7 @@ func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
 		return
 	}
 	// Workers
-	numWorkers := min(len(needScanning)/5, 100)
+	numWorkers := min(len(needScanning)/5, 200)
 	if numWorkers < 2 {
 		numWorkers = 2
 	}
