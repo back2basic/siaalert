@@ -39,7 +39,7 @@ func CheckNewExporedHosts(hosts []explored.Host) {
 	}
 }
 
-func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
+func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
 	needScanning := []sdk.HostDocument{}
 	skipped := 0
 	failed := 0
@@ -74,7 +74,7 @@ func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
 
 	for i := 1; i <= numWorkers; i++ {
 		worker := NewWorker(i, jobQueue, &wg)
-		worker.Start(checker)
+		worker.Start(*checker)
 	}
 	// Add jobs to the queue
 	var jobId int
@@ -87,6 +87,7 @@ func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
 			Name:    host.Id,
 			Address: host.NetAddress,
 			HostKey: host.PublicKey,
+			V2:      host.V2,
 		}
 		wg.Add(1)
 		jobQueue <- jobscan
