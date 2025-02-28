@@ -69,10 +69,9 @@ func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
 	// Workers
 	numWorkers := 20
 	if os.Getenv("NETWORK") == "main" {
-		if len(needScanning)/5 > 100 {
-			numWorkers = 100
-		} else {
-			numWorkers = len(needScanning) / 5
+		numWorkers = min(len(needScanning) / 5, 50)
+		if numWorkers == 0 {
+			numWorkers = 1
 		}
 	}
 	for i := 1; i <= numWorkers; i++ {
