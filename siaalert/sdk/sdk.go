@@ -427,6 +427,7 @@ func UpdateHostStatus(error, onlineSince, offlineSince string, online bool, host
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("Failed to update status")
+		return
 	}
 	var resp HostDocument
 	doc.Decode(&resp)
