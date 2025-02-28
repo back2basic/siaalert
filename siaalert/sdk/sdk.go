@@ -118,12 +118,12 @@ func (ads *AppwriteDatabaseService) UpdateRhp2Document(documentID string, data R
 
 func (ads *AppwriteDatabaseService) CreateRhp3Document(documentID string, data Rhp3) (*models.Document, error) {
 	cfg := config.GetConfig()
-	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, data)
+	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp3.Id, documentID, data)
 }
 
 func (ads *AppwriteDatabaseService) UpdateRhp3Document(documentID string, data Rhp3) (*models.Document, error) {
 	cfg := config.GetConfig()
-	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, ads.Client.WithUpdateDocumentData(data))
+	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp3.Id, documentID, ads.Client.WithUpdateDocumentData(data))
 }
 
 func GetAppwriteDatabaseService() *AppwriteDatabaseService {
