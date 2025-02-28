@@ -27,12 +27,15 @@ services:
     networks:
       - sia
 
-  siadata:
-    build:
-      dockerfile: ./docker/Dockerfile
-      context: ./siaalert
+  siaalert:
+    # build:
+    #   dockerfile: ./docker/Dockerfile
+    #   context: ./siaalert
+    image: ghcr.io/back2basic/siaalert:latest
     volumes:
       - ./cache:/app/cache
+      - ./data:/app/data
+    restart: unless-stopped
     depends_on:
       - explored
       - bench

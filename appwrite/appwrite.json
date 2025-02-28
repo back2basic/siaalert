@@ -1785,20 +1785,110 @@
             "documentSecurity": false,
             "attributes": [
                 {
-                    "key": "hostBlockHeight",
+                    "key": "hostId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 55,
+                    "default": null
+                },
+                {
+                    "key": "hostblockheight",
                     "type": "integer",
                     "required": false,
                     "array": false,
                     "min": -9223372036854775808,
                     "max": 9223372036854775807,
                     "default": null
-                },
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "hostId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "67c0ba7f00378b9e0d32",
+            "$permissions": [],
+            "databaseId": "675cdd70003a75d6cc0f",
+            "name": "rhp3",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
                 {
                     "key": "hostId",
                     "type": "string",
                     "required": true,
                     "array": false,
                     "size": 55,
+                    "default": null
+                },
+                {
+                    "key": "hostblockheight",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "hostId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
+        },
+        {
+            "$id": "67c0bac9001a32813cc4",
+            "$permissions": [],
+            "databaseId": "67b10489002ca682bdc8",
+            "name": "rhp2",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [],
+            "indexes": []
+        },
+        {
+            "$id": "67c0badc00113df1df08",
+            "$permissions": [],
+            "databaseId": "67b10489002ca682bdc8",
+            "name": "rhp3",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "hostId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 55,
+                    "default": null
+                },
+                {
+                    "key": "hostblockheight",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
                     "default": null
                 }
             ],

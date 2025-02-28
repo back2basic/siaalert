@@ -644,7 +644,7 @@ func UpdateRhp(host explored.Host) {
 
 	params3 := Rhp3{
 		HostBlockHeight: host.PriceTable.HostBlockHeight,
-		HostId:               hostList.Documents[0].Id,
+		HostId:          hostList.Documents[0].Id,
 	}
 	if foundRhp3.Total == 0 {
 		_, err = db.CreateRhp3Document(id.Unique(), params3)
