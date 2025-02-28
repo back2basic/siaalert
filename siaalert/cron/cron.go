@@ -22,6 +22,10 @@ func cronEveryMinute(c *cron.Cron) {
 
 func cronEvery5Minutes(c *cron.Cron) {
 	c.AddFunc("0 */5 * * * *", func() {
+		if running15Minutes {
+			fmt.Println("Skipping scan, cache is being updated")
+			return
+		}
 		checker := scan.Checker{}
 		sdk.Mutex.RLock()
 		cache := sdk.HostCache
@@ -33,7 +37,7 @@ func cronEvery5Minutes(c *cron.Cron) {
 var running15Minutes bool
 
 func cronEvery15Minutes(c *cron.Cron) {
-	c.AddFunc("0 */15 * * * *", func() {
+	c.AddFunc("10 */15 * * * *", func() {
 		if running15Minutes {
 			return
 		}
