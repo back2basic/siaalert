@@ -328,36 +328,36 @@ export const RenderError = ({ error }: { error: string }) => {
   return (
     <div className="flex items-center gap-1 whitespace-nowrap px-2">
       {parts.map((part: string, index: number) => {
-        if (part.includes("failed to create session")) {
+        if (part.includes("failed to get host settings")) {
           return (
             <span key={index} className="flex items-center gap-1">
               <TooltipWrapper content={part}>
                 <Globe />
-                {part.split("failed to create session")[1]}
+                {part.split("failed to get host settings")[1]}
               </TooltipWrapper>
             </span>
           );
-        } else if (part.includes("failed to dial host")) {
+        } else if (part.includes("failed to connect to host")) {
           return (
             <span key={index} className="flex items-center gap-1">
               <TooltipWrapper content={part}>
                 <Shell />
               </TooltipWrapper>
-              {part.split("failed to dial host")[1]}
+              {part.split("failed to connect to host")[1]}
             </span>
           );
-        } else if (part.includes("failed to create transport")) {
+        } else if (part.includes("failed to establish v2 transport")) {
           return (
             <span key={index} className="flex items-center gap-1">
               <TooltipWrapper content={part}>
                 <OctagonMinus />
               </TooltipWrapper>
-              {part.split("failed to create transport")[1]}
+              {part.split("failed to establish v2 transport")[1]}
             </span>
           );
         } else if (
           part.includes(
-            "context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+            "failed to parse net address",
           )
         ) {
           return (
@@ -367,7 +367,7 @@ export const RenderError = ({ error }: { error: string }) => {
               </TooltipWrapper>
               {
                 part.split(
-                  "context deadline exceeded (Client.Timeout exceeded while awaiting headers)",
+                  "failed to parse net address",
                 )[1]
               }
             </span>
