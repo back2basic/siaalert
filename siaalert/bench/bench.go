@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -98,7 +97,8 @@ func BenchHosts(address, hostkey string, sectors int) (Bench, error) {
 }
 
 func LoadBenchPeers() ([]Peers, error) {
-	url := os.Getenv("BENCH_URL") + "syncer/peers"
+	cfg := config.GetConfig()
+	url := cfg.External.BenchUrl + "syncer/peers"
 	// Create the request
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -133,7 +133,8 @@ func LoadBenchPeers() ([]Peers, error) {
 }
 
 func LoadBenchConsensus() (Consensus, error) {
-	url := os.Getenv("BENCH_URL") + "state/consensus"
+	cfg := config.GetConfig()
+	url := cfg.External.BenchUrl + "state/consensus"
 	// Create the request
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

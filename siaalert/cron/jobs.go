@@ -2,10 +2,10 @@ package cron
 
 import (
 	"fmt"
-	"os"
 	"sync"
 	"time"
 
+	"github.com/back2basic/siadata/siaalert/config"
 	"github.com/back2basic/siadata/siaalert/explored"
 	"github.com/back2basic/siadata/siaalert/scan"
 	"github.com/back2basic/siadata/siaalert/sdk"
@@ -41,6 +41,7 @@ func CheckNewExporedHosts(hosts []explored.Host) {
 }
 
 func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
+	cfg := config.GetConfig()
 	needScanning := []sdk.HostDocument{}
 	skipped := 0
 	failed := 0
@@ -64,7 +65,7 @@ func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
 	}
 	// Workers
 	numWorkers := 20
-	if os.Getenv("NETWORK") == "main" {
+	if cfg.Network.Name == "main" {
 		numWorkers = min(len(needScanning)/5, 50)
 		if numWorkers < 5 {
 			numWorkers = 2
