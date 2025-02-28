@@ -1773,8 +1773,38 @@
             "name": "rhp3",
             "enabled": true,
             "documentSecurity": false,
-            "attributes": [],
-            "indexes": []
+            "attributes": [
+                {
+                    "key": "hostId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 55,
+                    "default": null
+                },
+                {
+                    "key": "hostblockheight",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "hostId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
         },
         {
             "$id": "67c0b8ca00226f67fdf6",
@@ -1863,8 +1893,114 @@
             "name": "rhp2",
             "enabled": true,
             "documentSecurity": false,
-            "attributes": [],
-            "indexes": []
+            "attributes": [
+                {
+                    "key": "acceptingcontracts",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "maxdownloadbatchsize",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "maxduration",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "maxrevisebatchsize",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "remainingstorage",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "totalstorage",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "revisionnumber",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "version",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 25,
+                    "default": null
+                },
+                {
+                    "key": "release",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 25,
+                    "default": null
+                },
+                {
+                    "key": "siamuxport",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 25,
+                    "default": null
+                },
+                {
+                    "key": "hostId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 55,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "index_1",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "hostId"
+                    ],
+                    "orders": [
+                        "ASC"
+                    ]
+                }
+            ]
         },
         {
             "$id": "67c0badc00113df1df08",
