@@ -19,7 +19,7 @@ import (
 
 var (
 	HostCache = make(map[string]HostDocument)
-	Mutex     sync.Mutex
+	Mutex     sync.RWMutex
 )
 
 var (
@@ -131,6 +131,19 @@ func GetAppwriteDatabaseService() *AppwriteDatabaseService {
 		instance = &AppwriteDatabaseService{}
 	})
 	return instance
+}
+
+func WriteTohostCache(key string, value HostDocument) {
+	Mutex.Lock() // Lock for writing
+	HostCache[key] = value
+	Mutex.Unlock()
+}
+
+func ReadFromHostCache(key string) (HostDocument, bool) {
+	Mutex.RLock() // Lock for reading
+	value, ok := HostCache[key]
+	Mutex.RUnlock()
+	return value, ok
 }
 
 func PrepareAppwrite(cfg *config.Config) DatabaseService {

@@ -13,9 +13,9 @@ import (
 
 func CheckNewExporedHosts(hosts []explored.Host) {
 	for i := 1; i <= len(hosts); i++ {
-		sdk.Mutex.Lock()
+		sdk.Mutex.RLock()
 		checked, exists := sdk.HostCache[hosts[i-1].PublicKey]
-		sdk.Mutex.Unlock()
+		sdk.Mutex.RUnlock()
 
 		// Check host if not already cached
 		if !exists {

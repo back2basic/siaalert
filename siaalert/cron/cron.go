@@ -23,11 +23,15 @@ func cronEveryMinute(c *cron.Cron) {
 func cronEvery5Minutes(c *cron.Cron) {
 	c.AddFunc("0 */5 * * * *", func() {
 		checker := scan.Checker{}
-		RunScan(sdk.HostCache, checker)
+		sdk.Mutex.RLock()
+		cache := sdk.HostCache
+		sdk.Mutex.RUnlock()
+		RunScan(cache, checker)
 	})
 }
 
 var running15Minutes bool
+
 func cronEvery15Minutes(c *cron.Cron) {
 	c.AddFunc("0 */15 * * * *", func() {
 		if running15Minutes {
@@ -38,6 +42,9 @@ func cronEvery15Minutes(c *cron.Cron) {
 			running15Minutes = false
 		}()
 		hosts, err := explored.GetAllHosts()
+		sdk.Mutex.RLock()
+		cache := sdk.HostCache
+		sdk.Mutex.RUnlock()
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -46,12 +53,13 @@ func cronEvery15Minutes(c *cron.Cron) {
 			fmt.Println("No hosts found")
 			return
 		}
-		fmt.Println("New Hosts available:", len(hosts)-len(sdk.HostCache))
+		fmt.Println("New Hosts available:", len(hosts)-len(cache))
 		CheckNewExporedHosts(hosts)
 	})
 }
 
 var running2Hour bool
+
 func cronEvery2Hour(c *cron.Cron) {
 	c.AddFunc("0 0 */2 * * *", func() {
 		if running2Hour {

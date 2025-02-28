@@ -53,7 +53,9 @@ func init() {
 	if err != nil {
 		fmt.Println("Error loading cache:", err)
 	} else {
+		sdk.Mutex.Lock()
 		sdk.HostCache = cache
+		sdk.Mutex.Unlock()
 	}
 }
 
