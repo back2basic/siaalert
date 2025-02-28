@@ -26,7 +26,7 @@ func cronEvery5Minutes(c *cron.Cron) {
 			fmt.Println("Skipping scan, cache is being updated")
 			return
 		}
-		checker := scan.Checker{}
+		checker := &scan.Checker{}
 		sdk.Mutex.RLock()
 		cache := sdk.HostCache
 		sdk.Mutex.RUnlock()
