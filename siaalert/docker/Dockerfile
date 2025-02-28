@@ -1,5 +1,5 @@
-# Use the official Golang image as the base image
-FROM golang:1.23.5-alpine
+# Build Stage
+FROM golang:1.23.5-alpine AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -12,10 +12,19 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o myapp .
+RUN go build -o siaalert
+
+# Run Stage
+FROM alpine:latest
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the built binary from the build stage
+COPY --from=build /app/siaalert .
 
 # Start the Go app
-CMD ["./myapp"]
+CMD ["./siaalert"]
 
 # Expose the port the app runs on
 # EXPOSE 8000
