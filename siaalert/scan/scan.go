@@ -76,7 +76,7 @@ func (nc *Checker) SplitAddressPort(address string) (string, string, error) {
 }
 
 func (nc *Checker) PortScan(hostId string, scanned HostScan) {
-	fmt.Println("PortScan", scanned.Settings.NetAddress)
+	// fmt.Println("PortScan", scanned.Settings.NetAddress)
 	netAddress, rhp2, err := nc.SplitAddressPort(scanned.Settings.NetAddress)
 	if err != nil {
 		fmt.Println("PortScan", err)
@@ -84,6 +84,7 @@ func (nc *Checker) PortScan(hostId string, scanned HostScan) {
 	}
 
 	rhp3 := scanned.Settings.SiaMuxPort
+	// need to be changed to to the v2 address WIP!
 	rhp4 := "9984"
 
 	// clasify netaddress
