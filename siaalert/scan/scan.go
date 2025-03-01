@@ -11,7 +11,9 @@ import (
 	"github.com/back2basic/siadata/siaalert/sdk"
 )
 
-type Checker struct{}
+type Checker struct {
+	cm ChainManager
+}
 
 type NetworkChecker interface {
 	CheckPortOpen(address string, port string) (bool, time.Duration)
@@ -19,9 +21,11 @@ type NetworkChecker interface {
 	ClassifyNetAddress(address string) string
 	SplitAddressPort(address string) (host, port string, err error)
 	PortScan(hostId string, scanned bench.Scan)
+	ScanV1Host(host UnscannedHost) (HostScan, error)
+	ScanV2Host(host UnscannedHost) (HostScan, error)
 }
 
-func (nc Checker) CheckPortOpen(address, port string) (bool, time.Duration) {
+func (nc *Checker) CheckPortOpen(address, port string) (bool, time.Duration) {
 	timeout := 3 * time.Second
 	// measure delay
 	start := time.Now()
@@ -33,7 +37,7 @@ func (nc Checker) CheckPortOpen(address, port string) (bool, time.Duration) {
 	return true, time.Since(start)
 }
 
-func (nc Checker) CheckDNSRecords(hostname string) (bool, bool, []net.IP, []net.IP) {
+func (nc *Checker) CheckDNSRecords(hostname string) (bool, bool, []net.IP, []net.IP) {
 	resolver := net.Resolver{
 		PreferGo: true,
 		// Timeout:  5 * time.Second,
@@ -50,7 +54,7 @@ func (nc Checker) CheckDNSRecords(hostname string) (bool, bool, []net.IP, []net.
 	return hasARecord, hasAAAARecord, v4, v6
 }
 
-func (nc Checker) ClassifyNetAddress(address string) string {
+func (nc *Checker) ClassifyNetAddress(address string) string {
 	ipv4Pattern := regexp.MustCompile(`^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`)
 	ipv6Pattern := regexp.MustCompile(`^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$`)
 
@@ -63,7 +67,7 @@ func (nc Checker) ClassifyNetAddress(address string) string {
 	}
 }
 
-func (nc Checker) SplitAddressPort(address string) (string, string, error) {
+func (nc *Checker) SplitAddressPort(address string) (string, string, error) {
 	host, port, err := net.SplitHostPort(address)
 	if err != nil {
 		return "", "", err
@@ -71,14 +75,16 @@ func (nc Checker) SplitAddressPort(address string) (string, string, error) {
 	return host, port, nil
 }
 
-func (nc Checker) PortScan(hostId string, scanned bench.Scan) {
-	netAddress, rhp2, err := nc.SplitAddressPort(scanned.Settings.Netaddress)
+func (nc *Checker) PortScan(hostId string, scanned HostScan) {
+	// fmt.Println("PortScan", scanned.Settings.NetAddress)
+	netAddress, rhp2, err := nc.SplitAddressPort(scanned.Settings.NetAddress)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("PortScan", err)
 		return
 	}
 
-	rhp3 := scanned.Settings.Siamuxport
+	rhp3 := scanned.Settings.SiaMuxPort
+	// need to be changed to to the v2 address WIP!
 	rhp4 := "9984"
 
 	// clasify netaddress
@@ -88,7 +94,7 @@ func (nc Checker) PortScan(hostId string, scanned bench.Scan) {
 	params.Rhp2Port = rhp2
 	params.Rhp3Port = rhp3
 	params.Rhp4Port = rhp4
-	params.AcceptingContracts = scanned.Settings.Acceptingcontracts
+	params.AcceptingContracts = scanned.Settings.AcceptingContracts
 	classify := nc.ClassifyNetAddress(netAddress)
 	switch classify {
 	case "Hostname":

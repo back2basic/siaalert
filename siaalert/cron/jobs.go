@@ -39,10 +39,13 @@ func CheckNewExporedHosts(hosts []explored.Host) {
 	}
 }
 
-func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
+func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
 	needScanning := []sdk.HostDocument{}
 	skipped := 0
 	failed := 0
+	malicious := 0
+
+	// Filter hosts
 	for _, host := range hosts {
 		lastAnnounced, err := time.Parse(time.RFC3339, host.LastAnnouncement)
 		if err != nil {
@@ -50,10 +53,18 @@ func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
 			continue
 		}
 
-		if !host.Online && host.Error != "" && host.OfflineSince != "" && time.Since(lastAnnounced).Hours() > (24*365*2) {
+		// Bad Host detection
+		if scan.DetectBadHost(host.NetAddress) {
+			malicious++
+			continue
+		}
+
+		// if !host.Online && host.Error != "" && host.OfflineSince != "" && time.Since(lastAnnounced).Hours() > (24*365*2) {
+		if time.Since(lastAnnounced).Hours() > (24 * 365 * 5) {
 			skipped++
 			continue
 		}
+
 		// append to needscanning
 		needScanning = append(needScanning, host)
 	}
@@ -61,20 +72,22 @@ func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
 	if len(needScanning) == 0 {
 		return
 	}
-	// Workers
-	numWorkers := min(len(needScanning)/5, 100)
-	if numWorkers < 2 {
-		numWorkers = 2
-	}
+	// Workers max 500 min 2
+	numWorkers := max(min(len(needScanning)/10, 500), 2)
 
 	fmt.Println("Starting", numWorkers, "workers for scanning", len(needScanning), "hosts")
+	fmt.Printf("Skipped %d hosts\n", skipped)
+	fmt.Printf("Failed %d hosts\n", failed)
+	fmt.Printf("Malicious %d hosts\n", malicious)
+	fmt.Printf("Scanning %d hosts\n", len(hosts)-skipped-failed-malicious)
+	
 	// Queue
 	jobQueue := make(chan Job, len(needScanning))
 	var wg sync.WaitGroup
 
 	for i := 1; i <= numWorkers; i++ {
 		worker := NewWorker(i, jobQueue, &wg)
-		worker.Start(checker)
+		worker.Start(*checker)
 	}
 	// Add jobs to the queue
 	var jobId int
@@ -87,14 +100,11 @@ func RunScan(hosts map[string]sdk.HostDocument, checker scan.Checker) {
 			Name:    host.Id,
 			Address: host.NetAddress,
 			HostKey: host.PublicKey,
+			V2:      host.V2,
 		}
 		wg.Add(1)
 		jobQueue <- jobscan
 	}
-
-	fmt.Printf("Skipped %d hosts\n", skipped)
-	fmt.Printf("Failed %d hosts\n", failed)
-	fmt.Printf("Scanning %d hosts\n", len(hosts)-skipped-failed)
 
 	close(jobQueue)
 	wg.Wait()

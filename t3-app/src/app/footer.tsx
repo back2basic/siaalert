@@ -11,6 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { GitHiubHostdRelease } from "@/lib/types";
 
 const Footer = () => {
   const data = useQuery({
@@ -21,9 +22,20 @@ const Footer = () => {
     refetchInterval: 60 * 1000,
   });
 
+  const version = useQuery({
+    queryKey: ["app version"],
+    queryFn: async () => {
+      return (await fetch(
+        "https://api.github.com/repos/back2basic/siaalert/releases/latest",
+      ).then((res) => res.json())) as GitHiubHostdRelease;
+    },
+  });
+
   return (
     <footer className="flex items-center justify-center gap-6 pb-2 pr-6">
-      <div>Sia Host Alert © {new Date().getFullYear()} ©</div>
+      <div>
+        Sia Host Alert {version.data?.tag_name} © {new Date().getFullYear()} ©
+      </div>
       <a href="https://github.com/back2basic/siaalert" target="_blank">
         <SiGithub className="h-6 w-6" />
       </a>
