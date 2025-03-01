@@ -146,7 +146,7 @@ func TestRunScan(t *testing.T) {
 	checker := scan.Checker{}
 
 	// Run the scan
-	RunScan(hostCache, checker)
+	RunScan(hostCache, &checker)
 
 	// Check if the scan was run successfully
 	// NOTE: This test is incomplete, as it doesn't check the actual behavior of the RunScan function.
