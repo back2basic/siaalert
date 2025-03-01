@@ -11,7 +11,7 @@ import {
   Handshake,
   Shield,
   ReceiptText,
-  Vote,
+  // Vote,
 } from "lucide-react";
 import TooltipWrapper from "@/components/TooltipWrapper";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
-import { UseVersionStore } from "@/lib/store";
+// import { UseVersionStore } from "@/lib/store";
 
 export const Scan = ({
   network,
@@ -41,7 +41,7 @@ export const Scan = ({
   network: Network;
   host: HostDoc;
 }) => {
-  const { version } = UseVersionStore();
+  // const { version } = UseVersionStore();
   const data = useQuery({
     queryKey: ["scan", network, host.publicKey],
     queryFn: async () => {
@@ -165,7 +165,13 @@ export const Scan = ({
               <div>{data.data?.documents[0]?.rhp2Port}</div>
               {data.data?.documents[0]?.rhp2V4Delay !== 0 &&
                 (data.data?.documents[0]?.rhp2V4Delay ?? 0) < 3000 && (
-                  <div className={!data.data?.documents[0]?.rhp2V4 ? "hidden" : "flex"}>{data.data?.documents[0]?.rhp2V4Delay}ms</div>
+                  <div
+                    className={
+                      !data.data?.documents[0]?.rhp2V4 ? "hidden" : "flex"
+                    }
+                  >
+                    {data.data?.documents[0]?.rhp2V4Delay}ms
+                  </div>
                 )}
             </div>
           </div>
@@ -179,7 +185,13 @@ export const Scan = ({
               <div>{data.data?.documents[0]?.rhp2Port}</div>
               {data.data?.documents[0]?.rhp2V6Delay !== 0 &&
                 (data.data?.documents[0]?.rhp2V6Delay ?? 0) < 3000 && (
-                  <div className={!data.data?.documents[0]?.rhp2V6 ? "hidden" : "flex"}>{data.data?.documents[0]?.rhp2V6Delay}ms</div>
+                  <div
+                    className={
+                      !data.data?.documents[0]?.rhp2V6 ? "hidden" : "flex"
+                    }
+                  >
+                    {data.data?.documents[0]?.rhp2V6Delay}ms
+                  </div>
                 )}
             </div>
           </div>
@@ -196,7 +208,13 @@ export const Scan = ({
               <div>{data.data?.documents[0]?.rhp3Port}</div>
               {data.data?.documents[0]?.rhp3V4Delay !== 0 &&
                 (data.data?.documents[0]?.rhp3V4Delay ?? 0) < 3000 && (
-                  <div className={!data.data?.documents[0]?.rhp3V4 ? "hidden" : "flex"}>{data.data?.documents[0]?.rhp3V4Delay}ms</div>
+                  <div
+                    className={
+                      !data.data?.documents[0]?.rhp3V4 ? "hidden" : "flex"
+                    }
+                  >
+                    {data.data?.documents[0]?.rhp3V4Delay}ms
+                  </div>
                 )}
             </div>
           </div>
@@ -210,7 +228,13 @@ export const Scan = ({
               <div>{data.data?.documents[0]?.rhp3Port}</div>
               {data.data?.documents[0]?.rhp3V6Delay !== 0 &&
                 (data.data?.documents[0]?.rhp3V6Delay ?? 0) < 3000 && (
-                  <div  className={!data.data?.documents[0]?.rhp2V6 ? "hidden" : "flex"}>{data.data?.documents[0]?.rhp3V6Delay}ms</div>
+                  <div
+                    className={
+                      !data.data?.documents[0]?.rhp2V6 ? "hidden" : "flex"
+                    }
+                  >
+                    {data.data?.documents[0]?.rhp3V6Delay}ms
+                  </div>
                 )}
             </div>
           </div>
@@ -355,21 +379,13 @@ export const RenderError = ({ error }: { error: string }) => {
               {part.split("failed to establish v2 transport")[1]}
             </span>
           );
-        } else if (
-          part.includes(
-            "failed to parse net address",
-          )
-        ) {
+        } else if (part.includes("failed to parse net address")) {
           return (
             <span key={index} className="flex items-center gap-1">
               <TooltipWrapper content={part}>
                 <HeartPulse />
               </TooltipWrapper>
-              {
-                part.split(
-                  "failed to parse net address",
-                )[1]
-              }
+              {part.split("failed to parse net address")[1]}
             </span>
           );
         } else if (part.includes("handshake signature was invalid")) {
