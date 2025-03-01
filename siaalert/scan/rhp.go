@@ -125,28 +125,28 @@ func (nc *Checker) ScanV1Host(host UnscannedHost) (HostScan, error) {
 
 	conn, err := dialer.DialContext(ctx, "tcp", host.NetAddress)
 	if err != nil {
-		// return HostScan{}, fmt.Errorf("scanHost: failed to connect to host: %w", err)
-		return HostScan{}, fmt.Errorf("failed to connect to host")
+		return HostScan{}, fmt.Errorf("scanHost: failed to connect to host: %w", err)
+		// return HostScan{}, fmt.Errorf("failed to connect to host")
 	}
 	defer conn.Close()
 
 	transport, err := rhpv2.NewRenterTransport(conn, host.PublicKey)
 	if err != nil {
-		// return HostScan{}, fmt.Errorf("scanHost: failed to establish v2 transport: %w", err)
-		return HostScan{}, fmt.Errorf("failed to establish v2 transport")
+		return HostScan{}, fmt.Errorf("scanHost: failed to establish v2 transport: %w", err)
+		// return HostScan{}, fmt.Errorf("failed to establish v2 transport")
 	}
 	defer transport.Close()
 
 	settings, err := RPCSettings(ctx, transport)
 	if err != nil {
-		// return HostScan{}, fmt.Errorf("scanHost: failed to get host settings: %w", err)
-		return HostScan{}, fmt.Errorf("failed to get host settings")
+		return HostScan{}, fmt.Errorf("scanHost: failed to get host settings: %w", err)
+		// return HostScan{}, fmt.Errorf("failed to get host settings")
 	}
 
 	hostIP, _, err := net.SplitHostPort(settings.NetAddress)
 	if err != nil {
-		// return HostScan{}, fmt.Errorf("scanHost: failed to parse net address: %w", err)
-		return HostScan{}, fmt.Errorf("failed to parse net address")
+		return HostScan{}, fmt.Errorf("scanHost: failed to parse net address: %w", err)
+		// return HostScan{}, fmt.Errorf("failed to parse net address")
 	}
 
 	// resolved, err := net.ResolveIPAddr("ip", hostIP)
@@ -162,14 +162,14 @@ func (nc *Checker) ScanV1Host(host UnscannedHost) (HostScan, error) {
 	v3Addr := net.JoinHostPort(hostIP, settings.SiaMuxPort)
 	v3Session, err := NewSession(ctx, host.PublicKey, v3Addr, nc.cm, nil)
 	if err != nil {
-		// return HostScan{}, fmt.Errorf("scanHost: failed to establish v3 transport: %w", err)
-		return HostScan{}, fmt.Errorf("failed to establish v3 transport")
+		return HostScan{}, fmt.Errorf("scanHost: failed to establish v3 transport: %w", err)
+		// return HostScan{}, fmt.Errorf("failed to establish v3 transport")
 	}
 
 	table, err := ScanPriceTable(v3Session)
 	if err != nil {
-		// return HostScan{}, fmt.Errorf("scanHost: failed to scan price table: %w", err)
-		return HostScan{}, fmt.Errorf("failed to scan price table")
+		return HostScan{}, fmt.Errorf("scanHost: failed to scan price table: %w", err)
+		// return HostScan{}, fmt.Errorf("failed to scan price table")
 	}
 
 	return HostScan{
@@ -194,15 +194,15 @@ func (nc *Checker) ScanV2Host(host UnscannedHost) (HostScan, error) {
 
 	transport, err := crhpv4.DialSiaMux(ctx, addr, host.PublicKey)
 	if err != nil {
-		// return HostScan{}, fmt.Errorf("failed to dial host: %w", err)
-		return HostScan{}, fmt.Errorf("failed to dial host")
+		return HostScan{}, fmt.Errorf("failed to dial host: %w", err)
+		// return HostScan{}, fmt.Errorf("failed to dial host")
 	}
 	defer transport.Close()
 
 	settings, err := crhpv4.RPCSettings(ctx, transport)
 	if err != nil {
-		// return HostScan{}, fmt.Errorf("failed to get host settings: %w", err)
-		return HostScan{}, fmt.Errorf("failed to get host settings")
+		return HostScan{}, fmt.Errorf("failed to get host settings: %w", err)
+		// return HostScan{}, fmt.Errorf("failed to get host settings")
 	}
 
 	// hostIP, _, err := net.SplitHostPort(addr)
