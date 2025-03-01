@@ -11,7 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { GitHiubHostdRelease } from "@/lib/types";
+import type { GitHiubHostdRelease } from "@/lib/types";
 
 const Footer = () => {
   const data = useQuery({
@@ -23,13 +23,13 @@ const Footer = () => {
   });
 
   const version = useQuery({
-      queryKey: ["app version"],
-      queryFn: async () => {
-        return (await fetch(
-          "https://api.github.com/repos/back2basic/siaalert/releases/latest",
-        ).then((res) => res.json())) as GitHiubHostdRelease;
-      },
-    });
+    queryKey: ["app version"],
+    queryFn: async () => {
+      return (await fetch(
+        "https://api.github.com/repos/back2basic/siaalert/releases/latest",
+      ).then((res) => res.json())) as GitHiubHostdRelease;
+    },
+  });
 
   return (
     <footer className="flex items-center justify-center gap-6 pb-2 pr-6">
