@@ -576,19 +576,19 @@ func UpdateCheck(params CheckParams, wg *sync.WaitGroup, task chan Task) {
 
 	if checkList.Total == 0 {
 		wg.Add(1)
-		task <- Task{ID: 1, Job: "createCheck"}
-		_, err := db.CreateCheckDocument(id.Unique(), check)
-		if err != nil {
-			fmt.Println(err)
-		}
+		task <- Task{ID: 1, Job: "createCheck", CheckID: id.Unique(), Check: check}
+		// _, err := db.CreateCheckDocument(id.Unique(), check)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
 	} else {
 		// TODO: check if value have changed and send mail with array that have changed
 		wg.Add(1)
-		task <- Task{ID: 1, Job: "updateCheck"}
-		_, err := db.UpdateCheckDocument(checkList.Documents[0].Id, check)
-		if err != nil {
-			fmt.Println(err)
-		}
+		task <- Task{ID: 1, Job: "updateCheck", CheckID: checkList.Documents[0].Id, Check: check}
+		// _, err := db.UpdateCheckDocument(checkList.Documents[0].Id, check)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
 	}
 }
 
