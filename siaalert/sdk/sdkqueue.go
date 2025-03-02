@@ -3,17 +3,15 @@ package sdk
 import (
 	"fmt"
 	"sync"
+
+	"github.com/back2basic/siadata/siaalert/strict"
 )
 
-type TaskCheckDoc struct {
-	ID      int
-	Job     string
-	CheckID string
-	Check   Check
-}
-
-func Worker(id int, tasks <-chan TaskCheckDoc, wg *sync.WaitGroup) {
+func SdkWorker(id int, tasks <-chan strict.TaskCheckDoc, wg *sync.WaitGroup) {
 	db := GetAppwriteDatabaseService()
+	defer func() {
+		wg.Done()
+	}()
 	for task := range tasks {
 		switch task.Job {
 		case "createCheck":
@@ -31,7 +29,5 @@ func Worker(id int, tasks <-chan TaskCheckDoc, wg *sync.WaitGroup) {
 		default:
 			fmt.Printf("WIP %d: Unknown task: %s\n", id, task.Job)
 		}
-
-		wg.Done() // Mark the task as done
 	}
 }

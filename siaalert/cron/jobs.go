@@ -8,6 +8,7 @@ import (
 	"github.com/back2basic/siadata/siaalert/explored"
 	"github.com/back2basic/siadata/siaalert/scan"
 	"github.com/back2basic/siadata/siaalert/sdk"
+	"github.com/back2basic/siadata/siaalert/strict"
 )
 
 func CheckNewExploredHosts(host explored.Host) {
@@ -37,14 +38,15 @@ func CheckNewExploredHosts(host explored.Host) {
 	}
 }
 
-func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
-	needScanning := []sdk.HostDocument{}
+func RunScan(hosts map[string]strict.HostDocument, checker *scan.Checker) {
+	needScanning := []strict.HostDocument{}
 	skipped := 0
 	failed := 0
 	malicious := 0
-
+	fmt.Println("Scanning", len(hosts), "hosts")
 	// Filter hosts
 	for _, host := range hosts {
+		// fmt.Println("Scanning host", host.NetAddress)
 		lastAnnounced, err := time.Parse(time.RFC3339, host.LastAnnouncement)
 		if err != nil {
 			failed++
@@ -76,6 +78,7 @@ func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
 	}
 
 	if len(needScanning) == 0 {
+		Running5Minutes = false
 		return
 	}
 	// Workers max 400 min 2
@@ -91,17 +94,17 @@ func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
 	jobQueue := make(chan Job, len(needScanning))
 	var wg sync.WaitGroup
 
-	for i := 1; i <= numWorkers; i++ {
+	for i := 0; i <= numWorkers; i++ {
 		worker := NewWorker(i, jobQueue, &wg)
 		worker.Start(*checker)
 	}
 	// Add jobs to the queue
-	var jobId int
-	for _, host := range needScanning {
+	// var jobId int
+	for j, host := range needScanning {
 		// schedule scan
-		jobId++
+		// jobId++
 		jobscan := Job{
-			ID:      jobId,
+			ID:      j,
 			Type:    "scan",
 			Name:    host.Id,
 			Address: host.NetAddress,
@@ -113,7 +116,9 @@ func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
 	}
 
 	close(jobQueue)
+	// fmt.Println("Closed jobQueue")
 	wg.Wait()
+	// fmt.Println("wg done waiting")
 }
 
 func RunBench(hosts []explored.Host, checker scan.Checker) {

@@ -17,6 +17,15 @@ var (
 	Mutex         sync.RWMutex
 )
 
+func (h *Host) updateCacheIfDifferent(found Host) {
+	if h != &found {
+		// update cache
+		Mutex.Lock()
+		ExploredCache[h.PublicKey] = *h
+		Mutex.Unlock()
+	}
+}
+
 func GetConsensus() (Consensus, error) {
 	cfg := config.GetConfig()
 	url := cfg.External.ExploredUrl + "api/consensus/state"
@@ -64,8 +73,8 @@ func GetAllHosts() (map[string]Host, error) {
 	Mutex.RUnlock()
 	var hosts []Host
 	// try grab new hosts
-	for i := 0; i < 20; i++ {
-		host, err := GetHosts(len(cache))
+	for i := range 200 {
+		host, err := GetHosts(i * 500)
 		if err != nil {
 			continue
 		}
@@ -77,11 +86,13 @@ func GetAllHosts() (map[string]Host, error) {
 	// update cache
 	for _, host := range hosts {
 		Mutex.RLock()
-		_, exists := ExploredCache[host.PublicKey]
+		found, exists := ExploredCache[host.PublicKey]
 		Mutex.RUnlock()
 		if exists {
+			host.updateCacheIfDifferent(found)
 			continue
 		}
+
 		Mutex.Lock()
 		ExploredCache[host.PublicKey] = host
 		Mutex.Unlock()
@@ -126,6 +137,12 @@ func GetHosts(offset int) ([]Host, error) {
 }
 
 func GetHostByPublicKey(publicKey string) (Host, error) {
+	// try grabbing first from cache else grab from api
+	host,exists := ExploredCache[publicKey]
+	if exists {
+		return host, nil
+	}
+	// failback to api
 	cfg := config.GetConfig()
 	url := cfg.External.ExploredUrl + "api/hosts/"
 	reqBody := strings.NewReader(`{"PublicKeys": "[` + publicKey + `]"}`)

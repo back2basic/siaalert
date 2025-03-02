@@ -15,10 +15,12 @@ import (
 	"github.com/back2basic/siadata/siaalert/config"
 	"github.com/back2basic/siadata/siaalert/explored"
 	"github.com/back2basic/siadata/siaalert/mail"
+
+	"github.com/back2basic/siadata/siaalert/strict"
 )
 
 var (
-	HostCache = make(map[string]HostDocument)
+	HostCache = make(map[string]strict.HostDocument)
 	Mutex     sync.RWMutex
 )
 
@@ -38,16 +40,16 @@ type DatabaseService interface {
 	ListCollections(databaseID string) (*models.CollectionList, error)
 	ListDocuments(databaseID, collectionID string, queries []string) (*models.DocumentList, error)
 	GetDocument(databaseID, collectionID, documentID string) (*models.Document, error)
-	CreateHostDocument(documentID string, data Host) (*models.Document, error)
-	UpdateHostDocument(documentID string, data Host) (*models.Document, error)
-	CreateCheckDocument(documentID string, data Check) (*models.Document, error)
-	UpdateCheckDocument(documentID string, data Check) (*models.Document, error)
-	CreateStatusDocument(documentID string, data Status) (*models.Document, error)
-	UpdateStatusDocument(documentID string, data Status) (*models.Document, error)
-	CreateRhp2Document(documentID string, data Rhp2) (*models.Document, error)
-	UpdateRhp2Document(documentID string, data Rhp2) (*models.Document, error)
-	CreateRhp3Document(documentID string, data Rhp3) (*models.Document, error)
-	UpdateRhp3Document(documentID string, data Rhp3) (*models.Document, error)
+	CreateHostDocument(documentID string, data strict.Host) (*models.Document, error)
+	UpdateHostDocument(documentID string, data strict.Host) (*models.Document, error)
+	CreateCheckDocument(documentID string, data strict.Check) (*models.Document, error)
+	UpdateCheckDocument(documentID string, data strict.Check) (*models.Document, error)
+	CreateStatusDocument(documentID string, data strict.Status) (*models.Document, error)
+	UpdateStatusDocument(documentID string, data strict.Status) (*models.Document, error)
+	CreateRhp2Document(documentID string, data strict.Rhp2) (*models.Document, error)
+	UpdateRhp2Document(documentID string, data strict.Rhp2) (*models.Document, error)
+	CreateRhp3Document(documentID string, data strict.Rhp3) (*models.Document, error)
+	UpdateRhp3Document(documentID string, data strict.Rhp3) (*models.Document, error)
 }
 
 // ListDatabases calls the Appwrite SDK's List method.
@@ -71,57 +73,57 @@ func (ads *AppwriteDatabaseService) GetDocument(databaseID, collectionID, docume
 }
 
 // CreateDocument wraps the Appwrite create document call.
-func (ads *AppwriteDatabaseService) CreateHostDocument(documentID string, data Host) (*models.Document, error) {
+func (ads *AppwriteDatabaseService) CreateHostDocument(documentID string, data strict.Host) (*models.Document, error) {
 	cfg := config.GetConfig()
 	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColHosts.Id, documentID, data)
 }
 
 // UpdateDocument wraps the Appwrite update document call.
-func (ads *AppwriteDatabaseService) UpdateHostDocument(documentID string, data Host) (*models.Document, error) {
+func (ads *AppwriteDatabaseService) UpdateHostDocument(documentID string, data strict.Host) (*models.Document, error) {
 	cfg := config.GetConfig()
 	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColHosts.Id, documentID, ads.Client.WithUpdateDocumentData(data))
 }
 
 // CreateDocument wraps the Appwrite create document call.
-func (ads *AppwriteDatabaseService) CreateStatusDocument(documentID string, data Status) (*models.Document, error) {
+func (ads *AppwriteDatabaseService) CreateStatusDocument(documentID string, data strict.Status) (*models.Document, error) {
 	cfg := config.GetConfig()
 	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColStatus.Id, documentID, data)
 }
 
 // UpdateDocument wraps the Appwrite update document call.
-func (ads *AppwriteDatabaseService) UpdateStatusDocument(documentID string, data Status) (*models.Document, error) {
+func (ads *AppwriteDatabaseService) UpdateStatusDocument(documentID string, data strict.Status) (*models.Document, error) {
 	cfg := config.GetConfig()
 	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColStatus.Id, documentID, ads.Client.WithUpdateDocumentData(data))
 }
 
 // CreateDocument wraps the Appwrite create document call.
-func (ads *AppwriteDatabaseService) CreateCheckDocument(documentID string, data Check) (*models.Document, error) {
+func (ads *AppwriteDatabaseService) CreateCheckDocument(documentID string, data strict.Check) (*models.Document, error) {
 	cfg := config.GetConfig()
 	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColCheck.Id, documentID, data)
 }
 
 // UpdateDocument wraps the Appwrite update document call.
-func (ads *AppwriteDatabaseService) UpdateCheckDocument(documentID string, data Check) (*models.Document, error) {
+func (ads *AppwriteDatabaseService) UpdateCheckDocument(documentID string, data strict.Check) (*models.Document, error) {
 	cfg := config.GetConfig()
 	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColCheck.Id, documentID, ads.Client.WithUpdateDocumentData(data))
 }
 
-func (ads *AppwriteDatabaseService) CreateRhp2Document(documentID string, data Rhp2) (*models.Document, error) {
+func (ads *AppwriteDatabaseService) CreateRhp2Document(documentID string, data strict.Rhp2) (*models.Document, error) {
 	cfg := config.GetConfig()
 	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, data)
 }
 
-func (ads *AppwriteDatabaseService) UpdateRhp2Document(documentID string, data Rhp2) (*models.Document, error) {
+func (ads *AppwriteDatabaseService) UpdateRhp2Document(documentID string, data strict.Rhp2) (*models.Document, error) {
 	cfg := config.GetConfig()
 	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp2.Id, documentID, ads.Client.WithUpdateDocumentData(data))
 }
 
-func (ads *AppwriteDatabaseService) CreateRhp3Document(documentID string, data Rhp3) (*models.Document, error) {
+func (ads *AppwriteDatabaseService) CreateRhp3Document(documentID string, data strict.Rhp3) (*models.Document, error) {
 	cfg := config.GetConfig()
 	return ads.Client.CreateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp3.Id, documentID, data)
 }
 
-func (ads *AppwriteDatabaseService) UpdateRhp3Document(documentID string, data Rhp3) (*models.Document, error) {
+func (ads *AppwriteDatabaseService) UpdateRhp3Document(documentID string, data strict.Rhp3) (*models.Document, error) {
 	cfg := config.GetConfig()
 	return ads.Client.UpdateDocument(cfg.Appwrite.Database.Id, cfg.Appwrite.ColRhp3.Id, documentID, ads.Client.WithUpdateDocumentData(data))
 }
@@ -133,13 +135,13 @@ func GetAppwriteDatabaseService() *AppwriteDatabaseService {
 	return instance
 }
 
-func WriteTohostCache(key string, value HostDocument) {
+func WriteTohostCache(key string, value strict.HostDocument) {
 	Mutex.Lock() // Lock for writing
 	HostCache[key] = value
 	Mutex.Unlock()
 }
 
-func ReadFromHostCache(key string) (HostDocument, bool) {
+func ReadFromHostCache(key string) (strict.HostDocument, bool) {
 	Mutex.RLock() // Lock for reading
 	value, ok := HostCache[key]
 	Mutex.RUnlock()
@@ -234,21 +236,21 @@ func GetHostByPublicKey(databaseID, collectionID, publicKey string) (*models.Doc
 	return response, nil
 }
 
-func CheckHost(host explored.Host) (HostDocument, error) {
+func CheckHost(host explored.Host) (strict.HostDocument, error) {
 	cfg := config.GetConfig()
 	// fmt.Println("Run check", host.NetAddress)
 	result, err := GetHostByPublicKey(cfg.Appwrite.Database.Id, cfg.Appwrite.ColHosts.Id, host.PublicKey)
 
 	if err != nil {
 		fmt.Println(err)
-		return HostDocument{}, err
+		return strict.HostDocument{}, err
 	}
 	// fmt.Println("Found" + fmt.Sprint(len(result.Documents)))
 	if len(result.Documents) == 0 {
 		// fmt.Println("Create new host")
 		return CreateHost(host)
 	}
-	var foundHost HostList
+	var foundHost strict.HostList
 	result.Decode(&foundHost)
 	if len(result.Documents) == 1 {
 		// fmt.Println("Update host")
@@ -260,10 +262,10 @@ func CheckHost(host explored.Host) (HostDocument, error) {
 	return foundHost.Documents[0], nil
 }
 
-func CreateHost(host explored.Host) (HostDocument, error) {
+func CreateHost(host explored.Host) (strict.HostDocument, error) {
 	db := GetAppwriteDatabaseService()
 	// fmt.Println("Creating host", host)
-	sdkHost := Host{
+	sdkHost := strict.Host{
 		PublicKey:              host.PublicKey,
 		V2:                     host.V2,
 		NetAddress:             host.NetAddress,
@@ -284,20 +286,20 @@ func CreateHost(host explored.Host) (HostDocument, error) {
 	}
 
 	doc, err := db.CreateHostDocument(id.Unique(), sdkHost)
-	var resp HostDocument
+	var resp strict.HostDocument
 	doc.Decode(&resp)
 	if err != nil {
 		// fmt.Println(host.PublicKey)
-		return HostDocument{}, err
+		return strict.HostDocument{}, err
 	}
 	// fmt.Println("Host created", resp.Id)
 	return resp, nil
 }
 
-func UpdateHost(host explored.Host, hostId string, foundHost HostDocument) {
+func UpdateHost(host explored.Host, hostId string, foundHost strict.HostDocument) {
 	db := GetAppwriteDatabaseService()
 	// fmt.Println("Updating host")
-	sdkHost := Host{
+	sdkHost := strict.Host{
 		PublicKey:              host.PublicKey,
 		V2:                     host.V2,
 		NetAddress:             host.NetAddress,
@@ -326,10 +328,10 @@ func UpdateHost(host explored.Host, hostId string, foundHost HostDocument) {
 	// fmt.Println("Host updated", resp.Id)
 }
 
-func UpdateNetAddress(host HostDocument) {
+func UpdateNetAddress(host strict.HostDocument) {
 	db := GetAppwriteDatabaseService()
 
-	docData := Host{
+	docData := strict.Host{
 		PublicKey:              host.PublicKey,
 		NetAddress:             host.NetAddress,
 		V2:                     host.V2,
@@ -374,7 +376,7 @@ func CheckUpdateStatus(hostId, netAddress, error string, online bool) {
 		fmt.Println("Error getting document, Failed to check update status")
 		return
 	}
-	var hostDoc HostDocument
+	var hostDoc strict.HostDocument
 	found.Decode(&hostDoc)
 
 	// Update document
@@ -397,10 +399,10 @@ func CheckUpdateStatus(hostId, netAddress, error string, online bool) {
 	}
 }
 
-func UpdateHostStatus(error, onlineSince, offlineSince string, online bool, host HostDocument) {
+func UpdateHostStatus(error, onlineSince, offlineSince string, online bool, host strict.HostDocument) {
 	db := GetAppwriteDatabaseService()
 
-	docData := Host{
+	docData := strict.Host{
 		PublicKey:              host.PublicKey,
 		V2:                     host.V2,
 		NetAddress:             host.NetAddress,
@@ -429,7 +431,7 @@ func UpdateHostStatus(error, onlineSince, offlineSince string, online bool, host
 		fmt.Println("Failed to update status")
 		return
 	}
-	var resp HostDocument
+	var resp strict.HostDocument
 	doc.Decode(&resp)
 	Mutex.Lock()
 	HostCache[host.PublicKey] = resp
@@ -461,7 +463,7 @@ func GetSubscribers(hostId string) []string {
 		fmt.Println(err)
 		return nil
 	}
-	var alertList AlertList
+	var alertList strict.AlertList
 	found.Decode(&alertList)
 
 	// loop t and find email subscribers
@@ -488,9 +490,9 @@ func UpdateStatus(state explored.Consensus) {
 		fmt.Println(err)
 		return
 	}
-	var statusList StatusList
+	var statusList strict.StatusList
 	found.Decode(&statusList)
-	status := Status{
+	status := strict.Status{
 		Height: state.Index.Height,
 	}
 	if statusList.Total == 0 {
@@ -506,7 +508,7 @@ func UpdateStatus(state explored.Consensus) {
 	}
 }
 
-func GetCheck(hostId string) (CheckDocument, error) {
+func GetCheck(hostId string) (strict.CheckDocument, error) {
 	db := GetAppwriteDatabaseService()
 	cfg := config.GetConfig()
 	found, err := db.ListDocuments(
@@ -518,17 +520,17 @@ func GetCheck(hostId string) (CheckDocument, error) {
 	)
 	if err != nil {
 		fmt.Println(err)
-		return CheckDocument{}, err
+		return strict.CheckDocument{}, err
 	}
-	var checkList CheckList
+	var checkList strict.CheckList
 	found.Decode(&checkList)
 	if len(checkList.Documents) == 0 {
-		return CheckDocument{}, errors.New("no check found for host " + hostId)
+		return strict.CheckDocument{}, errors.New("no check found for host " + hostId)
 	}
 	return checkList.Documents[0], nil
 }
 
-func UpdateCheck(params CheckParams, wg *sync.WaitGroup, task chan TaskCheckDoc) {
+func UpdateCheck(params strict.CheckParams, wg *sync.WaitGroup, task chan strict.TaskCheckDoc) {
 	db := GetAppwriteDatabaseService()
 	cfg := config.GetConfig()
 	found, err := db.ListDocuments(
@@ -544,14 +546,14 @@ func UpdateCheck(params CheckParams, wg *sync.WaitGroup, task chan TaskCheckDoc)
 		return
 	}
 	var release string
-	var checkList CheckList
+	var checkList strict.CheckList
 	found.Decode(&checkList)
 	if len(checkList.Documents) == 0 {
 		release = ""
 	} else {
 		release = checkList.Documents[0].Release
 	}
-	check := Check{
+	check := strict.Check{
 		HostId:             params.HostId,
 		V4Addr:             params.V4,
 		V6Addr:             params.V6,
@@ -576,7 +578,7 @@ func UpdateCheck(params CheckParams, wg *sync.WaitGroup, task chan TaskCheckDoc)
 
 	if checkList.Total == 0 {
 		wg.Add(1)
-		task <- TaskCheckDoc{ID: 1, Job: "createCheck", CheckID: id.Unique(), Check: check}
+		task <- strict.TaskCheckDoc{ID: 1, Job: "createCheck", CheckID: id.Unique(), Check: check}
 		// _, err := db.CreateCheckDocument(id.Unique(), check)
 		// if err != nil {
 		// 	fmt.Println(err)
@@ -584,7 +586,7 @@ func UpdateCheck(params CheckParams, wg *sync.WaitGroup, task chan TaskCheckDoc)
 	} else {
 		// TODO: check if value have changed and send mail with array that have changed
 		wg.Add(1)
-		task <- TaskCheckDoc{ID: 1, Job: "updateCheck", CheckID: checkList.Documents[0].Id, Check: check}
+		task <- strict.TaskCheckDoc{ID: 1, Job: "updateCheck", CheckID: checkList.Documents[0].Id, Check: check}
 		// _, err := db.UpdateCheckDocument(checkList.Documents[0].Id, check)
 		// if err != nil {
 		// 	fmt.Println(err)
@@ -592,7 +594,7 @@ func UpdateCheck(params CheckParams, wg *sync.WaitGroup, task chan TaskCheckDoc)
 	}
 }
 
-func UpdateRelease(id string, check Check) {
+func UpdateRelease(id string, check strict.Check) {
 	db := GetAppwriteDatabaseService()
 	_, err := db.UpdateCheckDocument(id, check)
 	if err != nil {
@@ -608,7 +610,7 @@ func UpdateRhp(host explored.Host) {
 		fmt.Println(err)
 		return
 	}
-	var hostList HostList
+	var hostList strict.HostList
 	found.Decode(&hostList)
 
 	foundRhp2, err := db.ListDocuments(
@@ -634,7 +636,7 @@ func UpdateRhp(host explored.Host) {
 		fmt.Println(err)
 		return
 	}
-	params2 := Rhp2{
+	params2 := strict.Rhp2{
 		AcceptingContracts:   host.Settings.AcceptingContracts,
 		MaxDownloadBatchSize: host.Settings.MaxDownloadBatchSize,
 		MaxDuration:          host.Settings.MaxDuration,
@@ -659,7 +661,7 @@ func UpdateRhp(host explored.Host) {
 		fmt.Println(err)
 	}
 
-	params3 := Rhp3{
+	params3 := strict.Rhp3{
 		HostBlockHeight: host.PriceTable.HostBlockHeight,
 		HostId:          hostList.Documents[0].Id,
 	}

@@ -7,6 +7,7 @@ import (
 	"net"
 	"time"
 
+	"github.com/back2basic/siadata/siaalert/strict"
 	rhpv2 "go.sia.tech/core/rhp/v2"
 	rhpv3 "go.sia.tech/core/rhp/v3"
 	rhpv4 "go.sia.tech/core/rhp/v4"
@@ -60,8 +61,8 @@ type (
 	// A Session is an RHP3 session with the host
 	Session struct {
 		hostKey types.PublicKey
-		cm      ChainManager
-		w       Wallet
+		cm      strict.ChainManager
+		w       strict.Wallet
 		t       *rhpv3.Transport
 
 		pt rhpv3.HostPriceTable
@@ -79,7 +80,7 @@ func RPCSettings(ctx context.Context, t *rhpv2.Transport) (settings rhpv2.HostSe
 }
 
 // NewSession creates a new session with a host
-func NewSession(ctx context.Context, hostKey types.PublicKey, hostAddr string, cm ChainManager, w Wallet) (*Session, error) {
+func NewSession(ctx context.Context, hostKey types.PublicKey, hostAddr string, cm strict.ChainManager, w strict.Wallet) (*Session, error) {
 	conn, err := (&net.Dialer{}).DialContext(ctx, "tcp", hostAddr)
 	if err != nil {
 		return nil, fmt.Errorf("failed to dial host: %w", err)

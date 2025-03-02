@@ -5,6 +5,7 @@ import (
 
 	"github.com/back2basic/siadata/siaalert/explored"
 	"github.com/back2basic/siadata/siaalert/scan"
+
 	"github.com/back2basic/siadata/siaalert/sdk"
 	"github.com/robfig/cron"
 )

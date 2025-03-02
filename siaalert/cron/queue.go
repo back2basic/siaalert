@@ -7,6 +7,8 @@ import (
 
 	"github.com/back2basic/siadata/siaalert/scan"
 	"github.com/back2basic/siadata/siaalert/sdk"
+	"github.com/back2basic/siadata/siaalert/strict"
+
 	"go.sia.tech/core/rhp/v2"
 	"go.sia.tech/core/types"
 )
@@ -29,19 +31,22 @@ func (w Worker) Start(checker scan.Checker) {
 	go func() {
 		defer func() {
 			Running5Minutes = false
+			// print wg state
+			fmt.Println("Scan complete")
 			w.Waitgroup.Done()
 		}()
 
 		// Create channel for upadting sdk queue
 		const numWorkers = 3
-		sdkQueue := make(chan sdk.TaskCheckDoc)
+		sdkQueue := make(chan strict.TaskCheckDoc)
 		var sdkWg sync.WaitGroup
 		// Start worker goroutines
 		for i := 1; i <= numWorkers; i++ {
-			go sdk.Worker(i, sdkQueue, &sdkWg)
+			go sdk.SdkWorker(i, sdkQueue, &sdkWg)
 		}
 
 		for job := range w.JobQueue {
+			// fmt.Printf("WIP %d: %s\n", w.ID, job.Type)
 			publicKey, err := stringToPublicKey(job.HostKey)
 			if err != nil {
 				// handle the error
@@ -128,6 +133,7 @@ func (w Worker) Start(checker scan.Checker) {
 		}
 
 		close(sdkQueue)
+		Running5Minutes = false
 		sdkWg.Wait()
 	}()
 }

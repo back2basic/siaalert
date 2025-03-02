@@ -11,10 +11,12 @@ import (
 
 	"github.com/back2basic/siadata/siaalert/config"
 	"github.com/back2basic/siadata/siaalert/cron"
+	"github.com/back2basic/siadata/siaalert/explored"
 	"github.com/back2basic/siadata/siaalert/sdk"
+	"github.com/back2basic/siadata/siaalert/strict"
 )
 
-func SaveHostCacheToFile(filename string, cache map[string]sdk.HostDocument) error {
+func SaveHostCacheToFile(filename string, cache map[string]strict.HostDocument) error {
 	file, err := os.Create(filename)
 	if err != nil {
 		return err
@@ -30,14 +32,14 @@ func SaveHostCacheToFile(filename string, cache map[string]sdk.HostDocument) err
 	return nil
 }
 
-func LoadHostCacheFromFile(filename string) (map[string]sdk.HostDocument, error) {
+func LoadHostCacheFromFile(filename string) (map[string]strict.HostDocument, error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 
-	cache := make(map[string]sdk.HostDocument)
+	cache := make(map[string]strict.HostDocument)
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&cache)
 	if err != nil {
@@ -89,6 +91,10 @@ func main() {
 	cfg.Appwrite.Database = sdk.PrepareDatabase(cfg, sdk.GetAppwriteDatabaseService())
 	cfg.Appwrite.ColHosts, cfg.Appwrite.ColStatus, cfg.Appwrite.ColAlert, cfg.Appwrite.ColCheck, cfg.Appwrite.ColRhp2, cfg.Appwrite.ColRhp3 = sdk.PrepareCollection(sdk.GetAppwriteDatabaseService(), cfg.Appwrite.Database.Id)
 
+	// cache explored hosts
+	explored.GetAllHosts()
+
+	// start cron
 	cron.StartCron()
 
 	fmt.Println("Startup Complete")

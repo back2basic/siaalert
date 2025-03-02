@@ -11,10 +11,11 @@ import (
 	"github.com/back2basic/siadata/siaalert/bench"
 	"github.com/back2basic/siadata/siaalert/explored"
 	"github.com/back2basic/siadata/siaalert/sdk"
+	"github.com/back2basic/siadata/siaalert/strict"
 )
 
 type Checker struct {
-	cm ChainManager
+	cm strict.ChainManager
 }
 
 type NetworkChecker interface {
@@ -77,7 +78,7 @@ func (nc *Checker) SplitAddressPort(address string) (string, string, error) {
 	return host, port, nil
 }
 
-func (nc *Checker) PortScan(hostId string, scanned HostScan, wg *sync.WaitGroup, task chan sdk.TaskCheckDoc) {
+func (nc *Checker) PortScan(hostId string, scanned HostScan, wg *sync.WaitGroup, task chan strict.TaskCheckDoc) {
 	// fmt.Println("PortScan", scanned.Settings.NetAddress)
 	netAddress, rhp2, err := nc.SplitAddressPort(scanned.Settings.NetAddress)
 	if err != nil {
@@ -91,7 +92,7 @@ func (nc *Checker) PortScan(hostId string, scanned HostScan, wg *sync.WaitGroup,
 
 	// clasify netaddress
 	var v4, v6 []net.IP = nil, nil
-	params := sdk.CheckParams{}
+	params := strict.CheckParams{}
 	params.HostId = hostId
 	params.Rhp2Port = rhp2
 	params.Rhp3Port = rhp3
@@ -145,11 +146,10 @@ func (nc *Checker) PortScan(hostId string, scanned HostScan, wg *sync.WaitGroup,
 	}
 }
 
-
 func (nc *Checker) CheckVersion(publicKey string) (string, error) {
-	host,err := explored.GetHostByPublicKey(publicKey)
+	host, err := explored.GetHostByPublicKey(publicKey)
 	if err != nil {
 		return "", err
 	}
-	return host.Settings.Version, nil	
+	return host.Settings.Version, nil
 }
