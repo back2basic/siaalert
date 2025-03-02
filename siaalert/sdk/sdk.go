@@ -528,7 +528,7 @@ func GetCheck(hostId string) (CheckDocument, error) {
 	return checkList.Documents[0], nil
 }
 
-func UpdateCheck(params CheckParams, wg *sync.WaitGroup, task chan Task) {
+func UpdateCheck(params CheckParams, wg *sync.WaitGroup, task chan TaskCheckDoc) {
 	db := GetAppwriteDatabaseService()
 	cfg := config.GetConfig()
 	found, err := db.ListDocuments(
@@ -576,7 +576,7 @@ func UpdateCheck(params CheckParams, wg *sync.WaitGroup, task chan Task) {
 
 	if checkList.Total == 0 {
 		wg.Add(1)
-		task <- Task{ID: 1, Job: "createCheck", CheckID: id.Unique(), Check: check}
+		task <- TaskCheckDoc{ID: 1, Job: "createCheck", CheckID: id.Unique(), Check: check}
 		// _, err := db.CreateCheckDocument(id.Unique(), check)
 		// if err != nil {
 		// 	fmt.Println(err)
@@ -584,7 +584,7 @@ func UpdateCheck(params CheckParams, wg *sync.WaitGroup, task chan Task) {
 	} else {
 		// TODO: check if value have changed and send mail with array that have changed
 		wg.Add(1)
-		task <- Task{ID: 1, Job: "updateCheck", CheckID: checkList.Documents[0].Id, Check: check}
+		task <- TaskCheckDoc{ID: 1, Job: "updateCheck", CheckID: checkList.Documents[0].Id, Check: check}
 		// _, err := db.UpdateCheckDocument(checkList.Documents[0].Id, check)
 		// if err != nil {
 		// 	fmt.Println(err)

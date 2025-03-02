@@ -76,7 +76,7 @@ func (nc *Checker) SplitAddressPort(address string) (string, string, error) {
 	return host, port, nil
 }
 
-func (nc *Checker) PortScan(hostId string, scanned HostScan, wg *sync.WaitGroup, task chan sdk.Task) {
+func (nc *Checker) PortScan(hostId string, scanned HostScan, wg *sync.WaitGroup, task chan sdk.TaskCheckDoc) {
 	// fmt.Println("PortScan", scanned.Settings.NetAddress)
 	netAddress, rhp2, err := nc.SplitAddressPort(scanned.Settings.NetAddress)
 	if err != nil {

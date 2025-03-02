@@ -29,8 +29,9 @@ func (w Worker) Start(checker scan.Checker) {
 	go func() {
 		defer w.Waitgroup.Done()
 
+		// Create channel for upadting sdk queue
 		const numWorkers = 3
-		sdkQueue := make(chan sdk.Task) // Unbuffered channel to remain open
+		sdkQueue := make(chan sdk.TaskCheckDoc)
 		var sdkWg sync.WaitGroup
 		// Start worker goroutines
 		for i := 1; i <= numWorkers; i++ {
@@ -124,6 +125,6 @@ func (w Worker) Start(checker scan.Checker) {
 		}
 
 		close(sdkQueue)
-    sdkWg.Wait() 
+		sdkWg.Wait()
 	}()
 }
