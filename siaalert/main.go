@@ -56,6 +56,7 @@ func init() {
 		sdk.Mutex.Lock()
 		sdk.HostCache = cache
 		sdk.Mutex.Unlock()
+		fmt.Println("Cache loaded:", len(cache), "hosts")
 	}
 }
 
