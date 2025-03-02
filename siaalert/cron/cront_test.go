@@ -155,7 +155,7 @@ func TestRunScan(t *testing.T) {
 
 func TestRunRhp(t *testing.T) {
 	// Create a mock list of hosts
-	hosts := []explored.Host{}
+	hosts := map[string]explored.Host{}
 
 	// Run the RHP
 	RunRhp(hosts)

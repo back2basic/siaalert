@@ -6,9 +6,15 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/back2basic/siadata/siaalert/config"
+)
+
+var (
+	ExploredCache = make(map[string]Host)
+	Mutex         sync.RWMutex
 )
 
 func GetConsensus() (Consensus, error) {
@@ -51,19 +57,37 @@ func GetConsensus() (Consensus, error) {
 	return response, nil
 }
 
-func GetAllHosts() ([]Host, error) {
+func GetAllHosts() (map[string]Host, error) {
+	// Read from cache
+	Mutex.RLock()
+	cache := ExploredCache
+	Mutex.RUnlock()
 	var hosts []Host
-	for i := 0; i < 1000; i++ {
-		host, err := GetHosts(i * 500)
+	// try grab new hosts
+	for i := 0; i < 20; i++ {
+		host, err := GetHosts(len(cache))
 		if err != nil {
-			return []Host{}, err
+			continue
 		}
 		hosts = append(hosts, host...)
 		if len(host) < 500 {
 			break
 		}
 	}
-	return hosts, nil
+	// update cache
+	for _, host := range hosts {
+		Mutex.RLock()
+		_, exists := ExploredCache[host.PublicKey]
+		Mutex.RUnlock()
+		if exists {
+			continue
+		}
+		Mutex.Lock()
+		ExploredCache[host.PublicKey] = host
+		Mutex.Unlock()
+	}
+	fmt.Println("loaded", len(hosts), "explored hosts")
+	return cache, nil
 }
 
 func GetHosts(offset int) ([]Host, error) {

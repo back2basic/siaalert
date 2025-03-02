@@ -1,18 +1,18 @@
 # compose for benchmarking
 services:
-  bench:
-    build:
-      dockerfile: ./docker/Dockerfile.testnet
-      context: ./host-bench
-    environment:
-      - BENCHY_SEED=
-    volumes:
-      - host-bench-data:/data
-    ports:
-      - 8484
-    restart: unless-stopped
-    networks:
-      - sia
+  # bench:
+  #   build:
+  #     dockerfile: ./docker/Dockerfile.testnet
+  #     context: ./host-bench
+  #   environment:
+  #     - BENCHY_SEED=
+  #   volumes:
+  #     - host-bench-data:/data
+  #   ports:
+  #     - 8484
+  #   restart: unless-stopped
+  #   networks:
+  #     - sia
       
   # explored change network in main.go
   explored:

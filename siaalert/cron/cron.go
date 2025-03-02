@@ -65,7 +65,9 @@ func cronEvery15Minutes(c *cron.Cron) {
 			return
 		}
 		fmt.Println("New Hosts available:", len(hosts)-len(cache))
-		CheckNewExploredHosts(hosts)
+		for _, host := range hosts {
+			CheckNewExploredHosts(host)
+		}
 	})
 }
 

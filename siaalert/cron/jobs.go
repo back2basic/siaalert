@@ -10,31 +10,29 @@ import (
 	"github.com/back2basic/siadata/siaalert/sdk"
 )
 
-func CheckNewExploredHosts(hosts []explored.Host) {
-	for i := 1; i <= len(hosts); i++ {
-		sdk.Mutex.RLock()
-		checked, exists := sdk.HostCache[hosts[i-1].PublicKey]
-		sdk.Mutex.RUnlock()
+func CheckNewExploredHosts(host explored.Host) {
+	sdk.Mutex.RLock()
+	checked, exists := sdk.HostCache[host.PublicKey]
+	sdk.Mutex.RUnlock()
 
-		// Check host if not already cached
-		if !exists {
-			var err error
-			checked, err = sdk.CheckHost(hosts[i-1])
-			if err != nil {
-				continue
-			}
+	// Check host if not already cached
+	if !exists {
+		var err error
+		checked, err = sdk.CheckHost(host)
+		if err != nil {
+			return
+		}
 
+		sdk.Mutex.Lock()
+		sdk.HostCache[host.PublicKey] = checked
+		sdk.Mutex.Unlock()
+	} else {
+		if checked.NetAddress != host.NetAddress {
+			checked.NetAddress = host.NetAddress
 			sdk.Mutex.Lock()
-			sdk.HostCache[hosts[i-1].PublicKey] = checked
+			sdk.HostCache[host.PublicKey] = checked
 			sdk.Mutex.Unlock()
-		} else {
-			if checked.NetAddress != hosts[i-1].NetAddress {
-				checked.NetAddress = hosts[i-1].NetAddress
-				sdk.Mutex.Lock()
-				sdk.HostCache[hosts[i-1].PublicKey] = checked
-				sdk.Mutex.Unlock()
-				sdk.UpdateNetAddress(checked)
-			}
+			sdk.UpdateNetAddress(checked)
 		}
 	}
 }
@@ -73,7 +71,6 @@ func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
 			}
 		}
 
-
 		// append to needscanning
 		needScanning = append(needScanning, host)
 	}
@@ -89,7 +86,7 @@ func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
 	fmt.Printf("Failed %d hosts\n", failed)
 	fmt.Printf("Malicious %d hosts\n", malicious)
 	fmt.Printf("Scanning %d hosts\n", len(hosts)-skipped-failed-malicious)
-	
+
 	// Queue
 	jobQueue := make(chan Job, len(needScanning))
 	var wg sync.WaitGroup
@@ -148,7 +145,7 @@ func RunBench(hosts []explored.Host, checker scan.Checker) {
 
 }
 
-func RunRhp(hosts []explored.Host) {
+func RunRhp(hosts map[string]explored.Host) {
 	for _, host := range hosts {
 		if time.Since(host.LastAnnouncement).Hours() > 24*365*2 {
 			sdk.UpdateRhp(host)
