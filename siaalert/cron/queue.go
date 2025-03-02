@@ -29,6 +29,14 @@ func (w Worker) Start(checker scan.Checker) {
 	go func() {
 		defer w.Waitgroup.Done()
 
+		const numWorkers = 3
+		sdkQueue := make(chan sdk.Task) // Unbuffered channel to remain open
+		var sdkWg sync.WaitGroup
+		// Start worker goroutines
+		for i := 1; i <= numWorkers; i++ {
+			go sdk.Worker(i, sdkQueue, &sdkWg)
+		}
+
 		for job := range w.JobQueue {
 			publicKey, err := stringToPublicKey(job.HostKey)
 			if err != nil {
@@ -50,16 +58,18 @@ func (w Worker) Start(checker scan.Checker) {
 						_, port, err := checker.SplitAddressPort(job.Address)
 						if err != nil {
 							fmt.Println(err)
+							continue
 						}
 						// convert string to int add 1 to port and change back to string
 						mux, err := strconv.Atoi(port)
 						if err != nil {
 							fmt.Println(err)
+							continue
 						}
 						mux++
 						port = strconv.Itoa(mux)
 						scan := scan.HostScan{Settings: rhp.HostSettings{AcceptingContracts: false, NetAddress: job.Address, SiaMuxPort: port}}
-						checker.PortScan(job.Name, scan)
+						checker.PortScan(job.Name, scan, &sdkWg, sdkQueue)
 						continue
 					}
 				} else {
@@ -72,22 +82,24 @@ func (w Worker) Start(checker scan.Checker) {
 						_, port, err := checker.SplitAddressPort(job.Address)
 						if err != nil {
 							fmt.Println(err)
+							continue
 						}
 						// convert string to int add 1 to port and change back to string
 						mux, err := strconv.Atoi(port)
 						if err != nil {
 							fmt.Println(err)
+							continue
 						}
 						mux++
 						port = strconv.Itoa(mux)
 						scan := scan.HostScan{Settings: rhp.HostSettings{AcceptingContracts: false, NetAddress: job.Address, SiaMuxPort: port}}
 						// scan := scan.HostScan{Settings: bench.Settings{Acceptingcontracts: false, Netaddress: job.Address, Siamuxport: port}, PriceTable: bench.PriceTable{}}
-						checker.PortScan(job.Name, scan)
+						checker.PortScan(job.Name, scan, &sdkWg, sdkQueue)
 						continue
 					}
 				}
 				sdk.CheckUpdateStatus(job.Name, job.Address, "", true)
-				checker.PortScan(job.Name, scanned)
+				checker.PortScan(job.Name, scanned, &sdkWg, sdkQueue)
 				// scanned, err := bench.ScanHosts(job.Address, job.HostKey)
 				// if err != nil {
 				// 	sdk.CheckUpdateStatus(job.Name, job.Address, err.Error(), false)
@@ -110,5 +122,8 @@ func (w Worker) Start(checker scan.Checker) {
 				// }
 			}
 		}
+
+		close(sdkQueue)
+    sdkWg.Wait() 
 	}()
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"regexp"
+	"sync"
 	"time"
 
 	"github.com/back2basic/siadata/siaalert/bench"
@@ -75,7 +76,7 @@ func (nc *Checker) SplitAddressPort(address string) (string, string, error) {
 	return host, port, nil
 }
 
-func (nc *Checker) PortScan(hostId string, scanned HostScan) {
+func (nc *Checker) PortScan(hostId string, scanned HostScan, wg *sync.WaitGroup, task chan sdk.Task) {
 	// fmt.Println("PortScan", scanned.Settings.NetAddress)
 	netAddress, rhp2, err := nc.SplitAddressPort(scanned.Settings.NetAddress)
 	if err != nil {
@@ -120,7 +121,7 @@ func (nc *Checker) PortScan(hostId string, scanned HostScan) {
 		} else {
 			params.V6 = ""
 		}
-		sdk.UpdateCheck(params)
+		sdk.UpdateCheck(params, wg, task)
 		break
 
 	case "IPv4":
@@ -129,7 +130,7 @@ func (nc *Checker) PortScan(hostId string, scanned HostScan) {
 		params.Rhp2v4, params.Rhp2v4Delay = nc.CheckPortOpen(netAddress, rhp2)
 		params.Rhp3v4, params.Rhp3v4Delay = nc.CheckPortOpen(netAddress, rhp3)
 		params.Rhp4v4, params.Rhp4v4Delay = nc.CheckPortOpen(netAddress, rhp4)
-		sdk.UpdateCheck(params)
+		sdk.UpdateCheck(params, wg, task)
 		break
 
 	case "IPv6":
@@ -138,7 +139,7 @@ func (nc *Checker) PortScan(hostId string, scanned HostScan) {
 		params.Rhp2v6, params.Rhp2v6Delay = nc.CheckPortOpen(netAddress, rhp2)
 		params.Rhp3v6, params.Rhp3v6Delay = nc.CheckPortOpen(netAddress, rhp3)
 		params.Rhp4v6, params.Rhp4v6Delay = nc.CheckPortOpen(netAddress, rhp4)
-		sdk.UpdateCheck(params)
+		sdk.UpdateCheck(params, wg, task)
 		break
 	}
 }

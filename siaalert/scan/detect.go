@@ -40,7 +40,7 @@ func DetectBadHost(netAddress string) bool {
 
 	// Check threshold
 	if len(HostPortMap[host]) >= 10 {
-			fmt.Printf("Malicious IP detected: %s, Ports: %v\n", host, getKeys(HostPortMap[host]))
+			// fmt.Printf("Malicious IP detected: %s, Ports: %v\n", host, getKeys(HostPortMap[host]))
 			return true
 	}
 
