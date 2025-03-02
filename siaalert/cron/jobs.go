@@ -10,7 +10,7 @@ import (
 	"github.com/back2basic/siadata/siaalert/sdk"
 )
 
-func CheckNewExporedHosts(hosts []explored.Host) {
+func CheckNewExploredHosts(hosts []explored.Host) {
 	for i := 1; i <= len(hosts); i++ {
 		sdk.Mutex.RLock()
 		checked, exists := sdk.HostCache[hosts[i-1].PublicKey]
@@ -59,11 +59,20 @@ func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
 			continue
 		}
 
-		// if !host.Online && host.Error != "" && host.OfflineSince != "" && time.Since(lastAnnounced).Hours() > (24*365*2) {
-		if time.Since(lastAnnounced).Hours() > (24 * 365 * 5) {
-			skipped++
+		version, err := checker.CheckVersion(host.PublicKey)
+		if err != nil {
+			failed++
 			continue
 		}
+
+		// if hostd only check 1 year since last announcement
+		if version == "1.6.0" {
+			if time.Since(lastAnnounced).Hours() > (24 * 365 * 1) {
+				skipped++
+				continue
+			}
+		}
+
 
 		// append to needscanning
 		needScanning = append(needScanning, host)
@@ -72,8 +81,8 @@ func RunScan(hosts map[string]sdk.HostDocument, checker *scan.Checker) {
 	if len(needScanning) == 0 {
 		return
 	}
-	// Workers max 500 min 2
-	numWorkers := max(min(len(needScanning)/10, 400), 2)
+	// Workers max 400 min 2
+	numWorkers := max(min(len(needScanning)/10, 50), 2)
 
 	fmt.Println("Starting", numWorkers, "workers for scanning", len(needScanning), "hosts")
 	fmt.Printf("Skipped %d hosts\n", skipped)

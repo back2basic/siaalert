@@ -27,7 +27,10 @@ func stringToPublicKey(key string) (types.PublicKey, error) {
 
 func (w Worker) Start(checker scan.Checker) {
 	go func() {
-		defer w.Waitgroup.Done()
+		defer func() {
+			Running5Minutes = false
+			w.Waitgroup.Done()
+		}()
 
 		// Create channel for upadting sdk queue
 		const numWorkers = 3

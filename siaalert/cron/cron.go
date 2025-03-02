@@ -20,12 +20,19 @@ func cronEveryMinute(c *cron.Cron) {
 	})
 }
 
+var Running5Minutes bool
+
 func cronEvery5Minutes(c *cron.Cron) {
 	c.AddFunc("0 */5 * * * *", func() {
+		if Running5Minutes {
+			fmt.Println("Skipping scan, previous scan is still running")
+			return
+		}
 		if running15Minutes {
 			fmt.Println("Skipping scan, cache is being updated")
 			return
 		}
+		Running5Minutes = true
 		checker := &scan.Checker{}
 		sdk.Mutex.RLock()
 		cache := sdk.HostCache
@@ -58,7 +65,7 @@ func cronEvery15Minutes(c *cron.Cron) {
 			return
 		}
 		fmt.Println("New Hosts available:", len(hosts)-len(cache))
-		CheckNewExporedHosts(hosts)
+		CheckNewExploredHosts(hosts)
 	})
 }
 
