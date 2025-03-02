@@ -36,7 +36,7 @@ func worker(id int, tasks <-chan Job, wg *sync.WaitGroup, checker scan.Checker) 
 	}()
 
 	// Create channel for upadting sdk queue
-	const numWorkers = 3
+	const numWorkers = 2
 	sdkQueue := make(chan strict.TaskCheckDoc)
 	var sdkWg sync.WaitGroup
 	// Start worker goroutines
