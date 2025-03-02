@@ -101,3 +101,37 @@ func GetHosts(offset int) ([]Host, error) {
 	return response, nil
 }
 
+func GetHostByPublicKey(publicKey string) (Host, error) {
+	cfg := config.GetConfig()
+	url := cfg.External.ExploredUrl + "api/hosts/"
+	reqBody := strings.NewReader(`{"PublicKeys": "[` + publicKey + `]"}`)
+	// Create the request
+	req, err := http.NewRequest("GET", url, reqBody)
+	if err != nil {
+		return Host{}, fmt.Errorf("failed to create request: %v", err)
+	}
+
+	// Send the request
+	client := &http.Client{
+		Timeout: 60 * time.Second,
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return Host{}, fmt.Errorf("failed to make request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return Host{}, fmt.Errorf("failed to read response body: %v", err)
+	}
+	// fmt.Println(string(body))
+	// Parse the JSON response
+	var response Host
+	err = json.Unmarshal(body, &response)
+	if err != nil {
+		return Host{}, fmt.Errorf("failed to parse JSON: %v", err)
+	}
+	return response, nil
+}
