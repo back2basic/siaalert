@@ -7,14 +7,14 @@ import (
 
 var HostPortMap = make(map[string]map[string]bool)
 
-// Helper function to get keys (ports) from a map
-func getKeys(portMap map[string]bool) []string {
-	keys := make([]string, 0, len(portMap))
-	for key := range portMap {
-		keys = append(keys, key)
-	}
-	return keys
-}
+// Helper function to get keys (ports) from a map (used for debug)
+// func getKeys(portMap map[string]bool) []string {
+// 	keys := make([]string, 0, len(portMap))
+// 	for key := range portMap {
+// 		keys = append(keys, key)
+// 	}
+// 	return keys
+// }
 
 
 func DetectBadHost(netAddress string) bool {
@@ -46,3 +46,4 @@ func DetectBadHost(netAddress string) bool {
 
 	return false
 }
+
