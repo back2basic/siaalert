@@ -76,6 +76,10 @@ func RunScan(hosts map[string]strict.HostDocument, checker *scan.Checker) {
 				hostd++
 			}
 		} else {
+			if host.TotalScans != 0 && host.FailedInteractions != 0 {
+				failed++
+				continue
+			}
 			siad++
 		}
 
