@@ -43,6 +43,8 @@ func RunScan(hosts map[string]strict.HostDocument, checker *scan.Checker) {
 	skipped := 0
 	failed := 0
 	malicious := 0
+	hostd := 0
+	siad := 0
 	fmt.Println("Scanning", len(hosts), "hosts")
 	// Filter hosts
 	for _, host := range hosts {
@@ -67,10 +69,14 @@ func RunScan(hosts map[string]strict.HostDocument, checker *scan.Checker) {
 
 		// if hostd only check 1 year since last announcement
 		if version == "1.6.0" {
-			if time.Since(lastAnnounced).Hours() > (24 * 365 * 1) {
+			if time.Since(lastAnnounced).Hours() > (24 * 183) {
 				skipped++
 				continue
+			} else {
+				hostd++
 			}
+		} else {
+			siad++
 		}
 
 		// append to needscanning
@@ -82,21 +88,23 @@ func RunScan(hosts map[string]strict.HostDocument, checker *scan.Checker) {
 		return
 	}
 	// Workers max 400 min 2
-	numWorkers := max(min(len(needScanning)/10, 50), 2)
+	numWorkers := max(min(len(needScanning)/10, 100), 2)
 
 	fmt.Println("Starting", numWorkers, "workers for scanning", len(needScanning), "hosts")
 	fmt.Printf("Skipped %d hosts\n", skipped)
 	fmt.Printf("Failed %d hosts\n", failed)
 	fmt.Printf("Malicious %d hosts\n", malicious)
+	fmt.Printf("Hostd %d hosts\n", hostd)
+	fmt.Printf("Siad %d hosts\n", siad)
 	fmt.Printf("Scanning %d hosts\n", len(hosts)-skipped-failed-malicious)
 
 	// Queue
 	jobQueue := make(chan Job, len(needScanning))
 	var wg sync.WaitGroup
 
-	for i := 0; i <= numWorkers; i++ {
-		worker := NewWorker(i, jobQueue, &wg)
-		worker.Start(*checker)
+	for i := 1; i <= numWorkers; i++ {
+		go worker(i, jobQueue, &wg, *checker)
+
 	}
 	// Add jobs to the queue
 	// var jobId int
@@ -128,8 +136,7 @@ func RunBench(hosts []explored.Host, checker scan.Checker) {
 
 	numWorkers := 5
 	for i := 1; i <= numWorkers; i++ {
-		worker := NewWorker(i, jobQueue, &wg)
-		worker.Start(checker)
+		go worker(i, jobQueue, &wg, checker)
 	}
 
 	// Add jobs to the queue
@@ -152,7 +159,7 @@ func RunBench(hosts []explored.Host, checker scan.Checker) {
 
 func RunRhp(hosts map[string]explored.Host) {
 	for _, host := range hosts {
-		if time.Since(host.LastAnnouncement).Hours() > 24*365*2 {
+		if time.Since(host.LastAnnouncement).Hours() > 24*365 {
 			sdk.UpdateRhp(host)
 		}
 	}
