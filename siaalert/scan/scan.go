@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/back2basic/siadata/siaalert/bench"
+	"github.com/back2basic/siadata/siaalert/explored"
 	"github.com/back2basic/siadata/siaalert/sdk"
 )
 
@@ -142,4 +143,13 @@ func (nc *Checker) PortScan(hostId string, scanned HostScan, wg *sync.WaitGroup,
 		sdk.UpdateCheck(params, wg, task)
 		break
 	}
+}
+
+
+func (nc *Checker) CheckVersion(publicKey string) (string, error) {
+	host,err := explored.GetHostByPublicKey(publicKey)
+	if err != nil {
+		return "", err
+	}
+	return host.Settings.Version, nil	
 }
