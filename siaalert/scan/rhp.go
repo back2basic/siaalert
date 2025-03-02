@@ -119,7 +119,7 @@ func ScanPriceTable(v3Session *Session) (rhpv3.HostPriceTable, error) {
 }
 
 func (nc *Checker) ScanV1Host(host UnscannedHost) (HostScan, error) {
-	ctx, cancel := context.WithTimeout(context.TODO(), time.Second*5)
+	ctx, cancel := context.WithTimeout(context.TODO(), time.Second*3)
 	defer cancel()
 
 	dialer := (&net.Dialer{})
@@ -185,7 +185,7 @@ func (nc *Checker) ScanV1Host(host UnscannedHost) (HostScan, error) {
 }
 
 func (nc *Checker) ScanV2Host(host UnscannedHost) (HostScan, error) {
-	ctx, cancel := context.WithTimeout(context.TODO(), time.Second*5)
+	ctx, cancel := context.WithTimeout(context.TODO(), time.Second*3)
 	defer cancel()
 
 	addr, ok := host.V2SiamuxAddr()

@@ -92,7 +92,7 @@ func RunScan(hosts map[string]strict.HostDocument, checker *scan.Checker) {
 		return
 	}
 	// Workers max 400 min 2
-	numWorkers := max(min(len(needScanning)/10, 100), 2)
+	numWorkers := max(min(len(needScanning)/20, 150), 1)
 
 	fmt.Println("Starting", numWorkers, "workers for scanning", len(needScanning), "hosts")
 	fmt.Printf("Skipped %d hosts\n", skipped)
