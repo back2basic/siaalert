@@ -1,26 +1,19 @@
 "use client";
 
-import sdk from "@/lib/sdk";
+// import sdk from "@/lib/sdk";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { useQuery } from "@tanstack/react-query";
-import { Donut } from "lucide-react";
 import React from "react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import type { GitHiubHostdRelease } from "@/lib/types";
 
 const Footer = () => {
-  const data = useQuery({
-    queryKey: ["serverless"],
-    queryFn: async () => {
-      return await sdk.checkServerless();
-    },
-    refetchInterval: 60 * 1000,
-  });
+  // const data = useQuery({
+  //   queryKey: ["serverless"],
+  //   queryFn: async () => {
+  //     return await sdk.checkServerless();
+  //   },
+  //   refetchInterval: 60 * 1000,
+  // });
 
   const version = useQuery({
     queryKey: ["app version"],
@@ -39,7 +32,7 @@ const Footer = () => {
       <a href="https://github.com/back2basic/siaalert" target="_blank">
         <SiGithub className="h-6 w-6" />
       </a>
-      <div className="flex items-center gap-2 text-xs">
+      {/* <div className="flex items-center gap-2 text-xs">
         serverless:
         <TooltipProvider>
           <Tooltip>
@@ -53,7 +46,7 @@ const Footer = () => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-      </div>
+      </div> */}
     </footer>
   );
 };

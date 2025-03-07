@@ -58,3 +58,21 @@ Contributions are welcome! Please follow these steps to contribute:
 1. Fork the project repository.
 2. Create a new branch (`git checkout -b feature-branch`).
 3. Make your changes and commit them (`git commit -m 'Add some
+
+### Versioning
+
+If your shared code evolves frequently and you want to ensure stability across applications, consider versioning it:
+
+Commit and tag the shared module in Git:
+
+```bash
+git tag shared/v1.0.0
+```
+
+Reference the version in api and scanner:
+
+```bash
+go get github.com/back2basic/siaalert/shared@v1.0.0
+```
+
+This approach is more suitable when the shared module is developed and released alongside the applications.

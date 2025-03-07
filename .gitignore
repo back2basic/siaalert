@@ -4,6 +4,8 @@ docker-compose.yml
 explored-data
 host-bench-data
 
+build
 hostd
 cache
 data
+.old

@@ -1,61 +1,68 @@
-import type { Models } from "appwrite";
+export type Network = "mainnet" | "zen";
 
 export type Host = {
-  countryCode: string;
+  // "_id": string,
+  publicKey: string;
   failedInteractions: number;
   knownSince: string;
   lastAnnouncement: string;
   lastScan: string;
-  lastScanSuccessful: boolean;
+  lastScanSuccessful: false;
   netAddress: string;
-  publicKey: string;
   successfulInteractions: number;
   totalScans: number;
   v2: boolean;
-  v2NetAddresses: string;
-  v2NetAddressesProto: string;
+};
+
+export type Rhp = {
+  publicKey: string;
+  netAddress: string;
+  v2: boolean;
+  v2Adresses: V2Address[];
+  success: boolean;
+  timestamp: string;
+  nextScan: string;
+  acceptingContracts: boolean;
   error: string;
-  online: boolean;
   onlineSince: string;
   offlineSince: string;
 };
-export type HostDoc = Models.Document & Host;
-export type HostList = Models.DocumentList<HostDoc>;
 
-export type Status = {
-  height: number;
+type V2Address = {
+  address: string;
+  protocol: string;
 };
 
-export type StatusDoc = Models.Document & Status;
-export type StatusList = Models.DocumentList<StatusDoc>;
-
-export type Network = "mainnet" | "zen";
-
-export type Check = {
+export type Scan = {
   hostId: string;
-  v4Addr: string;
-  v6Addr: string;
-  rhp2Port: string;
-  rhp2V4Delay: number;
-  rhp2V6Delay: number;
-  rhp2V4: boolean;
-  rhp2V6: boolean;
-  rhp3Port: string;
-  rhp3V4: boolean;
-  rhp3V6: boolean;
-  rhp3V4Delay: number;
-  rhp3V6Delay: number;
-  rhp4Port: string;
-  rhp4V4: boolean;
-  rhp4V6: boolean;
-  rhp4V4Delay: number;
-  rhp4V6Delay: number;
-  acceptingContracts: boolean;
-  release: string;
+  v4addr: string;
+  v6addr: string;
+  rhp2port: string;
+  rhp2v4delay: number;
+  rhp2v6delay: number;
+  rhp2v4: boolean;
+  rhp2v6: boolean;
+  rhp3port: string;
+  rhp3v4: boolean;
+  rhp3v6: boolean;
+  rhp3v4delay: number;
+  rhp3v6delay: number;
+  rhp4port: string;
+  rhp4v4: boolean;
+  rhp4v6: boolean;
+  rhp4v4delay: number;
+  rhp4v6delay: number;
+  // acceptingContracts: boolean;
+  // release: string;
 };
 
-export type CheckDoc = Models.Document & Check;
-export type CheckList = Models.DocumentList<CheckDoc>;
+// export type CheckDoc = Models.Document & Check;
+// export type CheckList = Models.DocumentList<CheckDoc>;
+
+export type Consensus = {
+  height: number;
+  id: string;
+};
 
 export type GitHiubHostdRelease = {
   name: string;
