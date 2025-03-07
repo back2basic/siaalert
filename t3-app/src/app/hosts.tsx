@@ -1,9 +1,9 @@
 "use client";
 import { Switch } from "@/components/ui/switch";
-import sdk from "@/lib/sdk";
+// import sdk from "@/lib/sdk";
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
-import { Email, HostStatus, RenderError, Scan } from "./hostStatus";
+import { Email, HostStatus, RenderError, RenderScan } from "./hostStatus";
 import { Input } from "@/components/ui/input";
 import {
   Tooltip,
@@ -19,7 +19,7 @@ import {
   flexRender,
   type PaginationState,
 } from "@tanstack/react-table";
-import type { HostDoc, Network } from "@/lib/types";
+import type { Consensus, Network, Rhp } from "@/lib/types";
 
 const Hosts = () => {
   const [online, setOnline] = useState(true);
@@ -30,17 +30,35 @@ const Hosts = () => {
     pageSize: 15,
   });
 
+  // const consensusData = useQuery({
+  //   queryKey: ["consensus", network],
+  //   queryFn: async () => {
+  //     return await sdk.getStatus(network);
+  //   },
+  // });
+
   const consensusData = useQuery({
     queryKey: ["consensus", network],
     queryFn: async () => {
-      return await sdk.getStatus(network);
+      return (await fetch(
+        `/api/v1/consensus/?network=${network === "mainnet" ? "main" : "zen"}`,
+      ).then((res) => res.json())) as Consensus;
     },
   });
+  // const data = useQuery({
+  //   queryKey: ["hosts", network, online, search],
+  //   queryFn: async () => {
+  //     return await sdk.getHosts(network, search, online);
+  //   },
+  //   refetchInterval: 5 * 60 * 1000, // 5 min
+  // });
 
   const data = useQuery({
     queryKey: ["hosts", network, online, search],
     queryFn: async () => {
-      return await sdk.getHosts(network, search, online);
+      return (await fetch(
+        `/api/v1/rhp/?network=${network === "mainnet" ? "main" : "zen"}&online=${online}&search=${search}`,
+      ).then((res) => res.json())) as Rhp[];
     },
     refetchInterval: 5 * 60 * 1000, // 5 min
   });
@@ -93,24 +111,24 @@ const Hosts = () => {
       {
         header: "Status",
         accessorKey: "status",
-        cell: ({ row }: { row: { original: HostDoc } }) => (
+        cell: ({ row }: { row: { original: Rhp } }) => (
           <div className="flex items-center gap-6">
             <HostStatus host={row.original} />
-            <Scan network={network} host={row.original} />
+            <RenderScan network={network} host={row.original} />
           </div>
         ),
       },
       {
         header: "",
         accessorKey: "error",
-        cell: ({ row }: { row: { original: HostDoc } }) => (
+        cell: ({ row }: { row: { original: Rhp } }) => (
           <RenderError error={row.original.error ?? ""} />
         ),
       },
       {
         header: "Email",
         accessorKey: "email",
-        cell: ({ row }: { row: { original: HostDoc } }) => (
+        cell: ({ row }: { row: { original: Rhp } }) => (
           <Email network={network} host={row.original} />
         ),
       },
@@ -120,9 +138,7 @@ const Hosts = () => {
 
   const table = useReactTable({
     data:
-      data.data?.documents.sort((a, b) =>
-        a.netAddress.localeCompare(b.netAddress),
-      ) ?? [],
+      data.data?.sort((a, b) => a.netAddress.localeCompare(b.netAddress)) ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -135,7 +151,7 @@ const Hosts = () => {
 
   return (
     <div className="flex h-full w-full flex-col gap-6 p-2">
-      <div className="flex items-center justify-around gap-6">
+      <div className="flex w-full items-center justify-around gap-6">
         <Input
           type="text"
           placeholder="Search NetAddress"
@@ -145,7 +161,8 @@ const Hosts = () => {
         />
         <div className="flex items-center gap-2">
           <div>
-            Total Hosts {online ? " Online" : " Found"}: {data.data?.total ?? 0}
+            Total Hosts {online ? " Online" : " Found"}:{" "}
+            {data.data?.length ?? 0}
           </div>
           <Switch
             className={
@@ -176,17 +193,15 @@ const Hosts = () => {
           </div>
           <div className="text-xs">
             Consensus height: {consensusData.data?.height} -{" "}
-            {new Date(consensusData.data?.$updatedAt ?? "").toLocaleString()}
+            {new Date().toLocaleString()}
           </div>
         </div>
       </div>
       <div>
         {data.isLoading && <p className="animate-pulse">Loading Hosts...</p>}
         {data.isError && <p>Error: {data.error.message}</p>}
-        {data.isSuccess && !data.data && (
-          <p>Searching for all hosts is possible only via NetAddress.</p>
-        )}
-        {data.isSuccess && (data.data?.total ?? 0) > 0 && (
+        {data.isSuccess && !data.data && <p>No hosts found.</p>}
+        {data.isSuccess && (data.data?.length ?? 0) > 0 && (
           <div>
             <table className="w-full">
               <thead>

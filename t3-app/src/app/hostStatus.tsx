@@ -1,6 +1,6 @@
 "use client";
-import sdk from "@/lib/sdk";
-import type { HostDoc, Network } from "@/lib/types";
+// import sdk from "@/lib/sdk";
+import type { Network, Rhp, Scan } from "@/lib/types";
 import React, { useState } from "react";
 import {
   Globe,
@@ -34,18 +34,21 @@ import {
 import { useQuery } from "@tanstack/react-query";
 // import { UseVersionStore } from "@/lib/store";
 
-export const Scan = ({
+export const RenderScan = ({
   network,
   host,
 }: {
   network: Network;
-  host: HostDoc;
+  host: Rhp;
 }) => {
   // const { version } = UseVersionStore();
   const data = useQuery({
     queryKey: ["scan", network, host.publicKey],
     queryFn: async () => {
-      return await sdk.scanHost(network, host.$id);
+      // return await sdk.scanHost(network, host.$id);
+      return (await fetch(
+        `/api/v1/scan?network=${network}&publicKey=${host.publicKey}`,
+      ).then((res) => res.json())) as Scan;
     },
   });
 
@@ -64,24 +67,24 @@ export const Scan = ({
       <div className="flex items-center text-xs">
         <div className="flex items-center gap-2">
           <Shield className="h-4 w-4" />
-          {data.error?.message}
+          No scan available...
         </div>
       </div>
     );
   }
-  if (data.data?.documents.length === 0) {
-    return (
-      <div className="flex items-center text-xs">
-        <div className="flex items-center gap-2">
-          <Shield className="h-4 w-4" />
-          No scan data
-        </div>
-      </div>
-    );
-  }
+  // if (data.data?.length === 0) {
+  //   return (
+  //     <div className="flex items-center text-xs">
+  //       <div className="flex items-center gap-2">
+  //         <Shield className="h-4 w-4" />
+  //         No scan data
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
-    <div className="flex flex-1 items-center justify-start gap-4 rounded-full border-b border-green-500 px-2 py-1 text-xs shadow">
+    <div className="flex flex-1 items-center justify-start gap-4 rounded-full border-b border-green-500 px-4 py-1 text-xs shadow">
       {/* Accepting Contracts */}
       <div className="flex items-center gap-2 pl-2">
         <div>
@@ -89,12 +92,12 @@ export const Scan = ({
             <Tooltip>
               <TooltipTrigger className="flex cursor-default items-center">
                 <ReceiptText
-                  className={`h-4 w-4 ${data.data?.documents[0]?.acceptingContracts ? "text-green-500" : "text-red-500"}`}
+                  className={`h-4 w-4 ${host.acceptingContracts ? "text-green-500" : "text-red-500"}`}
                 />
               </TooltipTrigger>
               <TooltipContent>
                 <p>
-                  {data.data?.documents[0]?.acceptingContracts
+                  {host.acceptingContracts
                     ? "Accepting Contracts"
                     : "Not Accepting Contracts"}
                 </p>
@@ -127,27 +130,27 @@ export const Scan = ({
         {/* V4 */}
         <div
           className={
-            data.data?.documents[0]?.v4Addr !== ""
+            data.data?.v4addr !== ""
               ? "w-36 truncate text-nowrap text-green-500"
               : "w-36 truncate text-nowrap text-red-500"
           }
         >
-          IPv4 {data.data?.documents[0]?.v4Addr}
+          IPv4 {data.data?.v4addr}
         </div>
         {/* V6 */}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger
               className={
-                data.data?.documents[0]?.v6Addr !== ""
+                data.data?.v6addr !== ""
                   ? "w-36 truncate text-nowrap text-green-500"
                   : "w-36 truncate text-nowrap text-left text-red-500"
               }
             >
-              IPv6 {data.data?.documents[0]?.v6Addr}
+              IPv6 {data.data?.v6addr}
             </TooltipTrigger>
             <TooltipContent>
-              <p>{data.data?.documents[0]?.v6Addr}</p>
+              <p>{data.data?.v6addr}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -156,41 +159,33 @@ export const Scan = ({
         {/* RHP2 */}
         <div>
           <div
-            className={`flex items-center gap-2 ${data.data?.documents[0]?.rhp2V4Delay && data.data?.documents[0]?.rhp2V4Delay > 250 ? "text-orange-500" : ""}`}
+            className={`flex items-center gap-2 ${data.data?.rhp2v4delay && data.data?.rhp2v4delay > 250 ? "text-orange-500" : ""}`}
           >
             <Shield
-              className={`h-4 w-4 ${data.data?.documents[0]?.rhp2V4 ? "text-green-500" : "text-red-500"}`}
+              className={`h-4 w-4 ${data.data?.rhp2v4 ? "text-green-500" : "text-red-500"}`}
             />
             <div className="flex items-center gap-2">
-              <div>{data.data?.documents[0]?.rhp2Port}</div>
-              {data.data?.documents[0]?.rhp2V4Delay !== 0 &&
-                (data.data?.documents[0]?.rhp2V4Delay ?? 0) < 3000 && (
-                  <div
-                    className={
-                      !data.data?.documents[0]?.rhp2V4 ? "hidden" : "flex"
-                    }
-                  >
-                    {data.data?.documents[0]?.rhp2V4Delay}ms
+              <div>{data.data?.rhp2port}</div>
+              {data.data?.rhp2v4delay !== 0 &&
+                (data.data?.rhp2v4delay ?? 0) < 3000 && (
+                  <div className={!data.data?.rhp2v4 ? "hidden" : "flex"}>
+                    {data.data?.rhp2v4delay}ms
                   </div>
                 )}
             </div>
           </div>
           <div
-            className={`flex items-center gap-2 ${data.data?.documents[0]?.rhp2V6Delay && data.data?.documents[0]?.rhp2V6Delay > 250 ? "text-orange-500" : ""}`}
+            className={`flex items-center gap-2 ${data.data?.rhp2v6delay && data.data?.rhp2v6delay > 250 ? "text-orange-500" : ""}`}
           >
             <Shield
-              className={`h-4 w-4 ${data.data?.documents[0]?.rhp2V6 ? "text-green-500" : "text-red-500"}`}
+              className={`h-4 w-4 ${data.data?.rhp2v6 ? "text-green-500" : "text-red-500"}`}
             />
             <div className="flex items-center gap-2">
-              <div>{data.data?.documents[0]?.rhp2Port}</div>
-              {data.data?.documents[0]?.rhp2V6Delay !== 0 &&
-                (data.data?.documents[0]?.rhp2V6Delay ?? 0) < 3000 && (
-                  <div
-                    className={
-                      !data.data?.documents[0]?.rhp2V6 ? "hidden" : "flex"
-                    }
-                  >
-                    {data.data?.documents[0]?.rhp2V6Delay}ms
+              <div>{data.data?.rhp2port}</div>
+              {data.data?.rhp2v6delay !== 0 &&
+                (data.data?.rhp2v6delay ?? 0) < 3000 && (
+                  <div className={!data.data?.rhp2v6 ? "hidden" : "flex"}>
+                    {data.data?.rhp2v6delay}ms
                   </div>
                 )}
             </div>
@@ -199,84 +194,84 @@ export const Scan = ({
         {/* RHP3 */}
         <div>
           <div
-            className={`flex items-center gap-2 ${data.data?.documents[0]?.rhp3V4Delay && data.data?.documents[0]?.rhp3V4Delay > 250 ? "text-orange-500" : ""}`}
+            className={`flex items-center gap-2 ${data.data?.rhp3v4delay && data.data?.rhp3v4delay > 250 ? "text-orange-500" : ""}`}
           >
             <Shield
-              className={`h-4 w-4 ${data.data?.documents[0]?.rhp3V4 ? "text-green-500" : "text-red-500"}`}
+              className={`h-4 w-4 ${data.data?.rhp3v4 ? "text-green-500" : "text-red-500"}`}
             />
             <div className="flex items-center gap-2">
-              <div>{data.data?.documents[0]?.rhp3Port}</div>
-              {data.data?.documents[0]?.rhp3V4Delay !== 0 &&
-                (data.data?.documents[0]?.rhp3V4Delay ?? 0) < 3000 && (
-                  <div
-                    className={
-                      !data.data?.documents[0]?.rhp3V4 ? "hidden" : "flex"
-                    }
-                  >
-                    {data.data?.documents[0]?.rhp3V4Delay}ms
+              <div>{data.data?.rhp3port}</div>
+              {data.data?.rhp3v4delay !== 0 &&
+                (data.data?.rhp3v4delay ?? 0) < 3000 && (
+                  <div className={!data.data?.rhp3v4 ? "hidden" : "flex"}>
+                    {data.data?.rhp3v4delay}ms
                   </div>
                 )}
             </div>
           </div>
           <div
-            className={`flex items-center gap-2 ${data.data?.documents[0]?.rhp3V6Delay && data.data?.documents[0]?.rhp3V6Delay > 250 ? "text-orange-500" : ""}`}
+            className={`flex items-center gap-2 ${data.data?.rhp3v6delay && data.data?.rhp3v6delay > 250 ? "text-orange-500" : ""}`}
           >
             <Shield
-              className={`h-4 w-4 ${data.data?.documents[0]?.rhp3V6 ? "text-green-500" : "text-red-500"}`}
+              className={`h-4 w-4 ${data.data?.rhp3v6 ? "text-green-500" : "text-red-500"}`}
             />
             <div className="flex items-center gap-2">
-              <div>{data.data?.documents[0]?.rhp3Port}</div>
-              {data.data?.documents[0]?.rhp3V6Delay !== 0 &&
-                (data.data?.documents[0]?.rhp3V6Delay ?? 0) < 3000 && (
-                  <div
-                    className={
-                      !data.data?.documents[0]?.rhp2V6 ? "hidden" : "flex"
-                    }
-                  >
-                    {data.data?.documents[0]?.rhp3V6Delay}ms
+              <div>{data.data?.rhp3port}</div>
+              {data.data?.rhp3v6delay !== 0 &&
+                (data.data?.rhp3v6delay ?? 0) < 3000 && (
+                  <div className={!data.data?.rhp3v6 ? "hidden" : "flex"}>
+                    {data.data?.rhp3v6delay}ms
                   </div>
                 )}
             </div>
           </div>
         </div>
         {/* RHP4 */}
-        <div />
-        {/* <div>
-          <div
-            className={`flex items-center gap-2 ${data.data?.documents[0]?.rhp4V4Delay && data.data?.documents[0]?.rhp4V4Delay > 250 ? "text-orange-500" : ""}`}
-          >
-            <Shield
-              className={`h-4 w-4 ${data.data?.documents[0]?.rhp4V4 ? "text-green-500" : "text-red-500"}`}
-            />
-            <div>
-              {data.data?.documents[0]?.rhp4Port}-
-              {data.data?.documents[0]?.rhp4V4Delay}ms
+        {/* <div /> */}
+        {host.v2 ? (
+          <div>
+            <div
+              className={`flex items-center gap-2 ${data.data?.rhp4v4delay && data.data?.rhp4v4delay > 250 ? "text-orange-500" : ""}`}
+            >
+              <Shield
+                className={`h-4 w-4 ${data.data?.rhp4v4 ? "text-green-500" : "text-red-500"}`}
+              />
+              <div className="flex items-center gap-2">
+                <div>{data.data?.rhp4port}</div>
+                {data.data?.rhp4v4delay !== 0 &&
+                  (data.data?.rhp4v4delay ?? 0) < 3000 && (
+                    <div className={!data.data?.rhp4v4 ? "hidden" : "flex"}>
+                      {data.data?.rhp4v4delay}ms
+                    </div>
+                  )}
+              </div>
+            </div>
+            <div
+              className={`flex items-center gap-2 ${data.data?.rhp4v6delay && data.data?.rhp4v6delay > 250 ? "text-orange-500" : ""}`}
+            >
+              <Shield
+                className={`h-4 w-4 ${data.data?.rhp4v6 ? "text-green-500" : "text-red-500"}`}
+              />
+              <div className="flex items-center gap-2">
+                <div>{data.data?.rhp4port}</div>
+                {data.data?.rhp4v6delay !== 0 &&
+                  (data.data?.rhp4v6delay ?? 0) < 3000 && (
+                    <div className={!data.data?.rhp4v6 ? "hidden" : "flex"}>
+                      {data.data?.rhp4v6delay}ms
+                    </div>
+                  )}
+              </div>
             </div>
           </div>
-          <div
-            className={`flex items-center gap-2 ${data.data?.documents[0]?.rhp4V6Delay && data.data?.documents[0]?.rhp4V6Delay > 250 ? "text-orange-500" : ""}`}
-          >
-            <Shield
-              className={`h-4 w-4 ${data.data?.documents[0]?.rhp4V6 ? "text-green-500" : "text-red-500"}`}
-            />
-            <div>
-              {data.data?.documents[0]?.rhp4Port}-
-              {data.data?.documents[0]?.rhp4V6Delay}ms
-            </div>
-          </div>
-        </div> */}
+        ) : (
+          <div />
+        )}
       </div>
     </div>
   );
 };
 
-export const Email = ({
-  network,
-  host,
-}: {
-  network: Network;
-  host: HostDoc;
-}) => {
+export const Email = ({ network, host }: { network: Network; host: Rhp }) => {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("");
@@ -286,9 +281,14 @@ export const Email = ({
     setStatus("processing request");
     setDisabled(true);
     try {
-      const response = await sdk.sendHostEmail(network, host.publicKey, email);
+      const response = await fetch(
+        `/api/auth/otp?publicKey=${host.publicKey}&email=${email}&network=${network}`,
+        {
+          method: "POST",
+        },
+      );
       // console.log(response);
-      if (response) {
+      if (response.ok) {
         setStatus("success");
         setOpen(false);
       } else {
@@ -320,7 +320,7 @@ export const Email = ({
       <DialogContent className="sm:max-w-[1425px]">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-center gap-2">
-            {host.$id} - {host.netAddress} - {host.publicKey}
+            {host.netAddress} - {host.publicKey}
           </DialogTitle>
           <DialogDescription className="flex flex-col items-center gap-2">
             Leave your email address to (un)subscribe for notifications.
@@ -414,20 +414,23 @@ export const RenderError = ({ error }: { error: string }) => {
   );
 };
 
-export const HostStatus = ({ host }: { host: HostDoc }) => {
+export const HostStatus = ({ host }: { host: Rhp }) => {
   return (
     <div className="flex items-center justify-between gap-2 text-nowrap">
       <div className="flex items-center gap-2">
         <span
-          className={`text-lg font-bold ${host.online ? "text-green-500" : "text-red-500"}`}
+          className={`text-lg font-bold ${host.success ? "text-green-500" : "text-red-500"}`}
         >
-          {host.online ? "Online" : "Offline"}
+          {host.success ? "Online" : "Offline"}
         </span>
         <span className="-mr-3 text-xs">
-          {host.onlineSince && new Date(host.onlineSince).toLocaleString()}
+          {host.onlineSince != "0001-01-01T00:00:00Z" &&
+            new Date(host.onlineSince).toLocaleString()}
+          {/* {host.onlineSince} */}
         </span>
         <span className="text-xs">
-          {host.offlineSince && new Date(host.offlineSince).toLocaleString()}
+          {host.offlineSince != "0001-01-01T00:00:00Z" &&
+            new Date(host.offlineSince).toLocaleString()}
         </span>
         {/* <RenderError error={host.error ?? ""} /> */}
       </div>
