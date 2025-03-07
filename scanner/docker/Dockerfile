@@ -27,4 +27,4 @@ COPY --from=build /app/scanner .
 CMD ["./scanner"]
 
 # Expose the port the app runs on
-# EXPOSE 8000
+EXPOSE 8080
