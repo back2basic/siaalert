@@ -26,6 +26,8 @@ export type Rhp = {
   error: string;
   onlineSince: string;
   offlineSince: string;
+  totalStorage: number;
+  remainingStorage: number;
 };
 
 type V2Address = {

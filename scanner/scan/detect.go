@@ -44,7 +44,7 @@ func DetectBadHost(netAddress string, log *zap.Logger) bool {
 	// fmt.Printf("Host: %s, Current Ports: %v\n", host, getKeys(HostPortMap[host]))
 
 	// Check threshold
-	if len(HostPortMap[host]) >= 5 {
+	if len(HostPortMap[host]) >= 10 {
 		// fmt.Printf("Malicious IP detected: %s, Ports: %v\n", host, getKeys(HostPortMap[host]))
 		return true
 	}

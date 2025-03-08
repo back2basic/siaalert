@@ -32,6 +32,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
+import { formatBytes } from "@/lib/utils";
 // import { UseVersionStore } from "@/lib/store";
 
 export const RenderScan = ({
@@ -92,7 +93,7 @@ export const RenderScan = ({
             <Tooltip>
               <TooltipTrigger className="flex cursor-default items-center">
                 <ReceiptText
-                  className={`h-4 w-4 ${host.acceptingContracts ? "text-green-500" : "text-red-500"}`}
+                  className={`h-6 w-6 ${host.acceptingContracts ? "text-green-500" : "text-red-500"}`}
                 />
               </TooltipTrigger>
               <TooltipContent>
@@ -130,6 +131,11 @@ export const RenderScan = ({
             </Tooltip>
           </TooltipProvider>
         </div> */}
+      </div>
+      {/* Storage */}
+      <div className="text-xs">
+        <div>{host.totalStorage && formatBytes(host.v2, host.totalStorage)}</div>
+        <div>{host.remainingStorage && formatBytes(host.v2, host.remainingStorage)}</div>
       </div>
       {/* IP */}
       <div>
