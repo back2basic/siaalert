@@ -82,7 +82,7 @@ func (nc *Checker) CheckPortOpen(address, port string) (bool, float64) {
 	start := time.Now()
 	conn, err := net.DialTimeout("tcp", net.JoinHostPort(address, port), timeout)
 	if err != nil {
-		return false, float64(time.Since(start).Milliseconds())
+		return false, 0
 	}
 	conn.Close()
 	return true, float64(time.Since(start).Milliseconds())

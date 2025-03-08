@@ -18,8 +18,8 @@ func SendOtp(publicKey, email, otp, network string) error {
 	from := "Sia Host Alert <info@euregiohosting.nl>"
 	to := email
 	subject := "Setup Alerts for your Sia Host"
-	// htmlBody := fmt.Sprintf("<b>Control Alerts for your Sia Host</b><br><a href=\"https://siaalert.euregiohosting.nl/auth?otp=%s&network=%s&email=%s&publicKey=%s\">https://siaalert.euregiohosting.nl/auth?otp=%s&network=%s&email=%s&publicKey=%s</a>", otp, network, url.QueryEscape(email), publicKey, otp, network, url.QueryEscape(email), publicKey)
-	htmlBody := fmt.Sprintf("<b>Control Alerts for your Sia Host</b><br><a href=\"http://localhost:3000/auth?otp=%s&network=%s&email=%s&publicKey=%s\">http://localhost:3000/auth?otp=%s&network=%s&email=%s&publicKey=%s</a>", otp, network, url.QueryEscape(email), publicKey, otp, network, url.QueryEscape(email), publicKey)
+	htmlBody := fmt.Sprintf("<b>Control Alerts for your Sia Host</b><br><a href=\"https://siaalert.euregiohosting.nl/auth?otp=%s&network=%s&email=%s&publicKey=%s\">https://siaalert.euregiohosting.nl/auth?otp=%s&network=%s&email=%s&publicKey=%s</a>", otp, network, url.QueryEscape(email), publicKey, otp, network, url.QueryEscape(email), publicKey)
+	// htmlBody := fmt.Sprintf("<b>Control Alerts for your Sia Host</b><br><a href=\"http://localhost:3000/auth?otp=%s&network=%s&email=%s&publicKey=%s\">http://localhost:3000/auth?otp=%s&network=%s&email=%s&publicKey=%s</a>", otp, network, url.QueryEscape(email), publicKey, otp, network, url.QueryEscape(email), publicKey)
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", from)

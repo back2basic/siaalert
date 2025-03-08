@@ -224,7 +224,7 @@ func main() {
 		wg.Wait()  // Wait for all scans to finish
 		log.Info("All hosts scanned.")
 
-		// Step 3: Wait for the next 5-minute interval
+		// Step 2.9: adjust workers totaltime
 		elapsed := time.Since(start)
 		if elapsed > 6*time.Minute {
 			workTime--
@@ -235,6 +235,7 @@ func main() {
 		if elapsed < 4*time.Minute {
 			workTime++
 		}
+		// Step 3: Wait for the next 5-minute interval
 		if elapsed < 5*time.Minute {
 			log.Info("Waiting for the next 5-minute interval...", zap.Duration("remaining", 5*time.Minute-elapsed))
 			time.Sleep(5*time.Minute - elapsed)
