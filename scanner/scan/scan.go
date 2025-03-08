@@ -55,19 +55,19 @@ func (c *Check) ToBSON() bson.M {
 
 func (h *HostScan) ToBSON() bson.M {
 	return bson.M{
-		"publicKey":      h.PublicKey,
-		"netAddress":     h.NetAddress,
-		"v2":             h.V2,
-		"v2NetAddresses": h.V2NetAddresses,
-		"success":        h.Success,
-		"timestamp":      h.Timestamp,
-		"nextScan":       h.NextScan,
-
+		"publicKey":          h.PublicKey,
+		"netAddress":         h.NetAddress,
+		"v2":                 h.V2,
+		"v2NetAddresses":     h.V2NetAddresses,
+		"success":            h.Success,
+		"timestamp":          h.Timestamp,
+		"nextScan":           h.NextScan,
+		"totalStorage":       h.TotalStorage,
+		"remainingStorage":   h.RemainingStorage,
 		"acceptingContracts": h.AcceptingContracts,
-
-		"error":        h.Error,
-		"onlineSince":  h.OnlineSince,
-		"offlineSince": h.OfflineSince,
+		"error":              h.Error,
+		"onlineSince":        h.OnlineSince,
+		"offlineSince":       h.OfflineSince,
 
 		// "settings":      h.Settings,
 		// "priceTable":    h.PriceTable,

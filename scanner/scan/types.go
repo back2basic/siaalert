@@ -101,6 +101,10 @@ type HostScan struct {
 	OnlineSince  time.Time `json:"onlineSince"`
 	OfflineSince time.Time `json:"offlineSince"`
 
+	TotalStorage     uint64 `json:"totalStorage"`
+	RemainingStorage uint64 `json:"remainingStorage"`
+
+
 	Settings   rhpv2.HostSettings   `json:"settings"`
 	PriceTable rhpv3.HostPriceTable `json:"priceTable"`
 

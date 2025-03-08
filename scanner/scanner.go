@@ -62,7 +62,7 @@ func checkRhpResult(mongoDB *db.MongoDB, netAddress string, online bool, result 
 	// result.NetAddress = netAddress
 	err := mongoDB.UpdateRhp(result.PublicKey, online, result.ToBSON(), log)
 	if err != nil {
-		log.Error("Failed to update document", zap.Error(err))
+		log.Error("Failed to update rhp", zap.Error(err))
 	}
 }
 
@@ -204,7 +204,7 @@ func main() {
 		}
 		// Step 1.5: Filter hosts
 		filterred := filterHosts(hosts, log)
-		maxWorkers := max(min(len(filterred)/workTime, 200), 1)
+		maxWorkers := max(min(len(filterred)/workTime, 500), 1)
 
 		log.Info("Starting scan", zap.Int("workers", maxWorkers), zap.Int("run", runs))
 

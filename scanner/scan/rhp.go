@@ -70,6 +70,7 @@ func RunRhpScan(host explored.Host, log *zap.Logger, mongodDB *db.MongoDB, check
 				AcceptingContracts: false, PublicKey: host.PublicKey.String(), NetAddress: host.NetAddress,
 				Success: false, Timestamp: time.Now(), Settings: rhpv2.HostSettings{}, PriceTable: rhpv3.HostPriceTable{},
 				RHPV4Settings: rhpv4.HostSettings{}, OfflineSince: time.Now(), OnlineSince: time.Time{},
+				TotalStorage: 0, RemainingStorage: 0,
 			}, err
 		}
 		return scanned, nil
@@ -86,6 +87,7 @@ func RunRhpScan(host explored.Host, log *zap.Logger, mongodDB *db.MongoDB, check
 				AcceptingContracts: false, PublicKey: host.PublicKey.String(), NetAddress: host.V2NetAddresses[0].Address,
 				V2NetAddresses: host.V2NetAddresses, Success: false, Timestamp: time.Now(), Settings: rhpv2.HostSettings{},
 				PriceTable: rhpv3.HostPriceTable{}, RHPV4Settings: rhpv4.HostSettings{}, OfflineSince: time.Now(), OnlineSince: time.Time{},
+				TotalStorage: 0, RemainingStorage: 0,
 			}, err
 		}
 		return scanned, nil
@@ -205,6 +207,8 @@ func (nc *Checker) ScanV1Host(host UnscannedHost) (HostScan, error) {
 		AcceptingContracts: settings.AcceptingContracts,
 		Success:            true,
 		Timestamp:          types.CurrentTimestamp(),
+		TotalStorage:       settings.TotalStorage,
+		RemainingStorage:   settings.RemainingStorage,
 		Settings:           settings,
 		PriceTable:         table,
 		OnlineSince:        time.Now(),
@@ -258,9 +262,10 @@ func (nc *Checker) ScanV2Host(host UnscannedHost) (HostScan, error) {
 		AcceptingContracts: settings.AcceptingContracts,
 		Success:            true,
 		Timestamp:          types.CurrentTimestamp(),
-
-		RHPV4Settings: settings,
-		OnlineSince:   time.Now(),
-		OfflineSince:  time.Time{},
+		TotalStorage:       settings.TotalStorage,
+		RemainingStorage:   settings.RemainingStorage,
+		RHPV4Settings:      settings,
+		OnlineSince:        time.Now(),
+		OfflineSince:       time.Time{},
 	}, nil
 }
