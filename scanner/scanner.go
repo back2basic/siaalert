@@ -48,12 +48,12 @@ func checkRhpResult(mongoDB *db.MongoDB, netAddress string, online bool, result 
 		if online {
 			log.Info("Host " + result.PublicKey + " is online")
 			result.OnlineSince = time.Now()
-			// result.OfflineSince = time.Time{}
+			result.OfflineSince = time.Time{}
 			// Send Mail
 			mail.PrepareAlertEmails(netAddress, "Online", result.PublicKey, log, mongoDB)
 		} else {
 			log.Warn("Host " + result.PublicKey + " is offline")
-			// result.OnlineSince = time.Time{}
+			result.OnlineSince = time.Time{}
 			result.OfflineSince = time.Now()
 			// Send Mail
 			mail.PrepareAlertEmails(netAddress, "Offline", result.PublicKey, log, mongoDB)
@@ -181,6 +181,7 @@ func main() {
 	go api.StartServer(log)
 	log.Info("API is starting...", zap.String("module", "scanner"))
 
+	workTime := 10
 	// Start scanning
 	runs := 0
 	for {
@@ -203,7 +204,7 @@ func main() {
 		}
 		// Step 1.5: Filter hosts
 		filterred := filterHosts(hosts, log)
-		maxWorkers := max(min(len(filterred)/15, 200), 1)
+		maxWorkers := max(min(len(filterred)/workTime, 200), 1)
 
 		log.Info("Starting scan", zap.Int("workers", maxWorkers), zap.Int("run", runs))
 
@@ -225,6 +226,15 @@ func main() {
 
 		// Step 3: Wait for the next 5-minute interval
 		elapsed := time.Since(start)
+		if elapsed > 6*time.Minute {
+			workTime--
+			if workTime < 1 {
+				workTime = 1
+			}
+		}
+		if elapsed < 4*time.Minute {
+			workTime++
+		}
 		if elapsed < 5*time.Minute {
 			log.Info("Waiting for the next 5-minute interval...", zap.Duration("remaining", 5*time.Minute-elapsed))
 			time.Sleep(5*time.Minute - elapsed)

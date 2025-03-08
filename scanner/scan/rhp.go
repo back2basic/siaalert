@@ -66,7 +66,11 @@ func RunRhpScan(host explored.Host, log *zap.Logger, mongodDB *db.MongoDB, check
 			PublicKey:  host.PublicKey,
 		})
 		if err != nil {
-			return HostScan{AcceptingContracts: false, PublicKey: host.PublicKey.String(), NetAddress: host.NetAddress, Success: false, Timestamp: time.Now(), Settings: rhpv2.HostSettings{}, PriceTable: rhpv3.HostPriceTable{}, RHPV4Settings: rhpv4.HostSettings{}}, err
+			return HostScan{
+				AcceptingContracts: false, PublicKey: host.PublicKey.String(), NetAddress: host.NetAddress,
+				Success: false, Timestamp: time.Now(), Settings: rhpv2.HostSettings{}, PriceTable: rhpv3.HostPriceTable{},
+				RHPV4Settings: rhpv4.HostSettings{}, OfflineSince: time.Now(), OnlineSince: time.Time{},
+			}, err
 		}
 		return scanned, nil
 	} else {
@@ -78,7 +82,11 @@ func RunRhpScan(host explored.Host, log *zap.Logger, mongodDB *db.MongoDB, check
 		})
 		if err != nil {
 			// fmt.Println(err)
-			return HostScan{AcceptingContracts: false, PublicKey: host.PublicKey.String(), NetAddress: host.V2NetAddresses[0].Address, V2NetAddresses: host.V2NetAddresses, Success: false, Timestamp: time.Now(), Settings: rhpv2.HostSettings{}, PriceTable: rhpv3.HostPriceTable{}, RHPV4Settings: rhpv4.HostSettings{}}, err
+			return HostScan{
+				AcceptingContracts: false, PublicKey: host.PublicKey.String(), NetAddress: host.V2NetAddresses[0].Address,
+				V2NetAddresses: host.V2NetAddresses, Success: false, Timestamp: time.Now(), Settings: rhpv2.HostSettings{},
+				PriceTable: rhpv3.HostPriceTable{}, RHPV4Settings: rhpv4.HostSettings{}, OfflineSince: time.Now(), OnlineSince: time.Time{},
+			}, err
 		}
 		return scanned, nil
 	}
@@ -199,6 +207,8 @@ func (nc *Checker) ScanV1Host(host UnscannedHost) (HostScan, error) {
 		Timestamp:          types.CurrentTimestamp(),
 		Settings:           settings,
 		PriceTable:         table,
+		OnlineSince:        time.Now(),
+		OfflineSince:       time.Time{},
 	}, nil
 }
 
@@ -250,5 +260,7 @@ func (nc *Checker) ScanV2Host(host UnscannedHost) (HostScan, error) {
 		Timestamp:          types.CurrentTimestamp(),
 
 		RHPV4Settings: settings,
+		OnlineSince:   time.Now(),
+		OfflineSince:  time.Time{},
 	}, nil
 }
