@@ -108,7 +108,7 @@ export const RenderScan = ({
         </div>
         {/* Version */}
         <div
-          className={`rounded-full border border-green-500 p-1 shadow shadow-green-500 ${host.v2 ? "border-green-500" : "border-red-500"}`}
+          className={`rounded-full border border-green-500 p-1 shadow shadow-green-500 ${host.v2 ? "border-green-500 hover:motion-preset-confetti" : "border-red-500"}`}
         >
           {host.v2 ? "v2" : "v1"}
         </div>
@@ -134,8 +134,12 @@ export const RenderScan = ({
       </div>
       {/* Storage */}
       <div className="text-xs">
-        <div>{host.totalStorage && formatBytes(host.v2, host.totalStorage)}</div>
-        <div>{host.remainingStorage && formatBytes(host.v2, host.remainingStorage)}</div>
+        <div>
+          {host.totalStorage && formatBytes(host.v2, host.totalStorage)}
+        </div>
+        <div>
+          {host.remainingStorage && formatBytes(host.v2, host.remainingStorage)}
+        </div>
       </div>
       {/* IP */}
       <div>

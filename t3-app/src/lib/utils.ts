@@ -5,13 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-
 export function formatBytes(v2: boolean, bytes: number) {
   if (v2) {
     // return `${bytes} bytes`;
     return;
   }
-  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']; // Units from bytes to yottabytes
+  const units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]; // Units from bytes to yottabytes
   let i = 0;
 
   while (bytes >= 1024 && i < units.length - 1) {
