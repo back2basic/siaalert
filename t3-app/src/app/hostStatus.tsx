@@ -106,10 +106,10 @@ export const RenderScan = ({
           </TooltipProvider>
         </div>
         {/* Version */}
-        <div className={`border border-green-500 rounded-full p-1 shadow shadow-green-500 ${host.v2 ? "border-green-500" : "border-red-500"}`}>
-          {host.v2
-            ? "v2"
-            : "v1"}
+        <div
+          className={`rounded-full border border-green-500 p-1 shadow shadow-green-500 ${host.v2 ? "border-green-500" : "border-red-500"}`}
+        >
+          {host.v2 ? "v2" : "v1"}
         </div>
         {/* Release */}
         {/* <div>

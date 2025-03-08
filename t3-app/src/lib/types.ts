@@ -70,3 +70,10 @@ export type GitHiubHostdRelease = {
   html_url: string;
   body: string;
 };
+
+export type AuthOutput = {
+  message: string;
+  publicKey: string;
+  email: string;
+  address: string;
+};

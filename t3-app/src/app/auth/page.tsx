@@ -1,19 +1,13 @@
 "use client";
+import type { AuthOutput } from "@/lib/types";
 // import sdk from "@/lib/sdk";
 import { ArrowLeft } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
 
-interface Output {
-  message: string;
-  publicKey: string;
-  email: string;
-  address: string;
-}
-
 const Auth = () => {
   const router = useRouter();
-  const [output, setOutput] = useState<Output | null>(null);
+  const [output, setOutput] = useState<AuthOutput | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<{ message: string } | null>(null);
   const query = useSearchParams();
@@ -41,7 +35,7 @@ const Auth = () => {
           },
         );
         if (data.ok) {
-          const resp = (await data.json()) as Output;
+          const resp = (await data.json()) as AuthOutput;
           setOutput(resp);
           // console.log(data.text());
         } else {

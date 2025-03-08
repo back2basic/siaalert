@@ -13,29 +13,41 @@ export async function GET(request: NextRequest) {
 
   switch (network) {
     case "main":
-      const resMain = await fetch(
-        `${env.NEXT_PUBLIC_NETWORK_MAIN_URL}/v1/host?search=${search}&online=${online}`,
-      );
-      if (!resMain.ok) {
+      try {
+        const resMain = await fetch(
+          `${env.NEXT_PUBLIC_NETWORK_MAIN_URL}/v1/host?search=${search}&online=${online}`,
+        );
+        if (!resMain.ok) {
+          return Response.json([], {
+            status: 500,
+          });
+        }
+        const main = (await resMain.json()) as Host[];
+        // console.log(main);
+        return Response.json(main);
+      } catch {
         return Response.json([], {
           status: 500,
         });
       }
-      const main = (await resMain.json()) as Host[];
-      // console.log(main);
-      return Response.json(main);
     case "zen":
-      const resZen = await fetch(
-        `${env.NEXT_PUBLIC_NETWORK_ZEN_URL}/v1/host?search=${search}&online=${online}`,
-      );
-      if (!resZen.ok) {
+      try {
+        const resZen = await fetch(
+          `${env.NEXT_PUBLIC_NETWORK_ZEN_URL}/v1/host?search=${search}&online=${online}`,
+        );
+        if (!resZen.ok) {
+          return Response.json([], {
+            status: 500,
+          });
+        }
+        const zen = (await resZen.json()) as Host[];
+        // console.log(zen);
+        return Response.json(zen);
+      } catch {
         return Response.json([], {
           status: 500,
         });
       }
-      const zen = (await resZen.json()) as Host[];
-      // console.log(zen);
-      return Response.json(zen);
     default:
       return Response.json([], {
         status: 500,
