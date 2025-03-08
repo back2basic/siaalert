@@ -22,19 +22,28 @@ import (
 func checkRhpResult(mongoDB *db.MongoDB, netAddress string, online bool, result scan.HostScan, log *zap.Logger) {
 	prev := mongoDB.FindRhp(bson.M{"publicKey": result.PublicKey})
 	if prev.Err() != nil {
-		// log.Warn("Failed to find document", zap.Error(prev.Err()))
-		if result.Error != "" {
-			result.OfflineSince = time.Now()
-		} else {
-			result.OnlineSince = time.Now()
+		err := mongoDB.UpdateRhp(result.PublicKey, online, result.ToBSON(), log)
+		if err != nil {
+			log.Error("Failed to create rhp", zap.Error(err))
 		}
+		return
+		// log.Warn("Failed to find document", zap.Error(prev.Err()))
+		// if result.Error != "" {
+		// 	result.OfflineSince = time.Now()
+		// } else {
+		// 	result.OnlineSince = time.Now()
+		// }
 		// return err
 	}
 	var prevScan scan.HostScan
 	if err := prev.Decode(&prevScan); err != nil {
-		log.Warn("Failed to decode document", zap.Error(err))
+		log.Warn("Failed to decode rhp", zap.Error(err))
 		// return err
 	}
+
+	result.OnlineSince = prevScan.OnlineSince
+	result.OfflineSince = prevScan.OfflineSince
+
 	if prevScan.Success != online {
 		if online {
 			log.Info("Host " + result.PublicKey + " is online")
@@ -63,7 +72,7 @@ func scanHost(host explored.Host, wg *sync.WaitGroup, log *zap.Logger, mongodDB 
 		host.PublicKey,
 		host.ToBSON(),
 	)
-
+	// log.Info("Scanning host", zap.String("host", host.PublicKey.String()))
 	scanned, err := scan.RunRhpScan(host, log, mongodDB, checker)
 	if err != nil {
 		scanned.Error = err.Error()
@@ -194,7 +203,7 @@ func main() {
 		}
 		// Step 1.5: Filter hosts
 		filterred := filterHosts(hosts, log)
-		maxWorkers := max(min(len(filterred)/20, 100), 1)
+		maxWorkers := max(min(len(filterred)/15, 200), 1)
 
 		log.Info("Starting scan", zap.Int("workers", maxWorkers), zap.Int("run", runs))
 
