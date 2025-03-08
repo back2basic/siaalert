@@ -155,7 +155,7 @@ export const RenderScan = ({
             <TooltipTrigger
               className={
                 data.data?.v6addr !== ""
-                  ? "w-36 truncate text-nowrap text-green-500"
+                  ? "w-36 truncate text-nowrap text-left text-green-500"
                   : "w-36 truncate text-nowrap text-left text-red-500"
               }
             >
