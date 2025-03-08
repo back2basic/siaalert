@@ -199,7 +199,7 @@ const Hosts = () => {
       </div>
       <div>
         {data.isLoading && <p className="animate-pulse">Loading Hosts...</p>}
-        {data.isError && <p>Error: {data.error.message}</p>}
+        {data.isError && <p>Error: Failed loading hosts...</p>}
         {data.isSuccess && !data.data && <p>No hosts found.</p>}
         {data.isSuccess && (data.data?.length ?? 0) > 0 && (
           <div>

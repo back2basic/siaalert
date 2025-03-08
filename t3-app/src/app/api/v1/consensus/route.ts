@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
         );
       }
       const zen = (await resZen.json()) as Consensus;
-      console.log(zen);
+      // console.log(zen);
       return Response.json(zen);
     default:
       return Response.json(
