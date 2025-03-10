@@ -2,7 +2,7 @@
 import { Switch } from "@/components/ui/switch";
 // import sdk from "@/lib/sdk";
 import { useQuery } from "@tanstack/react-query";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Email, HostStatus, RenderError, RenderScan } from "./hostStatus";
 import { Input } from "@/components/ui/input";
 import {
@@ -20,6 +20,7 @@ import {
   type PaginationState,
 } from "@tanstack/react-table";
 import type { Consensus, Network, Rhp } from "@/lib/types";
+import { UseStorageStore } from "@/lib/store";
 
 const Hosts = () => {
   const [online, setOnline] = useState(true);
@@ -29,7 +30,7 @@ const Hosts = () => {
     pageIndex: 0,
     pageSize: 15,
   });
-
+  const { setV1Total, setV1Used, setV2Total, setV2used } = UseStorageStore();
   // const consensusData = useQuery({
   //   queryKey: ["consensus", network],
   //   queryFn: async () => {
@@ -148,6 +149,31 @@ const Hosts = () => {
       pagination,
     },
   });
+
+  // calculate total stoage
+  const totalStorage = useMemo(() => {
+    let v1total = 0;
+    let v2total = 0;
+    let v1used = 0;
+    let v2used = 0;
+    data.data?.forEach((host) => {
+      if (host.v2) {
+        v2total += host.totalStorage;
+        v2used += host.remainingStorage;
+      } else {
+        v1total += host.totalStorage;
+        v1used += host.remainingStorage;
+      }
+    });
+    return { v1total, v2total, v1used, v2used };
+  }, [data.data]);
+
+  useEffect(() => {
+    setV1Total(totalStorage.v1total);
+    setV2Total(totalStorage.v2total);
+    setV1Used(totalStorage.v1used);
+    setV2used(totalStorage.v2used);
+  }, [totalStorage, setV1Total, setV2Total, setV1Used, setV2used]);
 
   return (
     <div className="flex h-full w-full flex-col gap-6 p-2">

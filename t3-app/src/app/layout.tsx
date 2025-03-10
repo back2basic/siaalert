@@ -7,6 +7,7 @@ import Footer from "./footer";
 import Image from "next/image";
 import LatestRelease from "./hostdVersion";
 import Link from "next/link";
+import Storage from "./storage";
 
 export const metadata: Metadata = {
   title: "Sia Alert",
@@ -29,6 +30,7 @@ export default function RootLayout({
               </Link>
               {/* <Link href="/api-doc" className="flex items-center gap-2 underline">API</Link> */}
             </div>
+            <Storage />
             <LatestRelease />
           </header>
           {children}

@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatBytes(v2: boolean, bytes: number) {
+export function formatStorage(v2: boolean, bytes: number) {
   if (v2) {
     bytes = bytes * 4 * 1024 * 1024;
     // return;

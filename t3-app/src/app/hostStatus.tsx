@@ -32,7 +32,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
-import { formatBytes } from "@/lib/utils";
+import { formatStorage } from "@/lib/utils";
 // import { UseVersionStore } from "@/lib/store";
 
 export const RenderScan = ({
@@ -135,10 +135,11 @@ export const RenderScan = ({
       {/* Storage */}
       <div className="text-xs">
         <div>
-          {host.totalStorage && formatBytes(host.v2, host.totalStorage)}
+          {host.totalStorage && formatStorage(host.v2, host.totalStorage)}
         </div>
         <div>
-          {host.remainingStorage && formatBytes(host.v2, host.remainingStorage)}
+          {host.remainingStorage &&
+            formatStorage(host.v2, host.remainingStorage)}
         </div>
       </div>
       {/* IP */}
