@@ -129,7 +129,8 @@ func filterHosts(hosts map[string]explored.Host, log *zap.Logger) []explored.Hos
 		}
 
 		// if hostd only check 1 year since last announcement
-		if version != "" && version != "1.5.9" {
+		// once hardfork is active in june we can skip v1
+		if version != "" && version != "1.5.9" || host.V2 {
 			if time.Since(host.LastAnnouncement).Hours() > (24 * 365) {
 				skipped++
 				continue
