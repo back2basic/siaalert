@@ -30,7 +30,7 @@ const Hosts = () => {
     pageIndex: 0,
     pageSize: 15,
   });
-  const { setV1Total, setV1Used, setV2Total, setV2used } = UseStorageStore();
+  const { setV1Total, setV1Used, setV2Total, setV2used, setV1Hosts, setV2Hosts } = UseStorageStore();
   // const consensusData = useQuery({
   //   queryKey: ["consensus", network],
   //   queryFn: async () => {
@@ -156,16 +156,20 @@ const Hosts = () => {
     let v2total = 0;
     let v1used = 0;
     let v2used = 0;
+    let v1hosts = 0;
+    let v2hosts = 0;
     data.data?.forEach((host) => {
       if (host.v2) {
         v2total += host.totalStorage;
         v2used += host.remainingStorage;
+        v2hosts += 1;
       } else {
         v1total += host.totalStorage;
         v1used += host.remainingStorage;
+        v1hosts += 1;
       }
     });
-    return { v1total, v2total, v1used, v2used };
+    return { v1total, v2total, v1used, v2used, v1hosts, v2hosts };
   }, [data.data]);
 
   useEffect(() => {
@@ -173,7 +177,9 @@ const Hosts = () => {
     setV2Total(totalStorage.v2total);
     setV1Used(totalStorage.v1used);
     setV2used(totalStorage.v2used);
-  }, [totalStorage, setV1Total, setV2Total, setV1Used, setV2used]);
+    setV1Hosts(totalStorage.v1hosts);
+    setV2Hosts(totalStorage.v2hosts);
+  }, [totalStorage, setV1Total, setV2Total, setV1Used, setV2used, setV1Hosts, setV2Hosts]);
 
   return (
     <div className="flex h-full w-full flex-col gap-6 p-2">
