@@ -112,7 +112,8 @@ func GetAllHosts(cached bool) (map[string]Host, error) {
 			return ExploredCache, nil
 		}
 	}
-
+	// clear cache
+	ExploredCache = make(map[string]Host)
 	var hosts []Host
 	// try grab new hosts
 	for i := range 200 {

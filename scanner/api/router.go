@@ -45,6 +45,7 @@ func v1Router() *chi.Mux {
 
 	r.Route("/consensus", func(r chi.Router) { r.Get("/", handleGetConsensus) })
 	r.Route("/host", func(r chi.Router) { r.Get("/", handleGetHost) })
+	r.Route("/host/scan", func(r chi.Router) { r.Get("/", handleGetHostScan) })
 	r.Route("/rhp", func(r chi.Router) { r.Get("/", handleGetRhp) })
 	r.Route("/scan", func(r chi.Router) { r.Get("/", handleGetScan) })
 	return r

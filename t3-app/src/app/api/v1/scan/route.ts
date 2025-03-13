@@ -28,7 +28,13 @@ export async function GET(request: NextRequest) {
             status: 500,
           });
         }
-        return Response.json(main[0]);
+        // sort desc on cratedAt
+        main.sort((a, b) => {
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        });
+        return Response.json(main);
       } catch {
         return Response.json([], {
           status: 500,
@@ -51,7 +57,7 @@ export async function GET(request: NextRequest) {
             status: 500,
           });
         }
-        return Response.json(zen[0]);
+        return Response.json(zen);
       } catch {
         return Response.json([], {
           status: 500,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/back2basic/siaalert/scanner/logger"
 	stypes "go.sia.tech/core/types"
 	"go.uber.org/zap"
 
@@ -64,10 +65,21 @@ func (db *MongoDB) UpdateHosts(hosts []bson.M) error {
 func (db *MongoDB) UpdateHost(hostID stypes.PublicKey, hostData bson.M) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+	
+	log := logger.GetLogger()
+	defer log.Sync()
 
 	filter := bson.M{"publicKey": hostID.String()}
 	update := bson.M{"$set": hostData}
-	_, err := db.ColHosts.UpdateOne(ctx, filter, update, options.Update().SetUpsert(true))
+	result, err := db.ColHosts.UpdateOne(ctx, filter, update, options.Update().SetUpsert(true))
+	if result.MatchedCount == 0 {
+		log.Info("UpdateHost: no match", zap.String("hostID", hostID.String()))
+		return err
+	}
+	if result.ModifiedCount == 0 {
+		// log.Info("UpdateHost: no change", zap.String("hostID", hostID.String()))
+		return err
+	}
 	return err
 }
 
@@ -114,13 +126,13 @@ func (db *MongoDB) FindScan(filter bson.M) ([]bson.M, error) {
 	return results, nil
 }
 
-func (db *MongoDB) UpdateScan(hostID stypes.PublicKey, data bson.M) error {
+func (db *MongoDB) InsertScan(data bson.M) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	filter := bson.M{"publicKey": hostID.String()}
-	update := bson.M{"$set": data}
-	_, err := db.ColScan.UpdateOne(ctx, filter, update, options.Update().SetUpsert(true))
+	// filter := bson.M{"publicKey": hostID.String()}
+	// insert := bson.M{"$set": data}
+	_, err := db.ColScan.InsertOne(ctx, data, options.InsertOne())
 	return err
 }
 

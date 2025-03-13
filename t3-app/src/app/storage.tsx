@@ -5,9 +5,16 @@ import { formatStorage } from "@/lib/utils";
 import React from "react";
 
 const Storage = () => {
-  const { v1total, v2total, v1used, v2used , v1hosts, v2hosts} = UseStorageStore();
+  const { v1total, v2total, v1used, v2used, v1hosts, v2hosts } =
+    UseStorageStore();
+  console.log(v1total, v2total);
+
+  if (v1total === 0 && v2total === 0) {
+    return null;
+  }
+
   return (
-    <div className="flex w-72 flex-col text-sm">
+    <div className="motion-preset-bounce flex w-72 flex-col text-sm">
       <div className="flex w-full justify-between gap-4 border-b border-green-500">
         <h1></h1>
         <h2>Total</h2>
