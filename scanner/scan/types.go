@@ -56,16 +56,10 @@ type (
 	}
 )
 
-// type CheckParams struct {
-// 	Rhp2v4, Rhp2v6, Rhp3v4, Rhp3v6, Rhp4v4, Rhp4v6     bool
-// 	HasARecord, HasAAAARecord                          bool
-// 	Rhp2v4Delay, Rhp2v6Delay, Rhp3v4Delay, Rhp3v6Delay time.Duration
-// 	Rhp4v4Delay, Rhp4v6Delay                           time.Duration
-// 	V4, V6, HostId, Rhp2Port, Rhp3Port, Rhp4Port       string
-// }
-
+// A Check is a port scan of a host
 type Check struct {
-	// HostId      string  `json:"hostId"`
+	CreatedAt   time.Time
+	PublicKey   string  `json:"publicKey"`
 	V4Addr      string  `json:"v4Addr"`
 	V6Addr      string  `json:"v6Addr"`
 	Rhp2Port    string  `json:"rhp2Port"`
@@ -103,7 +97,6 @@ type HostScan struct {
 
 	TotalStorage     uint64 `json:"totalStorage"`
 	RemainingStorage uint64 `json:"remainingStorage"`
-
 
 	Settings   rhpv2.HostSettings   `json:"settings"`
 	PriceTable rhpv3.HostPriceTable `json:"priceTable"`

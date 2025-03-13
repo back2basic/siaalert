@@ -7,7 +7,6 @@ import (
 	"net"
 	"time"
 
-	"github.com/back2basic/siaalert/scanner/db"
 	"github.com/back2basic/siaalert/scanner/explored"
 
 	rhpv2 "go.sia.tech/core/rhp/v2"
@@ -59,7 +58,7 @@ type (
 	}
 )
 
-func RunRhpScan(host explored.Host, log *zap.Logger, mongodDB *db.MongoDB, checker *Checker) (HostScan, error) {
+func RunRhpScan(host explored.Host, log *zap.Logger, checker *Checker) (HostScan, error) {
 	if !host.V2 {
 		scanned, err := checker.ScanV1Host(UnscannedHost{
 			NetAddress: host.NetAddress,

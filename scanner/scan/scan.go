@@ -32,7 +32,8 @@ type NetworkChecker interface {
 
 func (c *Check) ToBSON() bson.M {
 	return bson.M{
-		// "hostId":      c.HostId,
+		"createdAt":   time.Now(),
+		"publicKey":   c.PublicKey,
 		"v4addr":      c.V4Addr,
 		"v6addr":      c.V6Addr,
 		"rhp2port":    c.Rhp2Port,
@@ -156,15 +157,6 @@ func (nc *Checker) PortScan(hostId types.PublicKey, scanned HostScan, mongoDB *d
 	strRhp2 := strconv.Itoa(rhp2)
 	strRhp3 := strconv.Itoa(rhp3)
 	strRhp4 := strconv.Itoa(rhp4)
-	// netAddress, rhp2, err := nc.SplitAddressPort(scanned.NetAddress)
-	// if err != nil {
-	// 	log.Error("PortScan", zap.Error(err))
-	// 	return
-	// }
-
-	// rhp3 := scanned.Settings.SiaMuxPort
-	// // need to be changed to to the v2 address WIP!
-	// rhp4 := "9884"
 
 	// clasify netaddress
 	var v4, v6 []net.IP = nil, nil
@@ -172,6 +164,7 @@ func (nc *Checker) PortScan(hostId types.PublicKey, scanned HostScan, mongoDB *d
 
 	check := Check{}
 	// check.HostId = hostId
+	check.PublicKey = scanned.PublicKey
 	check.Rhp2Port = strRhp2
 	check.Rhp3Port = strRhp3
 	check.Rhp4Port = strRhp4
@@ -191,26 +184,29 @@ func (nc *Checker) PortScan(hostId types.PublicKey, scanned HostScan, mongoDB *d
 			check.Rhp4V6, check.Rhp4V6Delay = nc.CheckPortOpen(v6[0].String(), strRhp4)
 		}
 
-		if len(v4) > 0 {
-			check.V4Addr = v4[0].String()
-		} else {
-			check.V4Addr = ""
+		if hasARecord || hasAAAARecord {
+			if len(v4) > 0 {
+				check.V4Addr = v4[0].String()
+			} else {
+				check.V4Addr = ""
+			}
+			if len(v6) > 0 {
+				check.V6Addr = v6[0].String()
+			} else {
+				check.V6Addr = ""
+			}
+
+			mongoDB.InsertScan(check.ToBSON())
 		}
-		if len(v6) > 0 {
-			check.V6Addr = v6[0].String()
-		} else {
-			check.V6Addr = ""
-		}
-		// sdk.UpdateCheck(params, wg, task)
-		mongoDB.UpdateScan(hostId, check.ToBSON())
+
 	case "IPv4":
 		check.V4Addr = netAddress
 		check.V6Addr = ""
 		check.Rhp2V4, check.Rhp2V4Delay = nc.CheckPortOpen(netAddress, strRhp2)
 		check.Rhp3V4, check.Rhp3V4Delay = nc.CheckPortOpen(netAddress, strRhp3)
 		check.Rhp4V4, check.Rhp4V4Delay = nc.CheckPortOpen(netAddress, strRhp4)
-		// sdk.UpdateCheck(check, wg, task)
-		mongoDB.UpdateScan(hostId, check.ToBSON())
+
+		mongoDB.InsertScan(check.ToBSON())
 
 	case "IPv6":
 		check.V4Addr = ""
@@ -218,8 +214,8 @@ func (nc *Checker) PortScan(hostId types.PublicKey, scanned HostScan, mongoDB *d
 		check.Rhp2V6, check.Rhp2V6Delay = nc.CheckPortOpen(netAddress, strRhp2)
 		check.Rhp3V6, check.Rhp3V6Delay = nc.CheckPortOpen(netAddress, strRhp3)
 		check.Rhp4V6, check.Rhp4V6Delay = nc.CheckPortOpen(netAddress, strRhp4)
-		// sdk.UpdateCheck(params, wg, task)
-		mongoDB.UpdateScan(hostId, check.ToBSON())
+
+		mongoDB.InsertScan(check.ToBSON())
 	}
 }
 

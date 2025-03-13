@@ -21,6 +21,7 @@ import {
 } from "@tanstack/react-table";
 import type { Consensus, Network, Rhp } from "@/lib/types";
 import { UseStorageStore } from "@/lib/store";
+import Link from "next/link";
 
 const Hosts = () => {
   const [online, setOnline] = useState(true);
@@ -30,7 +31,14 @@ const Hosts = () => {
     pageIndex: 0,
     pageSize: 15,
   });
-  const { setV1Total, setV1Used, setV2Total, setV2used, setV1Hosts, setV2Hosts } = UseStorageStore();
+  const {
+    setV1Total,
+    setV1Used,
+    setV2Total,
+    setV2used,
+    setV1Hosts,
+    setV2Hosts,
+  } = UseStorageStore();
   // const consensusData = useQuery({
   //   queryKey: ["consensus", network],
   //   queryFn: async () => {
@@ -70,22 +78,22 @@ const Hosts = () => {
         header: "NetAddress",
         accessorKey: "netAddress",
         cell: ({ getValue }: { getValue: () => string }) => (
-          // <p className="max-w-96 text-lg font-bold truncate">{getValue()}</p>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger className="flex items-center px-2">
-                <p
-                  className="max-w-64 truncate text-lg font-bold"
-                  onClick={() => navigator.clipboard.writeText(getValue())}
-                >
-                  {getValue()}
-                </p>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{getValue()}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <p className="max-w-96 truncate text-lg font-bold">{getValue()}</p>
+          // <TooltipProvider>
+          //   <Tooltip>
+          //     <TooltipTrigger className="flex items-center px-2">
+          //       <p
+          //         className="max-w-64 truncate text-lg font-bold"
+          //         onClick={() => navigator.clipboard.writeText(getValue())}
+          //       >
+          //         {getValue()}
+          //       </p>
+          //     </TooltipTrigger>
+          //     <TooltipContent>
+          //       <p>{getValue()}</p>
+          //     </TooltipContent>
+          //   </Tooltip>
+          // </TooltipProvider>
         ),
       },
       {
@@ -95,12 +103,13 @@ const Hosts = () => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className="flex items-center px-2">
-                <p
-                  className="max-w-72 cursor-default truncate"
-                  onClick={() => navigator.clipboard.writeText(getValue())}
+                <Link
+                  href={`/host/${network}/${encodeURIComponent(getValue())}`}
+                  className="max-w-72 truncate underline"
+                  // onClick={() => navigator.clipboard.writeText(getValue())}
                 >
                   {getValue()}
-                </p>
+                </Link>
               </TooltipTrigger>
               <TooltipContent>
                 <p>{getValue()}</p>
@@ -179,7 +188,15 @@ const Hosts = () => {
     setV2used(totalStorage.v2used);
     setV1Hosts(totalStorage.v1hosts);
     setV2Hosts(totalStorage.v2hosts);
-  }, [totalStorage, setV1Total, setV2Total, setV1Used, setV2used, setV1Hosts, setV2Hosts]);
+  }, [
+    totalStorage,
+    setV1Total,
+    setV2Total,
+    setV1Used,
+    setV2used,
+    setV1Hosts,
+    setV2Hosts,
+  ]);
 
   return (
     <div className="flex h-full w-full flex-col gap-6 p-2">
@@ -225,7 +242,7 @@ const Hosts = () => {
           </div>
           <div className="text-xs">
             Consensus height: {consensusData.data?.height} -{" "}
-            {new Date().toLocaleString()}
+            {new Date().toLocaleString("en-US")}
           </div>
         </div>
       </div>

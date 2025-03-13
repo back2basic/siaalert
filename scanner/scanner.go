@@ -73,15 +73,17 @@ func scanHost(host explored.Host, wg *sync.WaitGroup, log *zap.Logger, mongodDB 
 		host.ToBSON(),
 	)
 	// log.Info("Scanning host", zap.String("host", host.PublicKey.String()))
-	scanned, err := scan.RunRhpScan(host, log, mongodDB, checker)
+	scanned, err := scan.RunRhpScan(host, log, checker)
 	if err != nil {
 		scanned.Error = err.Error()
 		checkRhpResult(mongodDB, host.NetAddress, false, scanned, log)
-		return
+	} else {
+		checkRhpResult(mongodDB, host.NetAddress, true, scanned, log)
 	}
-
-	checkRhpResult(mongodDB, host.NetAddress, true, scanned, log)
-	checker.PortScan(host.PublicKey, scanned, mongodDB)
+	if (scanned.OnlineSince != time.Time{}) || (time.Since(scanned.OfflineSince) < 24*7*time.Hour) {
+		checker.PortScan(host.PublicKey, scanned, mongodDB)
+	}
+	// log.Info("Finished scanning host", zap.String("host", host.PublicKey.String()))
 }
 
 // Fetch the list of hosts (replace with your actual fetching logic)
@@ -182,7 +184,7 @@ func main() {
 	go api.StartServer(log)
 	log.Info("API is starting...", zap.String("module", "scanner"))
 
-	workTime := 10
+	workTime := 25
 	// Start scanning
 	runs := 0
 	for {
@@ -205,13 +207,13 @@ func main() {
 		}
 		// Step 1.5: Filter hosts
 		filterred := filterHosts(hosts, log)
-		maxWorkers := max(min(len(filterred)/workTime, 100), 1)
+		maxWorkers := max(min(len(filterred)/workTime, 50), 1)
 
 		log.Info("Starting scan", zap.Int("workers", maxWorkers), zap.Int("run", runs))
 
 		// Step 2: Scan hosts concurrently
 		var wg sync.WaitGroup
-		sem := make(chan struct{}, maxWorkers * 10)
+		sem := make(chan struct{}, workTime)
 
 		for _, host := range filterred {
 			wg.Add(1)

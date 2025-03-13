@@ -48,8 +48,8 @@ export const RenderScan = ({
     queryFn: async () => {
       // return await sdk.scanHost(network, host.$id);
       return (await fetch(
-        `/api/v1/scan?network=${network}&publicKey=${host.publicKey}`,
-      ).then((res) => res.json())) as Scan;
+        `/api/v1/scan/?network=${network === "mainnet" ? "main" : "zen"}&publicKey=${host.publicKey}`,
+      ).then((res) => res.json())) as Scan[];
     },
   });
 
@@ -73,16 +73,6 @@ export const RenderScan = ({
       </div>
     );
   }
-  // if (data.data?.length === 0) {
-  //   return (
-  //     <div className="flex items-center text-xs">
-  //       <div className="flex items-center gap-2">
-  //         <Shield className="h-4 w-4" />
-  //         No scan data
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="flex flex-1 items-center justify-start gap-4 rounded-full border-b border-green-500 px-4 py-1 text-xs shadow">
@@ -118,14 +108,14 @@ export const RenderScan = ({
             <Tooltip>
               <TooltipTrigger className="flex cursor-default items-center">
                 <Vote
-                  className={`h-4 w-4 ${data.data?.documents[0]?.release === "hostd " +version ? "text-green-500" : "text-red-500"}`}
+                  className={`h-4 w-4 ${data.data?.documents?.[0]?.release === "hostd " +version ? "text-green-500" : "text-red-500"}`}
                 />
               </TooltipTrigger>
               <TooltipContent>
                 <p>
-                  {data.data?.documents[0]?.release === version
+                  {data.data?.documents?.[0]?.release === version
                     ? "OK"
-                    : "Current: " + data.data?.documents[0]?.release + ", Latest: " + version }
+                    : "Current: " + data.data?.documents?.[0]?.release + ", Latest: " + version }
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -133,7 +123,7 @@ export const RenderScan = ({
         </div> */}
       </div>
       {/* Storage */}
-      <div className="text-xs">
+      <div className="w-16 text-nowrap text-xs">
         <div>
           {host.totalStorage && formatStorage(host.v2, host.totalStorage)}
         </div>
@@ -147,27 +137,27 @@ export const RenderScan = ({
         {/* V4 */}
         <div
           className={
-            data.data?.v4addr !== ""
+            data.data?.[0]?.v4addr !== ""
               ? "w-36 truncate text-nowrap text-green-500"
               : "w-36 truncate text-nowrap text-red-500"
           }
         >
-          IPv4 {data.data?.v4addr}
+          IPv4 {data.data?.[0]?.v4addr}
         </div>
         {/* V6 */}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger
               className={
-                data.data?.v6addr !== ""
+                data.data?.[0]?.v6addr !== ""
                   ? "w-36 truncate text-nowrap text-left text-green-500"
                   : "w-36 truncate text-nowrap text-left text-red-500"
               }
             >
-              IPv6 {data.data?.v6addr}
+              IPv6 {data.data?.[0]?.v6addr}
             </TooltipTrigger>
             <TooltipContent>
-              <p>{data.data?.v6addr}</p>
+              <p>{data.data?.[0]?.v6addr}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -176,33 +166,33 @@ export const RenderScan = ({
         {/* RHP2 */}
         <div>
           <div
-            className={`flex items-center gap-2 ${data.data?.rhp2v4delay && data.data?.rhp2v4delay > 250 ? "text-orange-500" : ""}`}
+            className={`flex items-center gap-2 ${data.data?.[0]?.rhp2v4delay && data.data?.[0]?.rhp2v4delay > 250 ? "text-orange-500" : ""}`}
           >
             <Shield
-              className={`h-4 w-4 ${data.data?.rhp2v4 ? "text-green-500" : "text-red-500"}`}
+              className={`h-4 w-4 ${data.data?.[0]?.rhp2v4 ? "text-green-500" : "text-red-500"}`}
             />
             <div className="flex items-center gap-2">
-              <div>{data.data?.rhp2port}</div>
-              {data.data?.rhp2v4delay !== 0 &&
-                (data.data?.rhp2v4delay ?? 0) < 3000 && (
-                  <div className={!data.data?.rhp2v4 ? "hidden" : "flex"}>
-                    {data.data?.rhp2v4delay}ms
+              <div>{data.data?.[0]?.rhp2port}</div>
+              {data.data?.[0]?.rhp2v4delay !== 0 &&
+                (data.data?.[0]?.rhp2v4delay ?? 0) < 3000 && (
+                  <div className={!data.data?.[0]?.rhp2v4 ? "hidden" : "flex"}>
+                    {data.data?.[0]?.rhp2v4delay}ms
                   </div>
                 )}
             </div>
           </div>
           <div
-            className={`flex items-center gap-2 ${data.data?.rhp2v6delay && data.data?.rhp2v6delay > 250 ? "text-orange-500" : ""}`}
+            className={`flex items-center gap-2 ${data.data?.[0]?.rhp2v6delay && data.data?.[0]?.rhp2v6delay > 250 ? "text-orange-500" : ""}`}
           >
             <Shield
-              className={`h-4 w-4 ${data.data?.rhp2v6 ? "text-green-500" : "text-red-500"}`}
+              className={`h-4 w-4 ${data.data?.[0]?.rhp2v6 ? "text-green-500" : "text-red-500"}`}
             />
             <div className="flex items-center gap-2">
-              <div>{data.data?.rhp2port}</div>
-              {data.data?.rhp2v6delay !== 0 &&
-                (data.data?.rhp2v6delay ?? 0) < 3000 && (
-                  <div className={!data.data?.rhp2v6 ? "hidden" : "flex"}>
-                    {data.data?.rhp2v6delay}ms
+              <div>{data.data?.[0]?.rhp2port}</div>
+              {data.data?.[0]?.rhp2v6delay !== 0 &&
+                (data.data?.[0]?.rhp2v6delay ?? 0) < 3000 && (
+                  <div className={!data.data?.[0]?.rhp2v6 ? "hidden" : "flex"}>
+                    {data.data?.[0]?.rhp2v6delay}ms
                   </div>
                 )}
             </div>
@@ -211,33 +201,33 @@ export const RenderScan = ({
         {/* RHP3 */}
         <div>
           <div
-            className={`flex items-center gap-2 ${data.data?.rhp3v4delay && data.data?.rhp3v4delay > 250 ? "text-orange-500" : ""}`}
+            className={`flex items-center gap-2 ${data.data?.[0]?.rhp3v4delay && data.data?.[0]?.rhp3v4delay > 250 ? "text-orange-500" : ""}`}
           >
             <Shield
-              className={`h-4 w-4 ${data.data?.rhp3v4 ? "text-green-500" : "text-red-500"}`}
+              className={`h-4 w-4 ${data.data?.[0]?.rhp3v4 ? "text-green-500" : "text-red-500"}`}
             />
             <div className="flex items-center gap-2">
-              <div>{data.data?.rhp3port}</div>
-              {data.data?.rhp3v4delay !== 0 &&
-                (data.data?.rhp3v4delay ?? 0) < 3000 && (
-                  <div className={!data.data?.rhp3v4 ? "hidden" : "flex"}>
-                    {data.data?.rhp3v4delay}ms
+              <div>{data.data?.[0]?.rhp3port}</div>
+              {data.data?.[0]?.rhp3v4delay !== 0 &&
+                (data.data?.[0]?.rhp3v4delay ?? 0) < 3000 && (
+                  <div className={!data.data?.[0]?.rhp3v4 ? "hidden" : "flex"}>
+                    {data.data?.[0]?.rhp3v4delay}ms
                   </div>
                 )}
             </div>
           </div>
           <div
-            className={`flex items-center gap-2 ${data.data?.rhp3v6delay && data.data?.rhp3v6delay > 250 ? "text-orange-500" : ""}`}
+            className={`flex items-center gap-2 ${data.data?.[0]?.rhp3v6delay && data.data?.[0]?.rhp3v6delay > 250 ? "text-orange-500" : ""}`}
           >
             <Shield
-              className={`h-4 w-4 ${data.data?.rhp3v6 ? "text-green-500" : "text-red-500"}`}
+              className={`h-4 w-4 ${data.data?.[0]?.rhp3v6 ? "text-green-500" : "text-red-500"}`}
             />
             <div className="flex items-center gap-2">
-              <div>{data.data?.rhp3port}</div>
-              {data.data?.rhp3v6delay !== 0 &&
-                (data.data?.rhp3v6delay ?? 0) < 3000 && (
-                  <div className={!data.data?.rhp3v6 ? "hidden" : "flex"}>
-                    {data.data?.rhp3v6delay}ms
+              <div>{data.data?.[0]?.rhp3port}</div>
+              {data.data?.[0]?.rhp3v6delay !== 0 &&
+                (data.data?.[0]?.rhp3v6delay ?? 0) < 3000 && (
+                  <div className={!data.data?.[0]?.rhp3v6 ? "hidden" : "flex"}>
+                    {data.data?.[0]?.rhp3v6delay}ms
                   </div>
                 )}
             </div>
@@ -246,33 +236,33 @@ export const RenderScan = ({
         {/* RHP4 */}
         <div>
           <div
-            className={`flex items-center gap-2 ${data.data?.rhp4v4delay && data.data?.rhp4v4delay > 250 ? "text-orange-500" : ""}`}
+            className={`flex items-center gap-2 ${data.data?.[0]?.rhp4v4delay && data.data?.[0]?.rhp4v4delay > 250 ? "text-orange-500" : ""}`}
           >
             <Shield
-              className={`h-4 w-4 ${data.data?.rhp4v4 ? "text-green-500" : "text-red-500"}`}
+              className={`h-4 w-4 ${data.data?.[0]?.rhp4v4 ? "text-green-500" : "text-red-500"}`}
             />
             <div className="flex items-center gap-2">
-              <div>{data.data?.rhp4port}</div>
-              {data.data?.rhp4v4delay !== 0 &&
-                (data.data?.rhp4v4delay ?? 0) < 3000 && (
-                  <div className={!data.data?.rhp4v4 ? "hidden" : "flex"}>
-                    {data.data?.rhp4v4delay}ms
+              <div>{data.data?.[0]?.rhp4port}</div>
+              {data.data?.[0]?.rhp4v4delay !== 0 &&
+                (data.data?.[0]?.rhp4v4delay ?? 0) < 3000 && (
+                  <div className={!data.data?.[0]?.rhp4v4 ? "hidden" : "flex"}>
+                    {data.data?.[0]?.rhp4v4delay}ms
                   </div>
                 )}
             </div>
           </div>
           <div
-            className={`flex items-center gap-2 ${data.data?.rhp4v6delay && data.data?.rhp4v6delay > 250 ? "text-orange-500" : ""}`}
+            className={`flex items-center gap-2 ${data.data?.[0]?.rhp4v6delay && data.data?.[0]?.rhp4v6delay > 250 ? "text-orange-500" : ""}`}
           >
             <Shield
-              className={`h-4 w-4 ${data.data?.rhp4v6 ? "text-green-500" : "text-red-500"}`}
+              className={`h-4 w-4 ${data.data?.[0]?.rhp4v6 ? "text-green-500" : "text-red-500"}`}
             />
             <div className="flex items-center gap-2">
-              <div>{data.data?.rhp4port}</div>
-              {data.data?.rhp4v6delay !== 0 &&
-                (data.data?.rhp4v6delay ?? 0) < 3000 && (
-                  <div className={!data.data?.rhp4v6 ? "hidden" : "flex"}>
-                    {data.data?.rhp4v6delay}ms
+              <div>{data.data?.[0]?.rhp4port}</div>
+              {data.data?.[0]?.rhp4v6delay !== 0 &&
+                (data.data?.[0]?.rhp4v6delay ?? 0) < 3000 && (
+                  <div className={!data.data?.[0]?.rhp4v6 ? "hidden" : "flex"}>
+                    {data.data?.[0]?.rhp4v6delay}ms
                   </div>
                 )}
             </div>

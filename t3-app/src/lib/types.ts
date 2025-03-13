@@ -36,7 +36,8 @@ type V2Address = {
 };
 
 export type Scan = {
-  hostId: string;
+  createdAt: string;
+  publicKey: string;
   v4addr: string;
   v6addr: string;
   rhp2port: string;
@@ -78,4 +79,116 @@ export type AuthOutput = {
   publicKey: string;
   email: string;
   address: string;
+};
+
+export type HostScan = {
+  publicKey: string;
+  v2: boolean;
+  v2NetAddresses: V2NetAddress[];
+  netAddress: string;
+  success: boolean;
+  timestamp: string;
+  nextScan: string;
+  acceptingContracts: boolean;
+  error: string;
+  onlineSince: string;
+  offlineSince: string;
+  totalStorage: number;
+  remainingStorage: number;
+  settings: Rhpv2Settings;
+  priceTable: Rhpv3Settings;
+  rhpV4Settings: Rhpv4Settings;
+};
+
+export type Rhpv2Settings = {
+  maxdownloadbatchsize: number;
+  acceptingcontracts: boolean;
+  baserpcprice: string;
+  collateral: string;
+  contractprice: string;
+  downloadbandwidthprice: string;
+  ephemeralaccountexpiry: number;
+  maxcollateral: string;
+  maxduration: number;
+  maxephemeralaccountbalance: string;
+  maxrevisebatchsize: number;
+  netaddress: string;
+  release: string;
+  remainingstorage: number;
+  revisionnumber: number;
+  sectoraccessprice: string;
+  sectorsize: number;
+  siamuxport: string;
+  storageprice: string;
+  totalstorage: number;
+  unlockhash: string;
+  uploadbandwidthprice: string;
+  version: string;
+  windowsize: number;
+};
+
+export type Rhpv3Settings = {
+  uid: string;
+  validity: number;
+  hostblockhieight: number;
+  updatepricetablecost: number;
+  accountbalancecost: number;
+  fundaccountcost: number;
+  latestrevisioncost: number;
+  subscriptionmemorycost: number;
+  subscriptionnotificationcost: number;
+  initbasecost: number;
+  memorytimecost: number;
+  downloadbandwidthcost: number;
+  uploadbandwidthcost: number;
+  dropsectorsbasecost: number;
+  dropsectorsunitcost: number;
+  hassectorbasecost: number;
+  readbasecost: number;
+  readlengthcost: number;
+  renewcontractcost: number;
+  revisionbasecost: number;
+  swapsectorcost: number;
+  writebasecost: number;
+  writelengthcost: number;
+  writestorecost: number;
+  txnfeeminrecommended: number;
+  txnfeemaxrecommended: number;
+  contractprice: number;
+  collateralcost: number;
+  maxcollateral: number;
+  maxduration: number;
+  maxephemeralaccountbalance: number;
+  windowsize: number;
+  registryentriesleft: number;
+  registryentriestotal: number;
+};
+
+export type Rhpv4Settings = {
+  protocolVersion: number[];
+  release: string;
+  walletAddress: string;
+  acceptingContracts: boolean;
+  maxCollateral: number;
+  maxContractDuration: number;
+  remainingStorage: number;
+  totalStorage: number;
+  prices: V2Prices;
+};
+
+export type V2NetAddress = {
+  protocol: string;
+  address: string;
+};
+
+export type V2Prices = {
+  contractPrice: number;
+  collateral: number;
+  storagePrice: number;
+  ingressPrice: number;
+  egressPrice: number;
+  freeSectorPrice: number;
+  tipHeight: number;
+  validUntil: Date;
+  signature: string;
 };
