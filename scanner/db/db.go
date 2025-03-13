@@ -71,15 +71,15 @@ func (db *MongoDB) UpdateHost(hostID stypes.PublicKey, hostData bson.M) error {
 
 	filter := bson.M{"publicKey": hostID.String()}
 	update := bson.M{"$set": hostData}
-	result, err := db.ColHosts.UpdateOne(ctx, filter, update, options.Update().SetUpsert(true))
-	if result.MatchedCount == 0 {
-		log.Info("UpdateHost: no match", zap.String("hostID", hostID.String()))
-		return err
-	}
-	if result.ModifiedCount == 0 {
-		// log.Info("UpdateHost: no change", zap.String("hostID", hostID.String()))
-		return err
-	}
+	_, err := db.ColHosts.UpdateOne(ctx, filter, update, options.Update().SetUpsert(true))
+	// if result.MatchedCount == 0 {
+	// 	log.Info("UpdateHost: no match", zap.String("hostID", hostID.String()))
+	// 	return err
+	// }
+	// if result.ModifiedCount == 0 {
+	// 	// log.Info("UpdateHost: no change", zap.String("hostID", hostID.String()))
+	// 	return err
+	// }
 	return err
 }
 
