@@ -156,7 +156,7 @@ export type Rhpv3Settings = {
   txnfeemaxrecommended: number;
   contractprice: number;
   collateralcost: number;
-  maxcollateral: number;
+  maxcollateral: string;
   maxduration: number;
   maxephemeralaccountbalance: number;
   windowsize: number;
@@ -169,7 +169,7 @@ export type Rhpv4Settings = {
   release: string;
   walletAddress: string;
   acceptingContracts: boolean;
-  maxCollateral: number;
+  maxCollateral: string;
   maxContractDuration: number;
   remainingStorage: number;
   totalStorage: number;

@@ -5,7 +5,7 @@ import type {
   Rhpv3Settings,
   Rhpv4Settings,
 } from "@/lib/types";
-import { formatStorage } from "@/lib/utils";
+import { convertPrice, formatStorage } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
@@ -23,8 +23,8 @@ const V1Settings = ({
       <div>
         Accepting Contracts: {settings.acceptingcontracts ? "Yes" : "No"}
       </div>
-      <div>Max Collateral: {settings.maxcollateral}</div>
-      <div>Max Contract Duration: {settings.maxduration}</div>
+      <div>Max Collateral: {convertPrice(settings.maxcollateral)}</div>
+      <div>Max Contract Duration: {settings.maxduration / 144} Days</div>
       <div>
         Remaining Storage: {formatStorage(false, settings.remainingstorage)}
       </div>
@@ -37,9 +37,9 @@ const V2Settings = ({ settings }: { settings: Rhpv4Settings }) => {
   return (
     <>
       <div>V2: Yes</div>
-      <div>Accepting Contracts: {settings.acceptingContracts}</div>
-      <div>Max Collateral: {settings.maxCollateral}</div>
-      <div>Max Contract Duration: {settings.maxContractDuration}</div>
+      <div>Accepting Contracts: {settings.acceptingContracts ? "Yes" : "No"}</div>
+      <div>Max Collateral: {convertPrice(settings.maxCollateral)}</div>
+      <div>Max Contract Duration: {settings.maxContractDuration / 144 } Days</div>
       <div>
         Remaining Storage: {formatStorage(true, settings.remainingStorage)}
       </div>
