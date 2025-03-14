@@ -1,7 +1,7 @@
 "use client";
 
 import { UseStorageStore } from "@/lib/store";
-import { formatStorage } from "@/lib/utils";
+import { convertSectorsToBytes, formatStorage } from "@/lib/utils";
 import React from "react";
 
 const Storage = () => {
@@ -22,13 +22,13 @@ const Storage = () => {
       </div>
       <div className="flex w-full justify-between gap-4">
         <div>V1-({v1hosts})</div>
-        <div>{formatStorage(false, v1total)}</div>
-        <div>{formatStorage(false, v1total - v1used)}</div>
+        <div>{formatStorage(v1total)}</div>
+        <div>{formatStorage(v1total - v1used)}</div>
       </div>
       <div className="flex w-full justify-between gap-4">
         <div>V2-({v2hosts})</div>
-        <div>{formatStorage(true, v2total)}</div>
-        <div>{formatStorage(true, v2total - v2used)}</div>
+        <div>{formatStorage(convertSectorsToBytes(v2total))}</div>
+        <div>{formatStorage(convertSectorsToBytes(v2total - v2used))}</div>
       </div>
     </div>
   );

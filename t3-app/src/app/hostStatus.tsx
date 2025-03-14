@@ -32,7 +32,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
-import { formatStorage } from "@/lib/utils";
+import { convertSectorsToBytes, formatStorage } from "@/lib/utils";
 // import { UseVersionStore } from "@/lib/store";
 
 export const RenderScan = ({
@@ -125,11 +125,20 @@ export const RenderScan = ({
       {/* Storage */}
       <div className="w-16 text-nowrap text-xs">
         <div>
-          {host.totalStorage && formatStorage(host.v2, host.totalStorage)}
+          {host.totalStorage &&
+            formatStorage(
+              host.v2
+                ? convertSectorsToBytes(host.totalStorage)
+                : host.totalStorage,
+            )}
         </div>
         <div>
           {host.remainingStorage &&
-            formatStorage(host.v2, host.remainingStorage)}
+            formatStorage(
+              host.v2
+                ? convertSectorsToBytes(host.remainingStorage)
+                : host.remainingStorage,
+            )}
         </div>
       </div>
       {/* IP */}
