@@ -80,7 +80,7 @@ func scanHost(host explored.Host, wg *sync.WaitGroup, log *zap.Logger, mongodDB 
 	} else {
 		checkRhpResult(mongodDB, host.NetAddress, true, scanned, log)
 	}
-	if (scanned.OnlineSince != time.Time{}) || (time.Since(scanned.OfflineSince) < 24*7*time.Hour) {
+	if (scanned.OnlineSince != time.Time{}) || (time.Since(scanned.OfflineSince) < 2*time.Hour) {
 		checker.PortScan(host.PublicKey, scanned, mongodDB)
 	}
 	// log.Info("Finished scanning host", zap.String("host", host.PublicKey.String()))
