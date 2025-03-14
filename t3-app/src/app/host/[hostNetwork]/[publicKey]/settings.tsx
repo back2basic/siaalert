@@ -52,7 +52,6 @@ const Settings = ({ network, publicKey }: Props) => {
   const data = useQuery({
     queryKey: ["hostscan", network, publicKey],
     queryFn: async () => {
-      // return await sdk.scanHost(network, host.$id);
       return (await fetch(
         `/api/v1/hostscan/?network=${network === "mainnet" ? "main" : "zen"}&publicKey=${publicKey}`,
       ).then((res) => res.json())) as HostScan;
@@ -64,7 +63,7 @@ const Settings = ({ network, publicKey }: Props) => {
   }
 
   if (data.isLoading) {
-    return <div className="animate-pulse">Loading...</div>;
+    return <div className="animate-pulse">Scanning host...</div>;
   }
 
   if (!data.data?.settings) {

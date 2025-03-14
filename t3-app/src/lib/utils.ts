@@ -8,7 +8,6 @@ export function cn(...inputs: ClassValue[]) {
 export function formatStorage(v2: boolean, bytes: number) {
   if (v2) {
     bytes = bytes * 4 * 1024 * 1024;
-    // return;
   }
   const units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]; // Units from bytes to yottabytes
   let i = 0;
