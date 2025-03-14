@@ -26,7 +26,7 @@ export default function RootLayout({
             <div className="flex items-center gap-6">
               <Link href="/" className="flex items-center gap-2">
                 <Image src={"/logo.png"} alt="logo" width={64} height={64} />
-                <h1 className="text-4xl font-bold">Sia Host Alert</h1>
+                <h1 className="text-4xl font-bold underline">Sia Host Alert</h1>
               </Link>
               {/* <Link href="/api-doc" className="flex items-center gap-2 underline">API</Link> */}
             </div>

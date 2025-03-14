@@ -89,7 +89,7 @@ export function Component({
   return (
     <ChartContainer
       config={chartConfig}
-      className="max-h-[300px] min-h-[200px] w-full"
+      className="max-h-[350px] min-h-[200px] w-full"
     >
       <BarChart accessibilityLayer data={v4 ? chartDataV4 : chartDataV6}>
         <CartesianGrid vertical={false} />

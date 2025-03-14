@@ -139,8 +139,8 @@ export type Rhpv3Settings = {
   subscriptionnotificationcost: number;
   initbasecost: number;
   memorytimecost: number;
-  downloadbandwidthcost: number;
-  uploadbandwidthcost: number;
+  downloadbandwidthcost: string;
+  uploadbandwidthcost: string;
   dropsectorsbasecost: number;
   dropsectorsunitcost: number;
   hassectorbasecost: number;
@@ -184,9 +184,9 @@ export type V2NetAddress = {
 export type V2Prices = {
   contractPrice: number;
   collateral: number;
-  storagePrice: number;
-  ingressPrice: number;
-  egressPrice: number;
+  storagePrice: string;
+  ingressPrice: string;
+  egressPrice: string;
   freeSectorPrice: number;
   tipHeight: number;
   validUntil: Date;

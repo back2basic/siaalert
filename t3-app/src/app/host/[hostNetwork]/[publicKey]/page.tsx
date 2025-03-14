@@ -10,7 +10,7 @@ const Page = async ({
   const publicKey = decodeURIComponent((await params).publicKey);
   const network = decodeURIComponent((await params).hostNetwork);
   return (
-    <div className="flex w-full flex-1 gap-2 p-6">
+    <div className="flex w-full flex-wrap gap-2 p-6">
       <div className="flex flex-1 flex-col gap-10">
         <Settings network={network} publicKey={publicKey} />
       </div>

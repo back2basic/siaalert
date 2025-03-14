@@ -7,8 +7,10 @@ import type {
 } from "@/lib/types";
 import {
   convertPrice,
+  convertPricePerBlock,
   convertSectorsToBytes,
   formatStorage,
+  toSia,
 } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
@@ -16,43 +18,126 @@ import React from "react";
 type Props = { network: string; publicKey: string };
 
 const V1Settings = ({
+  netAddress,
   settings,
+  pricetable,
 }: {
+  netAddress: string;
   settings: Rhpv2Settings;
   pricetable: Rhpv3Settings;
 }) => {
   return (
     <>
-      <div>V2: No</div>
-      <div>
-        Accepting Contracts: {settings.acceptingcontracts ? "Yes" : "No"}
+      <div className="mb-4 flex w-full justify-center border-b border-green-500 text-2xl font-bold">
+        {netAddress}
       </div>
-      <div>Max Collateral: {convertPrice(settings.maxcollateral)}</div>
-      <div>Max Contract Duration: {settings.maxduration / 144} Days</div>
-      <div>Remaining Storage: {formatStorage(settings.remainingstorage)}</div>
-      <div>Total Storage: {formatStorage(settings.totalstorage)}</div>
+      <div className="flex max-w-96 flex-col gap-2 p-10">
+        <div className="flex justify-between gap-2">
+          <div>V2:</div>
+          <div>No</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Accepting Contracts:</div>
+          <div>{settings.acceptingcontracts ? "Yes" : "No"}</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Max Collateral:</div>
+          <div>{convertPrice(settings.maxcollateral)}</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Max Contract Duration:</div>
+          <div>{settings.maxduration / 144} Days</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Remaining Storage:</div>
+          <div>
+            {formatStorage(convertSectorsToBytes(settings.remainingstorage))}
+          </div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Total Storage:</div>
+          <div>
+            {formatStorage(convertSectorsToBytes(settings.totalstorage))}
+          </div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Release:</div>
+          <div>{settings.release}</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Storage Price:</div>
+          <div>{convertPricePerBlock(settings.storageprice)}</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Upload Price:</div>
+          <div>{toSia(pricetable.uploadbandwidthcost, false)}</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Download Price:</div>
+          <div>{toSia(pricetable.downloadbandwidthcost, false)}</div>
+        </div>
+      </div>
     </>
   );
 };
 
-const V2Settings = ({ settings }: { settings: Rhpv4Settings }) => {
+const V2Settings = ({
+  netAddress,
+  settings,
+}: {
+  netAddress: string;
+  settings: Rhpv4Settings;
+}) => {
   return (
     <>
-      <div>V2: Yes</div>
-      <div>
-        Accepting Contracts: {settings.acceptingContracts ? "Yes" : "No"}
+      <div className="mb-4 flex w-full justify-center border-b border-green-500 text-2xl font-bold">
+        {netAddress}
       </div>
-      <div>Max Collateral: {convertPrice(settings.maxCollateral)}</div>
-      <div>
-        Max Contract Duration: {settings.maxContractDuration / 144} Days
-      </div>
-      <div>
-        Remaining Storage:{" "}
-        {formatStorage(convertSectorsToBytes(settings.remainingStorage))}
-      </div>
-      <div>
-        Total Storage:{" "}
-        {formatStorage(convertSectorsToBytes(settings.totalStorage))}
+      <div className="flex max-w-96 flex-col gap-2 p-10">
+        <div className="flex justify-between gap-2">
+          <div>V2:</div>
+          <div>Yes</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Accepting Contracts:</div>
+          <div>{settings.acceptingContracts ? "Yes" : "No"}</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Max Collateral:</div>
+          <div>{convertPrice(settings.maxCollateral)}</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Max Contract Duration:</div>
+          <div>{settings.maxContractDuration / 144} Days</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Remaining Storage:</div>
+          <div>
+            {formatStorage(convertSectorsToBytes(settings.remainingStorage))}
+          </div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Total Storage:</div>
+          <div>
+            {formatStorage(convertSectorsToBytes(settings.totalStorage))}
+          </div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Release:</div>
+          <div>{settings.release}</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Storage Price:</div>
+          <div>{convertPricePerBlock(settings.prices.storagePrice)}</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Upload Price:</div>
+          <div>{toSia(settings.prices.ingressPrice, false)}</div>
+        </div>
+        <div className="flex justify-between gap-2">
+          <div>Download Price:</div>
+          <div>{toSia(settings.prices.egressPrice, false)}</div>
+        </div>
       </div>
     </>
   );
@@ -82,11 +167,15 @@ const Settings = ({ network, publicKey }: Props) => {
 
   return (
     <div className="flex flex-col gap-2 rounded-lg p-2 shadow-md shadow-green-500">
-      <h1 className="pb-6 text-2xl font-bold">Settings</h1>
+      {/* <h1 className="pb-6 text-2xl font-bold">Settings</h1> */}
       {data.data?.v2 ? (
-        <V2Settings settings={data.data.rhpV4Settings} />
+        <V2Settings
+          netAddress={data.data.netAddress}
+          settings={data.data.rhpV4Settings}
+        />
       ) : (
         <V1Settings
+          netAddress={data.data.netAddress}
           settings={data.data?.settings}
           pricetable={data.data?.priceTable}
         />
