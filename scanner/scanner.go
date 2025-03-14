@@ -213,7 +213,7 @@ func main() {
 
 		// Step 2: Scan hosts concurrently
 		var wg sync.WaitGroup
-		sem := make(chan struct{}, workTime)
+		sem := make(chan struct{}, workTime*4)
 
 		for _, host := range filterred {
 			wg.Add(1)
