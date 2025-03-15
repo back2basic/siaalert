@@ -64,15 +64,20 @@ func checkRhpResult(mongoDB *db.MongoDB, netAddress string, online bool, result 
 	if err != nil {
 		log.Error("Failed to update rhp", zap.Error(err))
 	}
+	log.Info("Finished checking RHP", zap.String("publicKey", result.PublicKey))
 }
 
 func scanHost(host explored.Host, wg *sync.WaitGroup, log *zap.Logger, mongodDB *db.MongoDB, checker *scan.Checker) {
-	defer wg.Done() // Signal the WaitGroup when this goroutine is done
+	defer func() {
+		log.Info("Waitgroup Done", zap.String("host", host.PublicKey.String()))
+		wg.Done()
+	}()
+	
 	mongodDB.UpdateHost(
 		host.PublicKey,
 		host.ToBSON(),
 	)
-	// log.Info("Scanning host", zap.String("host", host.PublicKey.String()))
+	log.Info("Scanning host", zap.String("host", host.PublicKey.String()))
 	scanned, err := scan.RunRhpScan(host, log, checker)
 	if err != nil {
 		scanned.Error = err.Error()
@@ -83,7 +88,7 @@ func scanHost(host explored.Host, wg *sync.WaitGroup, log *zap.Logger, mongodDB 
 	if (scanned.OnlineSince != time.Time{}) || (time.Since(scanned.OfflineSince) < 2*time.Hour) {
 		checker.PortScan(host.PublicKey, scanned, mongodDB)
 	}
-	// log.Info("Finished scanning host", zap.String("host", host.PublicKey.String()))
+	log.Info("Finished scanning host", zap.String("host", host.PublicKey.String()))
 }
 
 // Fetch the list of hosts (replace with your actual fetching logic)

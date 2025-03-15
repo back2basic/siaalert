@@ -139,6 +139,7 @@ func (nc *Checker) PortScan(hostId types.PublicKey, scanned HostScan, mongoDB *d
 		address, port, err := nc.SplitAddressPort(scanned.V2NetAddresses[0].Address)
 		if err != nil {
 			log.Error("PortScan", zap.Error(err))
+			return
 		}
 		netAddress = address
 		rhp4, _ = strconv.Atoi(port)
@@ -148,6 +149,7 @@ func (nc *Checker) PortScan(hostId types.PublicKey, scanned HostScan, mongoDB *d
 		address, port, err := nc.SplitAddressPort(scanned.NetAddress)
 		if err != nil {
 			log.Error("PortScan", zap.Error(err))
+			return
 		}
 		netAddress = address
 		rhp2, _ = strconv.Atoi(port)
@@ -217,6 +219,7 @@ func (nc *Checker) PortScan(hostId types.PublicKey, scanned HostScan, mongoDB *d
 
 		mongoDB.InsertScan(check.ToBSON())
 	}
+	log.Info("PortScan finished", zap.String("host", scanned.PublicKey))
 }
 
 func (nc *Checker) CheckVersion(publicKey string) (string, error) {
