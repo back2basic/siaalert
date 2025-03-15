@@ -207,7 +207,7 @@ func main() {
 		}
 		// Step 1.5: Filter hosts
 		filterred := filterHosts(hosts, log)
-		maxWorkers := max(min(len(filterred)/workTime, 50), 1)
+		maxWorkers := max(min(len(filterred)/workTime, 150), 1)
 
 		log.Info("Starting scan", zap.Int("workers", maxWorkers), zap.Int("run", runs))
 
