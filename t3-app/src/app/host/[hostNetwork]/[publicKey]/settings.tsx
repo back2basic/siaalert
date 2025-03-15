@@ -51,13 +51,13 @@ const V1Settings = ({
         <div className="flex justify-between gap-2">
           <div>Remaining Storage:</div>
           <div>
-            {formatStorage(convertSectorsToBytes(settings.remainingstorage))}
+            {formatStorage(settings.remainingstorage)}
           </div>
         </div>
         <div className="flex justify-between gap-2">
           <div>Total Storage:</div>
           <div>
-            {formatStorage(convertSectorsToBytes(settings.totalstorage))}
+            {formatStorage(settings.totalstorage)}
           </div>
         </div>
         <div className="flex justify-between gap-2">
