@@ -33,7 +33,7 @@ func GetLogger() *zap.Logger {
 
         // Output to both stdout and a log file
         consoleWriter := zapcore.Lock(os.Stdout)
-        fileWriter, _ := os.Create("./data/app.log")
+        fileWriter, _ := os.Create("/app/data/app.log")
 
         core := zapcore.NewTee(
             zapcore.NewCore(consoleEncoder, consoleWriter, zapcore.DebugLevel), // Colorized stdout
