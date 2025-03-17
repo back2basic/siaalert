@@ -47,7 +47,7 @@ func (db *MongoDB) Close() error {
 
 // UpdateHosts inserts or updates multiple hosts document
 func (db *MongoDB) UpdateHosts(hosts []bson.M) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	var interfaceHosts []interface{}
@@ -77,7 +77,7 @@ func (db *MongoDB) UpdateHosts(hosts []bson.M) error {
 
 // FindHosts retrieves hosts based on a filter
 func (db *MongoDB) FindHosts(filter bson.M) ([]bson.M, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	cursor, err := db.ColHosts.Find(ctx, filter)
@@ -98,7 +98,7 @@ func (db *MongoDB) FindHosts(filter bson.M) ([]bson.M, error) {
 }
 
 func (db *MongoDB) FindScan(filter bson.M) ([]bson.M, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	cursor, err := db.ColScan.Find(ctx, filter)
@@ -119,7 +119,7 @@ func (db *MongoDB) FindScan(filter bson.M) ([]bson.M, error) {
 }
 
 func (db *MongoDB) InsertScan(data bson.M) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	// filter := bson.M{"publicKey": hostID.String()}
@@ -129,14 +129,14 @@ func (db *MongoDB) InsertScan(data bson.M) error {
 }
 
 func (db *MongoDB) FindRhp(filter bson.M) *mongo.SingleResult {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	return db.ColRhp.FindOne(ctx, filter)
 }
 
 func (db *MongoDB) FindRhps(filter bson.M) ([]bson.M, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	cursor, err := db.ColRhp.Find(ctx, filter)
@@ -158,7 +158,7 @@ func (db *MongoDB) FindRhps(filter bson.M) ([]bson.M, error) {
 
 // UpdateRhp inserts or updates a rhp document
 func (db *MongoDB) UpdateRhp(publicKey string, online bool, data bson.M, log *zap.Logger) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	filter := bson.M{"publicKey": publicKey}
@@ -172,7 +172,7 @@ func (db *MongoDB) UpdateRhp(publicKey string, online bool, data bson.M, log *za
 
 // UpdateOtp inserts or updates a otp document
 func (db *MongoDB) UpdateOtp(publicKey, email, exp, secret string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	filter := bson.M{"publicKey": publicKey}
@@ -183,14 +183,14 @@ func (db *MongoDB) UpdateOtp(publicKey, email, exp, secret string) error {
 }
 
 func (db *MongoDB) FindOtp(filter bson.M) *mongo.SingleResult {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	return db.ColApi.FindOne(ctx, filter)
 }
 
 func (db *MongoDB) DeleteOtp(publicKey, email string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	filter := bson.M{"publicKey": publicKey, "email": email}
@@ -199,7 +199,7 @@ func (db *MongoDB) DeleteOtp(publicKey, email string) error {
 }
 
 func (db *MongoDB) UpdateAlert(publicKey string, data bson.M) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	filter := bson.M{"publicKey": publicKey}
@@ -209,7 +209,7 @@ func (db *MongoDB) UpdateAlert(publicKey string, data bson.M) error {
 }
 
 func (db *MongoDB) FindAlerts(filter bson.M) ([]bson.M, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	cursor, err := db.ColAlert.Find(ctx, filter)
@@ -230,7 +230,7 @@ func (db *MongoDB) FindAlerts(filter bson.M) ([]bson.M, error) {
 }
 
 func (db *MongoDB) DeleteAlert(publicKey, email string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	filter := bson.M{"publicKey": publicKey, "email": email}
@@ -240,7 +240,7 @@ func (db *MongoDB) DeleteAlert(publicKey, email string) error {
 
 // GetSubscribers returns the subscribers of a host
 func (db *MongoDB) GetSubscribers(publicKey string, log *zap.Logger) []string {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	cursor, err := db.ColAlert.Find(ctx, bson.M{"publicKey": publicKey})
