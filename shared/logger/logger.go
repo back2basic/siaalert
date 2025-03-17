@@ -14,7 +14,7 @@ var (
 )
 
 // GetLogger initializes and returns a singleton logger instance
-func GetLogger() *zap.Logger {
+func GetLogger(file string) *zap.Logger {
     once.Do(func() {
         // Custom encoder configuration for colorized logging
         consoleEncoder := zapcore.NewConsoleEncoder(zapcore.EncoderConfig{
@@ -33,7 +33,7 @@ func GetLogger() *zap.Logger {
 
         // Output to both stdout and a log file
         consoleWriter := zapcore.Lock(os.Stdout)
-        fileWriter, _ := os.Create("/app/data/app.log")
+        fileWriter, _ := os.Create(file)
 
         core := zapcore.NewTee(
             zapcore.NewCore(consoleEncoder, consoleWriter, zapcore.DebugLevel), // Colorized stdout
