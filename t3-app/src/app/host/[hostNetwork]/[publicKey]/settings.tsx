@@ -21,16 +21,19 @@ const V1Settings = ({
   netAddress,
   settings,
   pricetable,
+  publicKey,
 }: {
   netAddress: string;
   settings: Rhpv2Settings;
   pricetable: Rhpv3Settings;
+  publicKey: string;
 }) => {
   return (
     <>
       <div className="mb-4 flex w-full justify-center border-b border-green-500 text-2xl font-bold">
         {netAddress}
       </div>
+      <div className="flex w-full justify-center cursor-pointer" onClick={() => navigator.clipboard.writeText(publicKey)} >{publicKey}</div>
       <div className="flex max-w-96 flex-col gap-2 p-10">
         <div className="flex justify-between gap-2">
           <div>V2:</div>
@@ -84,15 +87,18 @@ const V1Settings = ({
 const V2Settings = ({
   netAddress,
   settings,
+  publicKey,
 }: {
   netAddress: string;
   settings: Rhpv4Settings;
+  publicKey: string;
 }) => {
   return (
     <>
       <div className="mb-4 flex w-full justify-center border-b border-green-500 text-2xl font-bold">
         {netAddress}
       </div>
+      <div className="flex w-full justify-center">{publicKey}</div>
       <div className="flex max-w-96 flex-col gap-2 p-10">
         <div className="flex justify-between gap-2">
           <div>V2:</div>
@@ -172,12 +178,14 @@ const Settings = ({ network, publicKey }: Props) => {
         <V2Settings
           netAddress={data.data.netAddress}
           settings={data.data.rhpV4Settings}
+          publicKey={publicKey}
         />
       ) : (
         <V1Settings
           netAddress={data.data.netAddress}
           settings={data.data?.settings}
           pricetable={data.data?.priceTable}
+          publicKey={publicKey}
         />
       )}
     </div>
