@@ -50,12 +50,13 @@ func SendAlert(to, host, status string, log *zap.Logger) {
 	}
 }
 
-// func PrepareAlertEmails(publicKey, netAddress, status string, log *zap.Logger, mongoDB *db.MongoDB) {
-// 	subscribers := mongoDB.GetSubscribers(publicKey, log)
-// 	if len(subscribers) == 0 || subscribers == nil {
-// 		return
-// 	}
-// 	for _, subscriber := range subscribers {
-// 		SendAlert(subscriber, netAddress, status, log)
-// 	}
-// }
+func PrepareAlertEmails(publicKey, netAddress, status string, log *zap.Logger) {
+	cfg := config.GetConfig()
+	subscribers := cfg.DB.GetSubscribers(publicKey, log)
+	if len(subscribers) == 0 || subscribers == nil {
+		return
+	}
+	for _, subscriber := range subscribers {
+		SendAlert(subscriber, netAddress, status, log)
+	}
+}

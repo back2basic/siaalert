@@ -7,6 +7,7 @@ import (
 
 	"github.com/back2basic/siaalert/scanner/config"
 	"github.com/back2basic/siaalert/scanner/explored"
+	"github.com/back2basic/siaalert/scanner/mail"
 	"github.com/back2basic/siaalert/scanner/scan"
 	"github.com/back2basic/siaalert/shared/logger"
 	"go.mongodb.org/mongo-driver/bson"
@@ -77,7 +78,7 @@ func handlePostRhpScan(w http.ResponseWriter, r *http.Request) {
 
 func checkRhpResult(netAddress string, online bool, result scan.HostScan) {
 	cfg := config.GetConfig()
-	
+
 	log := logger.GetLogger(cfg.Logging.Path)
 	defer log.Sync()
 
@@ -105,13 +106,13 @@ func checkRhpResult(netAddress string, online bool, result scan.HostScan) {
 			result.OnlineSince = time.Now()
 			result.OfflineSince = time.Time{}
 			// Send Mail
-			// mail.PrepareAlertEmails(netAddress, "Online", result.PublicKey, log, mongoDB)
+			mail.PrepareAlertEmails(netAddress, "Online", result.PublicKey, log)
 		} else {
 			log.Warn("Host " + result.PublicKey + " is offline")
 			result.OnlineSince = time.Time{}
 			result.OfflineSince = time.Now()
 			// Send Mail
-			// mail.PrepareAlertEmails(netAddress, "Offline", result.PublicKey, log, mongoDB)
+			mail.PrepareAlertEmails(netAddress, "Offline", result.PublicKey, log)
 		}
 	}
 	// result.NetAddress = netAddress

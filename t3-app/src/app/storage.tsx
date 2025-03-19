@@ -7,7 +7,7 @@ import React from "react";
 const Storage = () => {
   const { v1total, v2total, v1used, v2used, v1hosts, v2hosts } =
     UseStorageStore();
-  console.log(v1total, v2total);
+  // console.log(v1total, v2total);
 
   if (v1total === 0 && v2total === 0) {
     return null;
