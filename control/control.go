@@ -143,6 +143,12 @@ func schedlPort(log *zap.Logger) {
 	// for _, host := range filterred {
 
 	// }
+	
+	//  if runtime is lower then 1 minutes sleep till 1 minute expires
+	if time.Since(start) < time.Minute {
+		time.Sleep(time.Minute - time.Since(start))
+	}
+
 	log.Info("Processed portScans in", zap.Duration("duration", time.Since(start)))
 	processDuration(time.Since(start), log, "portscan")
 
@@ -401,6 +407,11 @@ func schedlRHP(log *zap.Logger) {
 	// }
 	// close(sem) // Close the semaphore
 	// wg.Wait()  // Wait for all scans to finish
+
+	//  if runtime is lower then 1 minutes sleep till 1 minute expires
+	if time.Since(start) < time.Minute {
+		time.Sleep(time.Minute - time.Since(start))
+	}
 
 	log.Info("Processed rhpScans in", zap.Duration("duration", time.Since(start)))
 	processDuration(time.Since(start), log, "rhp")
