@@ -3,10 +3,10 @@ package scan_test
 import (
 	"testing"
 
+	"github.com/back2basic/siaalert/control/config"
 	"github.com/back2basic/siaalert/shared/logger"
 
-	"github.com/back2basic/siaalert/scanner/config"
-	"github.com/back2basic/siaalert/scanner/scan"
+	"github.com/back2basic/siaalert/control/scan"
 )
 
 func TestDetectBadHost(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/back2basic/siaalert/scanner/config"
+	"github.com/back2basic/siaalert/control/config"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

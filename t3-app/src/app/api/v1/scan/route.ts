@@ -57,6 +57,11 @@ export async function GET(request: NextRequest) {
             status: 500,
           });
         }
+        zen.sort((a, b) => {
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        });
         return Response.json(zen);
       } catch {
         return Response.json([], {

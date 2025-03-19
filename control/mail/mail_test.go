@@ -3,10 +3,10 @@ package mail_test
 import (
 	"testing"
 
-	"github.com/back2basic/siaalert/scanner/config"
+	"github.com/back2basic/siaalert/control/config"
 	"github.com/back2basic/siaalert/shared/logger"
 
-	"github.com/back2basic/siaalert/scanner/mail"
+	"github.com/back2basic/siaalert/control/mail"
 	"github.com/stretchr/testify/assert"
 )
 

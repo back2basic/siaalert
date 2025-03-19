@@ -7,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/back2basic/siaalert/scanner/explored"
+	"github.com/back2basic/siaalert/control/explored"
 
 	rhpv2 "go.sia.tech/core/rhp/v2"
 	rhpv3 "go.sia.tech/core/rhp/v3"

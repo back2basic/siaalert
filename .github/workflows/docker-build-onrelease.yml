@@ -36,7 +36,19 @@ jobs:
           cd scanner
           go mod tidy
 
-      - name: Build and push Docker image with release tag and latest tag
+      - name: Run go mod tidy
+        run: |
+          cd control
+          go mod tidy
+
+      - name: Build and push Docker scanner image with release tag and latest tag
         run: |
           cd scanner
-          docker buildx build --platform linux/amd64,linux/arm64 --tag ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }} --tag ghcr.io/${{ github.repository }}:latest -f ./docker/Dockerfile --push .
+          # docker buildx build --platform linux/amd64,linux/arm64 --tag ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }} --tag ghcr.io/${{ github.repository }}:latest -f ./docker/Dockerfile --push .
+          docker buildx build --platform linux/amd64,linux/arm64 --tag ghcr.io/${{ github.repository }}:scanner-${{ github.event.release.tag_name }} --tag ghcr.io/${{ github.repository }}:scanner-latest -f ./docker/Dockerfile --push .
+
+      - name: Build and push Control Docker image with release tag and latest tag
+        run: |
+          cd control
+          # docker buildx build --platform linux/amd64,linux/arm64 --tag ghcr.io/${{ github.repository }}:control-latest -f ./docker/Dockerfile --push .
+          docker buildx build --platform linux/amd64,linux/arm64 --tag ghcr.io/${{ github.repository }}:control-${{ github.event.release.tag_name }} --tag ghcr.io/${{ github.repository }}:control-latest -f ./docker/Dockerfile --push .

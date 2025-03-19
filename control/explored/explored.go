@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/back2basic/siaalert/scanner/config"
+	"github.com/back2basic/siaalert/control/config"
 	"github.com/back2basic/siaalert/shared/logger"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -52,6 +52,7 @@ func (h *Host) ToBSON() bson.M {
 
 		"knownSince":             h.KnownSince,
 		"lastScan":               h.LastScan,
+		"nextScan":               h.NextScan,
 		"lastScanSuccessful":     h.LastScanSuccessful,
 		"lastAnnouncement":       h.LastAnnouncement,
 		"totalScans":             h.TotalScans,
@@ -115,7 +116,7 @@ func GetAllHosts(cached bool) (map[string]Host, error) {
 		}
 	}
 	// clear cache
-	ExploredCache = make(map[string]Host)
+	// ExploredCache = make(map[string]Host)
 	var hosts []Host
 	// try grab new hosts
 	for i := range 200 {
@@ -185,11 +186,11 @@ func GetHosts(offset int) ([]Host, error) {
 
 func GetHostByPublicKey(publicKey string) (Host, error) {
 	// try grabbing first from cache else grab from api
-	// host, exists := ExploredCache[publicKey]
-	// if exists {
-	// 	fmt.Println("found in cache")
-	// 	return host, nil
-	// }
+	host, exists := ExploredCache[publicKey]
+	if exists {
+		// fmt.Println("found in cache")
+		return host, nil
+	}
 	// failback to api
 	cfg := config.GetConfig()
 	url := cfg.External.ExploredUrl + "api/hosts"
@@ -238,9 +239,9 @@ func GetHostByPublicKey(publicKey string) (Host, error) {
 		return Host{}, fmt.Errorf("no host found")
 	}
 	// // add to cache
-	// Mutex.Lock()
-	// ExploredCache[publicKey] = response[0]
-	// Mutex.Unlock()
-
+	Mutex.Lock()
+	ExploredCache[publicKey] = response[0]
+	Mutex.Unlock()
 	return response[0], nil
 }
+

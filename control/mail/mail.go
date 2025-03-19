@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/back2basic/siaalert/scanner/config"
+	"github.com/back2basic/siaalert/control/config"
 
 	"github.com/pingcap/log"
 
@@ -37,18 +37,18 @@ func SendOtp(publicKey, email, otp, network string) error {
 	return nil
 }
 
-func SendAlert(to, host, status string, log *zap.Logger) {
-	cfg := config.GetConfig()
-	m := gomail.NewMessage()
-	m.SetHeader("From", fmt.Sprintf("Sia Host Alert <%s>", cfg.Mail.Username))
-	m.SetHeader("Bcc", to)
-	m.SetHeader("Subject", fmt.Sprintf("Host Alert! %s is %s", host, status))
-	m.SetBody("text/html", fmt.Sprintf("Host Alert! %s is %s", host, status))
-	d := gomail.NewDialer(cfg.Mail.Host, cfg.Mail.Port, cfg.Mail.Username, cfg.Mail.Password)
-	if err := d.DialAndSend(m); err != nil {
-		log.Error("Failed to send alert email", zap.Error(err))
-	}
-}
+// func SendAlert(to, host, status string, log *zap.Logger) {
+// 	cfg := config.GetConfig()
+// 	m := gomail.NewMessage()
+// 	m.SetHeader("From", fmt.Sprintf("Sia Host Alert <%s>", cfg.Mail.Username))
+// 	m.SetHeader("Bcc", to)
+// 	m.SetHeader("Subject", fmt.Sprintf("Host Alert! %s is %s", host, status))
+// 	m.SetBody("text/html", fmt.Sprintf("Host Alert! %s is %s", host, status))
+// 	d := gomail.NewDialer(cfg.Mail.Host, cfg.Mail.Port, cfg.Mail.Username, cfg.Mail.Password)
+// 	if err := d.DialAndSend(m); err != nil {
+// 		log.Error("Failed to send alert email", zap.Error(err))
+// 	}
+// }
 
 // func PrepareAlertEmails(publicKey, netAddress, status string, log *zap.Logger, mongoDB *db.MongoDB) {
 // 	subscribers := mongoDB.GetSubscribers(publicKey, log)

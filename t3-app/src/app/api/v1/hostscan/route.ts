@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
           );
         }
         const zen = (await resZen.json()) as HostScan;
-        console.log(zen);
+        // console.log(zen);
         // if (zen.length === 0) {
         //   return Response.json([], {
         //     status: 500,

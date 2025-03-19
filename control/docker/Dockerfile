@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o scanner
+RUN go build -o control
 
 # Run Stage
 FROM alpine:latest
@@ -21,10 +21,10 @@ FROM alpine:latest
 WORKDIR /app
 
 # Copy the built binary from the build stage
-COPY --from=build /app/scanner .
+COPY --from=build /app/control .
 
 # Start the Go app
-CMD ["./scanner"]
+CMD ["./control"]
 
 # Expose the port the app runs on
-EXPOSE 8088
+EXPOSE 8080

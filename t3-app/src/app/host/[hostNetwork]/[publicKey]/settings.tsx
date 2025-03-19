@@ -33,7 +33,12 @@ const V1Settings = ({
       <div className="mb-4 flex w-full justify-center border-b border-green-500 text-2xl font-bold">
         {netAddress}
       </div>
-      <div className="flex w-full justify-center cursor-pointer" onClick={() => navigator.clipboard.writeText(publicKey)} >{publicKey}</div>
+      <div
+        className="flex w-full cursor-pointer justify-center"
+        onClick={() => navigator.clipboard.writeText(publicKey)}
+      >
+        {publicKey}
+      </div>
       <div className="flex max-w-96 flex-col gap-2 p-10">
         <div className="flex justify-between gap-2">
           <div>V2:</div>
@@ -53,15 +58,11 @@ const V1Settings = ({
         </div>
         <div className="flex justify-between gap-2">
           <div>Remaining Storage:</div>
-          <div>
-            {formatStorage(settings.remainingstorage)}
-          </div>
+          <div>{formatStorage(settings.remainingstorage)}</div>
         </div>
         <div className="flex justify-between gap-2">
           <div>Total Storage:</div>
-          <div>
-            {formatStorage(settings.totalstorage)}
-          </div>
+          <div>{formatStorage(settings.totalstorage)}</div>
         </div>
         <div className="flex justify-between gap-2">
           <div>Release:</div>

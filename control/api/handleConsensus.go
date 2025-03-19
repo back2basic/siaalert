@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/back2basic/siaalert/scanner/explored"
+	"github.com/back2basic/siaalert/control/explored"
 )
 
 func handleGetConsensus(w http.ResponseWriter, r *http.Request) {
