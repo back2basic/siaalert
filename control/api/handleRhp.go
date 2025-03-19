@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/back2basic/siaalert/scanner/config"
-	"github.com/back2basic/siaalert/scanner/logger"
+	"github.com/back2basic/siaalert/control/config"
+	"github.com/back2basic/siaalert/shared/logger"
+
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -19,7 +20,7 @@ func handleGetRhp(w http.ResponseWriter, r *http.Request) {
 	}
 	// fmt.Println(online, netaddress)
 	cfg := config.GetConfig()
-	log := logger.GetLogger()
+	log := logger.GetLogger(cfg.Logging.Path)
 	defer log.Sync()
 	if netaddress != "" {
 		var filter bson.M

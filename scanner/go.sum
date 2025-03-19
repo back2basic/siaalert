@@ -1,5 +1,9 @@
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
+github.com/back2basic/siaalert/shared v0.0.0-20250317210231-f5fdd7a124e5 h1:poPVshNTUufAS8dFWJGfnxHyQa7fcdrUUB1n7gfrST0=
+github.com/back2basic/siaalert/shared v0.0.0-20250317210231-f5fdd7a124e5/go.mod h1:22yfV4LZ1R25/dW6flwn5UoBtYvI3hOjiR0yM86XrGQ=
+github.com/back2basic/siaalert/shared v0.0.0-20250319144303-ce9da972cf83 h1:3HTdsJX5zWWo7OSM4FBYXQ3eFqh2o6NPgaxI9S00GMw=
+github.com/back2basic/siaalert/shared v0.0.0-20250319144303-ce9da972cf83/go.mod h1:22yfV4LZ1R25/dW6flwn5UoBtYvI3hOjiR0yM86XrGQ=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

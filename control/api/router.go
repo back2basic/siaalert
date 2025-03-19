@@ -13,7 +13,6 @@ func NewRouter() *chi.Mux {
 
 	// r.Use(middleware.Logger)
 	// r.Use(middleware.RealIP)
-	// r.Use(middleware.Throttle(20))
 	r.Use(middleware.Recoverer)
 	r.Use(cors.Handler(cors.Options{
 		// AllowedOrigins:   []string{"*"},
@@ -32,10 +31,10 @@ func NewRouter() *chi.Mux {
 		w.Write([]byte("SiaAlert API"))
 	})
 
-	// r.Route("/auth/otp", func(r chi.Router) {
-	// 	r.Post("/", handlePostOtp)
-	// 	r.Put("/", handlePutOtp)
-	// })
+	r.Route("/auth/otp", func(r chi.Router) {
+		r.Post("/", handlePostOtp)
+		r.Put("/", handlePutOtp)
+	})
 	r.Mount("/v1", v1Router())
 
 	return r
@@ -44,11 +43,10 @@ func NewRouter() *chi.Mux {
 func v1Router() *chi.Mux {
 	r := chi.NewRouter()
 
-	// r.Route("/consensus", func(r chi.Router) { r.Get("/", handleGetConsensus) })
-	// r.Route("/host", func(r chi.Router) { r.Get("/", handleGetHost) })
-	r.Route("/scan/rhp", func(r chi.Router) { r.Post("/", handlePostRhpScan) })
-	r.Route("/scan/port", func(r chi.Router) { r.Post("/", handlePostPortScan) })
-	// r.Route("/rhp", func(r chi.Router) { r.Get("/", handleGetRhp) })
-	// r.Route("/scan", func(r chi.Router) { r.Get("/", handleGetScan) })
+	r.Route("/consensus", func(r chi.Router) { r.Get("/", handleGetConsensus) })
+	r.Route("/host", func(r chi.Router) { r.Get("/", handleGetHost) })
+	r.Route("/host/scan", func(r chi.Router) { r.Get("/", handleGetHostScan) })
+	r.Route("/rhp", func(r chi.Router) { r.Get("/", handleGetRhp) })
+	r.Route("/scan", func(r chi.Router) { r.Get("/", handleGetScan) })
 	return r
 }

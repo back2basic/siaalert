@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/back2basic/siaalert/scanner/config"
-	"github.com/back2basic/siaalert/scanner/explored"
-	"github.com/back2basic/siaalert/scanner/logger"
-	"github.com/back2basic/siaalert/scanner/scan"
+	"github.com/back2basic/siaalert/control/config"
+	"github.com/back2basic/siaalert/control/explored"
+	"github.com/back2basic/siaalert/control/scan"
+	"github.com/back2basic/siaalert/shared/logger"
+	"go.uber.org/zap"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.uber.org/zap"
 )
 
 func handleGetHost(w http.ResponseWriter, r *http.Request) {
@@ -41,9 +41,9 @@ func handleGetHost(w http.ResponseWriter, r *http.Request) {
 func handleGetHostScan(w http.ResponseWriter, r *http.Request) {
 	publicKey := r.URL.Query().Get("publicKey")
 
-	// cfg := config.GetConfig()
+	cfg := config.GetConfig()
 	checker := &scan.Checker{}
-	log := logger.GetLogger()
+	log := logger.GetLogger(cfg.Logging.Path)
 	defer log.Sync()
 	host, err := explored.GetHostByPublicKey(publicKey)
 	if err != nil {
@@ -52,18 +52,12 @@ func handleGetHostScan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// log.Info("Scanning host", zap.String("host", host.PublicKey.String()))
-	scanned, err := scan.RunRhpScan(host, log, checker)
+	scanned, err := scan.RunRhpScan(host, checker)
 	if err != nil {
 		log.Error("RunRhpScan", zap.Error(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	// log.Info("Finished scanning host", zap.String("host", host.PublicKey.String()))
-	// hosts, err := cfg.DB.FindHosts(bson.M{"publicKey": publicKey})
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
 
 	hostsJson, err := json.Marshal(scanned)
 	if err != nil {
@@ -74,4 +68,5 @@ func handleGetHostScan(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(hostsJson)
+	// w.Write([]byte("TODO"))
 }

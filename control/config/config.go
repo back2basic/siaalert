@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/back2basic/siaalert/shared/db"
-
 	"github.com/back2basic/siaalert/shared/logger"
 
 	"go.uber.org/zap"
@@ -39,6 +38,7 @@ type NetworkConfig struct {
 type ExternalConfig struct {
 	// BenchUrl    string `yaml:"benchUrl"`
 	ExploredUrl string `yaml:"exploredUrl"`
+	ScannerUrl  string `yaml:"scannerUrl"`
 }
 
 type MailConfig struct {
@@ -57,7 +57,7 @@ var appConfig *Config
 
 // LoadConfig loads the configuration from the given file path
 func LoadConfig(filepath string) *Config {
-	log := logger.GetLogger("/app/data/scanner.log")
+	log := logger.GetLogger("/app/data/control.log")
 	defer logger.Sync()
 	file, err := os.Open(filepath)
 	if err != nil {

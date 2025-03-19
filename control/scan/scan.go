@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/back2basic/siaalert/scanner/config"
-	"github.com/back2basic/siaalert/scanner/explored"
+	"github.com/back2basic/siaalert/control/config"
+	"github.com/back2basic/siaalert/control/explored"
 	"github.com/back2basic/siaalert/shared/logger"
 
 	"go.uber.org/zap"
@@ -220,7 +220,7 @@ func (nc *Checker) PortScan(scanned HostScan) {
 
 		cfg.DB.InsertScan(check.ToBSON())
 	}
-	// return check
+	log.Info("PortScan finished", zap.String("host", scanned.PublicKey))
 }
 
 func (nc *Checker) CheckVersion(publicKey string) (string, error) {

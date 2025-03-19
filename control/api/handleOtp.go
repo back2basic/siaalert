@@ -7,10 +7,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/back2basic/siaalert/scanner/config"
-	"github.com/back2basic/siaalert/scanner/logger"
-	"github.com/back2basic/siaalert/scanner/mail"
-	"github.com/back2basic/siaalert/scanner/scan"
+	"github.com/back2basic/siaalert/control/config"
+	"github.com/back2basic/siaalert/control/mail"
+	"github.com/back2basic/siaalert/shared/logger"
+	"github.com/back2basic/siaalert/shared/types"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.uber.org/zap"
 )
@@ -35,7 +36,7 @@ func handlePostOtp(w http.ResponseWriter, r *http.Request) {
 	// expire := r.URL.Query().Get("expire")
 	email := r.URL.Query().Get("email")
 
-	log := logger.GetLogger()
+	log := logger.GetLogger(cfg.Logging.Path)
 	defer log.Sync()
 
 	log.Info("handlePostOtp", zap.String("publicKey", publicKey), zap.String("email", email))
@@ -78,7 +79,7 @@ func handlePostOtp(w http.ResponseWriter, r *http.Request) {
 
 func handlePutOtp(w http.ResponseWriter, r *http.Request) {
 	cfg := config.GetConfig()
-	log := logger.GetLogger()
+	log := logger.GetLogger(cfg.Logging.Path)
 	defer log.Sync()
 
 	publicKey := r.URL.Query().Get("publicKey")
@@ -119,7 +120,7 @@ func handlePutOtp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, host.Err().Error(), http.StatusInternalServerError)
 		return
 	}
-	var foundHost scan.HostScan
+	var foundHost types.HostScan
 	if err := host.Decode(&foundHost); err != nil {
 		log.Warn("Failed to decode document", zap.Error(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
