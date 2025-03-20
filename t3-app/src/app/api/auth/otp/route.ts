@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   const email = searchParams.get("email");
 
   switch (network) {
-    case "mainnet":
+    case "main":
       try {
         const resMain = await fetch(
           `${env.NEXT_PUBLIC_NETWORK_MAIN_URL}/auth/otp?publicKey=${publicKey}&email=${email}`,
