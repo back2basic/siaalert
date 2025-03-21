@@ -39,7 +39,7 @@ func handlePostOtp(w http.ResponseWriter, r *http.Request) {
 	log := logger.GetLogger(cfg.Logging.Path)
 	defer log.Sync()
 
-	log.Info("handlePostOtp", zap.String("publicKey", publicKey), zap.String("email", email))
+	// log.Info("handlePostOtp", zap.String("publicKey", publicKey), zap.String("email", email))
 	sec, err := getRandomString(32)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -47,7 +47,7 @@ func handlePostOtp(w http.ResponseWriter, r *http.Request) {
 	}
 	exp := time.Now().Format(time.RFC3339)
 
-	log.Info("Security", zap.String("sec", sec), zap.String("exp", exp))
+	// log.Info("Security", zap.String("sec", sec), zap.String("exp", exp))
 
 	err = cfg.DB.UpdateOtp(publicKey, email, exp, sec)
 	if err != nil {

@@ -34,11 +34,11 @@ func processDuration(elapsed time.Duration, log *zap.Logger, workType string) {
 		log.Warn("Process took too long", zap.Duration("duration", elapsed))
 		switch workType {
 		case "rhp":
-			if maxRhpWorkers < 150 {
+			if maxRhpWorkers < 60 {
 				maxRhpWorkers++
 			}
 		case "portscan":
-			if maxPortWorkers < 150 {
+			if maxPortWorkers < 20 {
 				maxPortWorkers++
 			}
 		}

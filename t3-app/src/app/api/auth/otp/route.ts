@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
           });
         }
         const zen = (await resZen.json()) as { message: string };
-        console.log(zen);
+        // console.log(zen);
         return Response.json(zen);
       } catch {
         return Response.json(
@@ -84,7 +84,7 @@ export async function PUT(request: NextRequest) {
   const secret = searchParams.get("secret");
   const email = searchParams.get("email");
 
-  console.log(network, publicKey, secret, email);
+  // console.log(network, publicKey, secret, email);
   switch (network) {
     case "main":
       try {
@@ -132,7 +132,7 @@ export async function PUT(request: NextRequest) {
           });
         }
         const zen = (await resZen.json()) as AuthOutput;
-        console.log(zen);
+        // console.log(zen);
         return Response.json(zen);
       } catch {
         return Response.json(
