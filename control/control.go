@@ -386,7 +386,7 @@ func schedlRHP(log *zap.Logger) {
         taskChannel <- host
     }
     close(taskChannel) // Close the channel to signal no more tasks.
-		log.Info("Channel RHP closed")
+	log.Info("Channel RHP closed")
     // Step 4: Wait for all workers to finish.
     wg.Wait()
 
@@ -441,7 +441,7 @@ func main() {
 	// Initialize the scheduler
 	sched := scheduler.NewScheduler()
 
-	// Add a cron job to run every 5 minutes
+	// Add a cron job to run every 5 minutes for RHP scanning
 	_, err := sched.AddJob("30 */5 * * * *", func() {
 		if !scan5minRHPrunning {
 			scan5minRHPrunning = true
@@ -453,7 +453,7 @@ func main() {
 		log.Error("Failed to add job:", zap.Error(err))
 	}
 
-	// Add a cron job to run every 5 minutes
+	// Add a cron job to run every 5 minutes for PortScan
 	_, err = sched.AddJob("* */5 * * * *", func() {
 		if !scan5minPORTrunning && runs != 0 {
 			scan5minPORTrunning = true
